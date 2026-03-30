@@ -57,8 +57,17 @@ const Sidebar = () => {
   return (
     <aside className="w-64 bg-white border-r border-gray-200 min-h-screen flex flex-col">
       <div className="p-6 border-b border-gray-200">
-        <h1 className="text-xl font-bold text-primary-700">Business Watch</h1>
-        <p className="text-xs text-gray-500 mt-1">Tender & Procurement</p>
+        <div className="flex items-center gap-3">
+          <img 
+            src="/logo/logo.png" 
+            alt="Business Watch" 
+            className="h-10 w-auto"
+          />
+          <div>
+            <h1 className="text-lg font-bold text-primary-700">Business Watch</h1>
+            <p className="text-xs text-gray-500">Tender & Procurement</p>
+          </div>
+        </div>
       </div>
       
       <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
