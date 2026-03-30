@@ -6,16 +6,14 @@ import {
   ShoppingCart, 
   Truck, 
   Building2, 
-  FolderOpen, 
   LogOut,
   Users,
-  Briefcase,
-  ClipboardList,
-  Zap,
-  PieChart,
   Receipt,
   Menu,
-  X
+  X,
+  CheckCircle,
+  Clock,
+  PieChart
 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useState, useEffect } from 'react';
@@ -62,19 +60,13 @@ const Sidebar = () => {
     { path: '/', icon: LayoutDashboard, label: 'Dashboard' },
     { path: '/tenders', icon: FileText, label: 'Tenders' },
     { path: '/bids', icon: DollarSign, label: 'Bids' },
+    { path: '/bids/won', icon: CheckCircle, label: 'Won Bids' },
+    { path: '/bids/pending', icon: Clock, label: 'Pending Bids' },
     { path: '/purchase-orders', icon: ShoppingCart, label: 'Purchase Orders' },
     { path: '/quotations', icon: Receipt, label: 'Quotations' },
     { path: '/procurement', icon: ShoppingCart, label: 'Procurement' },
     { path: '/suppliers', icon: Building2, label: 'Suppliers' },
     { path: '/deliveries', icon: Truck, label: 'Deliveries' },
-    { path: '/documents', icon: FolderOpen, label: 'Documents' },
-  ];
-
-  // Excel Data Navigation
-  const excelNavItems = [
-    { path: '/projects', icon: Briefcase, label: 'Projects (Hisaabu)' },
-    { path: '/tender-sheets', icon: ClipboardList, label: 'Tender Sheets' },
-    { path: '/quotes', icon: Zap, label: 'Quotes' },
     { path: '/finance', icon: PieChart, label: 'Finance' },
   ];
 
@@ -124,27 +116,6 @@ const Sidebar = () => {
         
         <nav className="flex-1 p-2 lg:p-4 space-y-1 overflow-y-auto">
           {navItems.map((item) => (
-            <NavLink
-              key={item.path}
-              to={item.path}
-              onClick={handleNavClick}
-              className={({ isActive }) => 
-                `flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
-                  isActive 
-                    ? 'bg-primary-50 text-primary-700' 
-                    : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
-                }`
-              }
-            >
-              <item.icon size={18} />
-              <span className="truncate">{item.label}</span>
-            </NavLink>
-          ))}
-          
-          <div className="mt-4 mb-2 px-3 text-xs font-semibold text-gray-400 uppercase tracking-wider">
-            Data Views
-          </div>
-          {excelNavItems.map((item) => (
             <NavLink
               key={item.path}
               to={item.path}

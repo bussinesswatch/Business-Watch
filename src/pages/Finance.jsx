@@ -1,52 +1,29 @@
 import { useState, useEffect } from 'react';
-import { collection, query, getDocs, where, orderBy } from 'firebase/firestore';
-import { db } from '../services/firebase';
-import { FileSpreadsheet, Calculator, TrendingUp, DollarSign, PieChart, ChevronDown, ChevronUp } from 'lucide-react';
+import { getAccountingData } from '../services/localDataService';
+import { FileSpreadsheet, Calculator, TrendingUp, DollarSign, PieChart, ChevronDown, ChevronUp, Wallet, CreditCard, TrendingDown } from 'lucide-react';
 
 const Finance = () => {
-  const [sheets, setSheets] = useState([]);
+  const [accounts, setAccounts] = useState([]);
+  const [transactions, setTransactions] = useState([]);
+  const [budgetSummary, setBudgetSummary] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState('all');
-  const [expandedSheet, setExpandedSheet] = useState(null);
+  const [activeTab, setActiveTab] = useState('accounts');
 
   useEffect(() => {
-    fetchSheets();
+    fetchData();
   }, []);
 
-  const fetchSheets = async () => {
+  const fetchData = async () => {
     try {
-      // Simple query without composite index requirements
-      const q = query(
-        collection(db, 'excelSheets'), 
-        where('type', '==', 'finance')
-      );
-      const snapshot = await getDocs(q);
-      // Sort client-side
-      const data = snapshot.docs
-        .map(doc => ({ id: doc.id, ...doc.data() }))
-        .sort((a, b) => a.sheetName?.localeCompare(b.sheetName));
-      setSheets(data);
+      const data = await getAccountingData();
+      setAccounts(data.accounts || []);
+      setTransactions(data.transactions || []);
+      setBudgetSummary(data.budgetSummary || null);
     } catch (error) {
-      console.error('Error fetching sheets:', error);
+      console.error('Error fetching accounting data:', error);
     } finally {
       setLoading(false);
     }
-  };
-
-  const getIcon = (sheetName) => {
-    switch (sheetName) {
-      case 'Masakkaiy': return <DollarSign className="w-6 h-6 text-green-600" />;
-      case 'Working': return <Calculator className="w-6 h-6 text-blue-600" />;
-      default: return <FileSpreadsheet className="w-6 h-6 text-gray-600" />;
-    }
-  };
-
-  const filteredSheets = activeTab === 'all' 
-    ? sheets 
-    : sheets.filter(s => s.sheetName === activeTab);
-
-  const toggleExpand = (sheetId) => {
-    setExpandedSheet(expandedSheet === sheetId ? null : sheetId);
   };
 
   return (

@@ -59,6 +59,22 @@ function App() {
         </ProtectedRoute>
       } />
       
+      <Route path="/bids/won" element={
+        <ProtectedRoute>
+          <Layout>
+            <Bids initialFilter="Won" />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      
+      <Route path="/bids/pending" element={
+        <ProtectedRoute>
+          <Layout>
+            <Bids initialFilter="Pending" />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      
       <Route path="/quotations" element={
         <ProtectedRoute>
           <Layout>

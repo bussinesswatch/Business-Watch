@@ -19,14 +19,14 @@ import { db } from '../services/firebase';
 import { useNavigate } from 'react-router-dom';
 import BidQuotation from '../components/BidQuotation';
 
-const Bids = () => {
+const Bids = ({ initialFilter }) => {
   const [bids, setBids] = useState([]);
   const [tenders, setTenders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState('All');
   const [filterCategory, setFilterCategory] = useState('All');
-  const [filterResult, setFilterResult] = useState('All');
+  const [filterResult, setFilterResult] = useState(initialFilter || 'All');
   const [showModal, setShowModal] = useState(false);
   const [editingBid, setEditingBid] = useState(null);
   const [viewingBid, setViewingBid] = useState(null);
