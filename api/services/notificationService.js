@@ -4,6 +4,10 @@
  */
 
 import nodemailer from 'nodemailer';
+import dotenv from 'dotenv';
+
+// Load environment variables from .env file
+dotenv.config();
 
 // Email configuration (use environment variables in production)
 const EMAIL_CONFIG = {
