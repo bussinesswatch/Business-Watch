@@ -1,0 +1,9 @@
+Name,File Path,Type,Dimensions,Usage,Description
+Business Watch Logo,/logo/logo.png,PNG,Original,All purpose main logo,Primary logo for all applications
+Business Watch Logo (Small),/logo/logo.png,PNG,Scaled 64x64,Header icon,Logo for sidebar and small displays
+Business Watch Logo (Medium),/logo/logo.png,PNG,Scaled 128x128,Forms and cards,Logo for login and medium displays
+Business Watch Logo (Large),/logo/logo.png,PNG,Scaled 256x256,Print and export,Logo for reports and quotations
+Business Watch Logo (Print),/logo/logo.png,PNG,Scaled 512x512,High resolution print,Logo for high quality print materials
+Favicon,/logo/logo.png,PNG,16x16,Browser tab,Website favicon
+Apple Touch Icon,/logo/logo.png,PNG,180x180,iOS devices,Apple touch icon
+Android Icon,/logo/logo.png,PNG,192x192,Android devices,Android home screen icon

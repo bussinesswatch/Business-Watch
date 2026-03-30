@@ -52,15 +52,33 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-50 to-primary-100">
-      <div className="card w-full max-w-md">
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-primary-100 rounded-full mb-4">
-            <Building2 className="w-8 h-8 text-primary-600" />
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-50 to-primary-100 p-4">
+      <div className="flex w-full max-w-5xl bg-white rounded-2xl shadow-xl overflow-hidden">
+        {/* Left Side - Illustration */}
+        <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-primary-600 to-primary-800 items-center justify-center p-8">
+          <div className="text-center">
+            <img 
+              src="/illustrations/Business Plan-amico.svg" 
+              alt="Business Planning" 
+              className="w-80 h-80 object-contain mb-6"
+            />
+            <h2 className="text-2xl font-bold text-white mb-2">Business Watch</h2>
+            <p className="text-primary-100">Tender & Procurement Management System</p>
+            <p className="text-primary-200 text-sm mt-4">Developed by RettsWebDev since 2016</p>
           </div>
-          <h1 className="text-2xl font-bold text-gray-900">Business Watch</h1>
-          <p className="text-gray-500 mt-2">Tender & Procurement Management</p>
         </div>
+
+        {/* Right Side - Form */}
+        <div className="w-full lg:w-1/2 p-8 md:p-12">
+          <div className="text-center mb-8">
+            <img 
+              src="/logo/logo.png" 
+              alt="Business Watch" 
+              className="w-16 h-16 mx-auto mb-4 object-contain"
+            />
+            <h1 className="text-2xl font-bold text-gray-900">Business Watch</h1>
+            <p className="text-gray-500 mt-2">Tender & Procurement Management</p>
+          </div>
 
         {error && (
           <div className="mb-4 p-3 bg-danger-50 text-danger-700 rounded-lg text-sm">
@@ -212,8 +230,10 @@ const Login = () => {
         {!isRegistering && (
           <div className="mt-6 text-center text-sm text-gray-500">
             <p>Need help? Contact your administrator.</p>
+            <p className="mt-2 text-xs">Powered by Business Watch PVT LTD</p>
           </div>
         )}
+        </div>
       </div>
     </div>
   );
