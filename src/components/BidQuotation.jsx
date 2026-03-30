@@ -79,15 +79,18 @@ const BidQuotation = ({ bid, onClose }) => {
       );
     }
 
-    return items.map((item, index) => {
+    const pages = [];
+    
+    for (let idx = 0; idx < items.length; idx++) {
+      const item = items[idx];
       const qty = parseFloat(item.quantity) || 0;
       const bidPrice = parseFloat(item.bidPrice) || 0;
       const itemTotal = qty * bidPrice;
       const itemTax = showTax ? (itemTotal * gstRate / 100) : 0;
       const itemGrandTotal = itemTotal + itemTax;
 
-      return (
-        <div key={`item-page-${index}-${item.id || 'no-id'}`} data-item-index={index} className="quotation-page mb-8 bg-white p-8 print:p-6">
+      pages.push(
+        <div key={`page-${idx}`} className="quotation-page mb-8 bg-white p-8 print:p-6">
           {/* Header */}
           <div className="flex justify-between items-start border-b-2 border-gray-800 pb-4 mb-6">
             <div>
@@ -122,7 +125,7 @@ const BidQuotation = ({ bid, onClose }) => {
             <div>
               <p className="flex items-center gap-2">
                 <span className="font-semibold">Quotation No.:</span> 
-                {generateQuotationNo()}-ITEM{index + 1}
+                {generateQuotationNo()}-ITEM{idx + 1}
               </p>
               <p className="flex items-center gap-2">
                 <span className="font-semibold">Date:</span> 
@@ -141,9 +144,9 @@ const BidQuotation = ({ bid, onClose }) => {
             </div>
             <div className="text-right">
               <div className="inline-block border-2 border-gray-800 px-3 py-1">
-                <span className="font-bold text-lg">ITEM-{index + 1} of {items.length}</span>
+                <span className="font-bold text-lg">ITEM-{idx + 1} of {items.length}</span>
               </div>
-              <div className="text-xs text-gray-500 mt-1">ID: {item.id || 'N/A'}</div>
+              <div className="text-xs text-gray-500 mt-1">{item.name || 'N/A'}</div>
             </div>
           </div>
 
@@ -162,7 +165,7 @@ const BidQuotation = ({ bid, onClose }) => {
               <tr>
                 <td className="border border-gray-800 px-2 py-3 text-center">1</td>
                 <td className="border border-gray-800 px-2 py-3">
-                  <div className="font-medium">{item.name || 'ITEM-' + (index + 1)}</div>
+                  <div className="font-medium">{item.name || `ITEM-${idx + 1}`}</div>
                   {item.specification && (
                     <div className="text-xs text-gray-600 mt-1">{item.specification}</div>
                   )}
@@ -174,7 +177,7 @@ const BidQuotation = ({ bid, onClose }) => {
               </tr>
               {/* Empty rows for spacing */}
               {[...Array(8)].map((_, i) => (
-                <tr key={`empty-${index}-${i}`}>
+                <tr key={`empty-${idx}-${i}`}>
                   <td className="border border-gray-800 px-2 py-2">&nbsp;</td>
                   <td className="border border-gray-800 px-2 py-2"></td>
                   <td className="border border-gray-800 px-2 py-2"></td>
@@ -226,7 +229,9 @@ const BidQuotation = ({ bid, onClose }) => {
           <div className="page-break-after"></div>
         </div>
       );
-    });
+    }
+    
+    return pages;
   };
 
   // Render all items in one quotation
@@ -463,13 +468,40 @@ const BidQuotation = ({ bid, onClose }) => {
               body {
                 -webkit-print-color-adjust: exact;
                 print-color-adjust: exact;
+                background: white !important;
               }
               .quotation-page {
                 page-break-after: always;
                 min-height: 100vh;
+                background: white !important;
+                box-shadow: none !important;
+                margin: 0 !important;
+                padding: 0 !important;
               }
               .quotation-page:last-child {
                 page-break-after: avoid;
+              }
+              /* Hide all controls and background in print */
+              .print\\:hidden {
+                display: none !important;
+              }
+              /* Hide the outer container background */
+              .bg-gray-100 {
+                background: white !important;
+              }
+              .bg-black {
+                display: none !important;
+              }
+              .bg-opacity-50 {
+                background: transparent !important;
+              }
+              /* Remove max-width constraint in print */
+              .max-w-4xl {
+                max-width: none !important;
+              }
+              /* Hide shadow in print */
+              .shadow-lg {
+                box-shadow: none !important;
               }
             }
             .page-break-after {
