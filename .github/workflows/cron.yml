@@ -1,0 +1,46 @@
+name: Deadline & Gazette Checks
+
+on:
+  schedule:
+    # Run deadline check daily at 8:00 AM UTC (13:00 Maldives time)
+    - cron: '0 8 * * *'
+    # Run gazette scrape every 6 hours
+    - cron: '0 */6 * * *'
+  workflow_dispatch:  # Allow manual trigger from GitHub UI
+
+jobs:
+  check-deadlines:
+    name: Check Tender Deadlines
+    runs-on: ubuntu-latest
+    if: github.event.schedule == '0 8 * * *' || github.event_name == 'workflow_dispatch'
+    steps:
+      - name: Trigger Deadline Check API
+        run: |
+          curl -X GET \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            -H "Content-Type: application/json" \
+            https://${{ secrets.VERCEL_URL }}/api/check-deadlines \
+            --fail \
+            --silent \
+            --show-error
+        env:
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+          VERCEL_URL: ${{ secrets.VERCEL_URL }}
+
+  scrape-gazette:
+    name: Scrape Gazette for New Tenders
+    runs-on: ubuntu-latest
+    if: github.event.schedule == '0 */6 * * *' || github.event_name == 'workflow_dispatch'
+    steps:
+      - name: Trigger Gazette Scrape API
+        run: |
+          curl -X GET \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            -H "Content-Type: application/json" \
+            https://${{ secrets.VERCEL_URL }}/api/scrape-gazette \
+            --fail \
+            --silent \
+            --show-error
+        env:
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+          VERCEL_URL: ${{ secrets.VERCEL_URL }}
