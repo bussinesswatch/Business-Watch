@@ -12,7 +12,13 @@ import {
   Menu,
   X,
   CheckCircle,
-  Clock
+  Clock,
+  BarChart3,
+  Calculator,
+  FolderOpen,
+  Calendar,
+  FileText as TemplateIcon,
+  FileBarChart
 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useState, useEffect } from 'react';
@@ -66,6 +72,12 @@ const Sidebar = () => {
     { path: '/procurement', icon: ShoppingCart, label: 'Procurement' },
     { path: '/suppliers', icon: Building2, label: 'Suppliers' },
     { path: '/deliveries', icon: Truck, label: 'Deliveries' },
+    { path: '/analytics', icon: BarChart3, label: 'Analytics' },
+    { path: '/cost-calculator', icon: Calculator, label: 'Cost Calculator' },
+    { path: '/documents', icon: FolderOpen, label: 'Documents' },
+    { path: '/calendar', icon: Calendar, label: 'Calendar' },
+    { path: '/templates', icon: TemplateIcon, label: 'Templates' },
+    { path: '/reports', icon: FileBarChart, label: 'Reports' },
   ];
 
   // Only show Users link to admins

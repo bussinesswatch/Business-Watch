@@ -16,6 +16,14 @@ import Quotes from './pages/Quotes';
 import Finance from './pages/Finance';
 import Quotations from './pages/Quotations';
 import Users from './pages/Users';
+import Analytics from './pages/Analytics';
+import EnhancedSuppliers from './pages/EnhancedSuppliers';
+import CostCalculator from './pages/CostCalculator';
+import DocumentManager from './pages/DocumentManager';
+import CalendarView from './pages/CalendarView';
+import BidTemplates from './pages/BidTemplates';
+import Reports from './pages/Reports';
+
 import { useAuth } from './contexts/AuthContext';
 
 function App() {
@@ -151,6 +159,62 @@ function App() {
         <ProtectedRoute>
           <Layout>
             <Finance />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      
+      <Route path="/suppliers" element={
+        <ProtectedRoute>
+          <Layout>
+            <EnhancedSuppliers />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      
+      <Route path="/analytics" element={
+        <ProtectedRoute>
+          <Layout>
+            <Analytics />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      
+      <Route path="/cost-calculator" element={
+        <ProtectedRoute>
+          <Layout>
+            <CostCalculator />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      
+      <Route path="/documents" element={
+        <ProtectedRoute>
+          <Layout>
+            <DocumentManager />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      
+      <Route path="/calendar" element={
+        <ProtectedRoute>
+          <Layout>
+            <CalendarView />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      
+      <Route path="/templates" element={
+        <ProtectedRoute>
+          <Layout>
+            <BidTemplates />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      
+      <Route path="/reports" element={
+        <ProtectedRoute>
+          <Layout>
+            <Reports />
           </Layout>
         </ProtectedRoute>
       } />
