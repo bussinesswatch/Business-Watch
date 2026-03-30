@@ -58,9 +58,13 @@ const Login = () => {
         <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-primary-600 to-primary-800 items-center justify-center p-8">
           <div className="text-center">
             <img 
-              src="/illustrations/Business Plan-amico.svg" 
+              src="/illustrations/Business%20Plan-amico.svg" 
               alt="Business Planning" 
               className="w-80 h-80 object-contain mb-6"
+              onError={(e) => {
+                console.error('Failed to load illustration:', e);
+                e.target.style.display = 'none';
+              }}
             />
             <h2 className="text-2xl font-bold text-white mb-2">Business Watch</h2>
             <p className="text-primary-100">Tender & Procurement Management System</p>

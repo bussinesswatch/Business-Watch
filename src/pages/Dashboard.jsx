@@ -142,11 +142,16 @@ const Dashboard = () => {
 
       bids.forEach(bid => {
         if (bid.createdAt) {
-          const date = new Date(bid.createdAt);
-          const monthKey = format(date, 'MMM yyyy');
-          if (monthlyData[monthKey]) {
-            monthlyData[monthKey].revenue += bid.bidAmount || 0;
-            monthlyData[monthKey].profit += bid.profitMargin || 0;
+          try {
+            const dateValue = bid.createdAt?.toDate ? bid.createdAt.toDate() : new Date(bid.createdAt);
+            if (isNaN(dateValue.getTime())) return; // Skip invalid dates
+            const monthKey = format(dateValue, 'MMM yyyy');
+            if (monthlyData[monthKey]) {
+              monthlyData[monthKey].revenue += bid.bidAmount || 0;
+              monthlyData[monthKey].profit += bid.profitMargin || 0;
+            }
+          } catch (e) {
+            console.warn('Invalid bid date:', bid.createdAt);
           }
         }
       });
@@ -326,7 +331,15 @@ const Dashboard = () => {
                 <div className="flex-1">
                   <p className="text-sm font-medium text-gray-900">{getActivityText(item)}</p>
                   <p className="text-xs text-gray-500">
-                    {item.date ? format(new Date(item.date?.toDate ? item.date.toDate() : item.date), 'MMM d, yyyy h:mm a') : 'Unknown date'}
+                    {item.date ? (() => {
+                      try {
+                        const dateValue = item.date?.toDate ? item.date.toDate() : new Date(item.date);
+                        if (isNaN(dateValue.getTime())) return 'Unknown date';
+                        return format(dateValue, 'MMM d, yyyy h:mm a');
+                      } catch (e) {
+                        return 'Unknown date';
+                      }
+                    })() : 'Unknown date'}
                   </p>
                 </div>
               </div>
