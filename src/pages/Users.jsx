@@ -156,9 +156,17 @@ const Users = () => {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">User Management</h1>
-          <p className="text-gray-500 mt-1">Manage system users and roles</p>
+        <div className="flex items-center gap-4">
+          <img 
+            src="/illustrations/Good%20team-amico.svg" 
+            alt="Users" 
+            className="w-16 h-16 object-contain"
+            onError={(e) => { e.target.style.display='none'; }}
+          />
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900">User Management</h1>
+            <p className="text-gray-500 mt-1">Manage system users and roles</p>
+          </div>
         </div>
         <button onClick={openAddModal} className="btn-primary">
           <UserPlus className="w-5 h-5 mr-2" />

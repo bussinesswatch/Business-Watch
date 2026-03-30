@@ -3,7 +3,7 @@ import {
   Plus, Search, Edit2, Trash2, Eye, X, CheckCircle, 
   Clock, Truck, Package, Building2, ArrowRight, 
   FileText, DollarSign, Calendar, User, Phone, Mail,
-  Send, HandshakeIcon, Download, Printer, ChevronDown, ChevronUp,
+  Send, Heart, Download, Printer, ChevronDown, ChevronUp,
   RefreshCw, Filter, MoreHorizontal, AlertCircle, CheckCircle2
 } from 'lucide-react';
 import { format } from 'date-fns';
@@ -364,9 +364,17 @@ const PurchaseOrders = () => {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">Purchase Orders</h1>
-          <p className="text-gray-500 mt-1">Manage purchase orders from won bids - Order Send, Receiving & Handover</p>
+        <div className="flex items-center gap-4">
+          <img 
+            src="/illustrations/Business%20deal-amico.svg" 
+            alt="Purchase Orders" 
+            className="w-16 h-16 object-contain"
+            onError={(e) => { e.target.style.display='none'; }}
+          />
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900">Purchase Orders</h1>
+            <p className="text-gray-500 mt-1">Manage purchase orders from won bids - Order Send, Receiving & Handover</p>
+          </div>
         </div>
         <div className="flex gap-3">
           <button 

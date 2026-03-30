@@ -13,13 +13,37 @@ import {
   ClipboardList,
   Zap,
   PieChart,
-  Receipt
+  Receipt,
+  Menu,
+  X
 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
+import { useState, useEffect } from 'react';
 
 const Sidebar = () => {
   const { logout, isAdmin, userRole } = useAuth();
   const navigate = useNavigate();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 1024) {
+        setIsMobileMenuOpen(false);
+      }
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (isMobileMenuOpen && !e.target.closest('.sidebar-container')) {
+        setIsMobileMenuOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [isMobileMenuOpen]);
 
   const handleLogout = async () => {
     try {
@@ -28,6 +52,10 @@ const Sidebar = () => {
     } catch (error) {
       console.error('Logout error:', error);
     }
+  };
+
+  const handleNavClick = () => {
+    setIsMobileMenuOpen(false);
   };
 
   const navItems = [
@@ -56,65 +84,99 @@ const Sidebar = () => {
   }
 
   return (
-    <aside className="w-64 bg-white border-r border-gray-200 min-h-screen flex flex-col">
-      <div className="p-6 border-b border-gray-200">
-        <div className="flex items-center gap-3">
-          <img 
-            src="/logo/logo.png" 
-            alt="Business Watch" 
-            className="h-10 w-auto"
-          />
-          <div>
-            <h1 className="text-lg font-bold text-primary-700">Business Watch</h1>
-            <p className="text-xs text-gray-500">Tender & Procurement</p>
+    <>
+      {/* Mobile Menu Toggle Button */}
+      <button
+        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+        className="lg:hidden fixed top-4 left-4 z-50 p-2 bg-white rounded-lg shadow-md border border-gray-200"
+        aria-label="Toggle menu"
+      >
+        {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+      </button>
+
+      {/* Mobile Overlay */}
+      {isMobileMenuOpen && (
+        <div 
+          className="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-40"
+          onClick={() => setIsMobileMenuOpen(false)}
+        />
+      )}
+
+      {/* Sidebar */}
+      <aside 
+        className={`sidebar-container fixed lg:static inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-200 min-h-screen flex flex-col transform transition-transform duration-300 ease-in-out lg:transform-none ${
+          isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
+        }`}
+      >
+        <div className="p-4 lg:p-6 border-b border-gray-200">
+          <div className="flex items-center gap-3">
+            <img 
+              src="/logo/logo.png" 
+              alt="Business Watch" 
+              className="h-10 w-auto object-contain"
+            />
+            <div>
+              <h1 className="text-lg font-bold text-primary-700">Business Watch</h1>
+              <p className="text-xs text-gray-500 hidden lg:block">Tender & Procurement</p>
+            </div>
           </div>
         </div>
-      </div>
-      
-      <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
-        {navItems.map((item) => (
-          <NavLink
-            key={item.path}
-            to={item.path}
-            className={({ isActive }) => 
-              `sidebar-link ${isActive ? 'active' : ''}`
-            }
-          >
-            <item.icon size={20} />
-            <span>{item.label}</span>
-          </NavLink>
-        ))}
         
-        <div className="mt-6 mb-2 px-4 text-xs font-semibold text-gray-400 uppercase tracking-wider">
-          Data Views
-        </div>
-        {excelNavItems.map((item) => (
-          <NavLink
-            key={item.path}
-            to={item.path}
-            className={({ isActive }) => 
-              `sidebar-link ${isActive ? 'active' : ''}`
-            }
-          >
-            <item.icon size={20} />
-            <span>{item.label}</span>
-          </NavLink>
-        ))}
-      </nav>
+        <nav className="flex-1 p-2 lg:p-4 space-y-1 overflow-y-auto">
+          {navItems.map((item) => (
+            <NavLink
+              key={item.path}
+              to={item.path}
+              onClick={handleNavClick}
+              className={({ isActive }) => 
+                `flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+                  isActive 
+                    ? 'bg-primary-50 text-primary-700' 
+                    : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                }`
+              }
+            >
+              <item.icon size={18} />
+              <span className="truncate">{item.label}</span>
+            </NavLink>
+          ))}
+          
+          <div className="mt-4 mb-2 px-3 text-xs font-semibold text-gray-400 uppercase tracking-wider">
+            Data Views
+          </div>
+          {excelNavItems.map((item) => (
+            <NavLink
+              key={item.path}
+              to={item.path}
+              onClick={handleNavClick}
+              className={({ isActive }) => 
+                `flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+                  isActive 
+                    ? 'bg-primary-50 text-primary-700' 
+                    : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                }`
+              }
+            >
+              <item.icon size={18} />
+              <span className="truncate">{item.label}</span>
+            </NavLink>
+          ))}
+        </nav>
 
-      <div className="p-4 border-t border-gray-200">
-        <div className="mb-4 px-4 py-2 bg-gray-50 rounded-lg">
-          <p className="text-sm font-medium text-gray-700">Role: {userRole}</p>
+        <div className="p-3 lg:p-4 border-t border-gray-200">
+          <div className="mb-3 px-3 py-2 bg-gray-50 rounded-lg">
+            <p className="text-xs lg:text-sm font-medium text-gray-700 truncate">Role: {userRole}</p>
+          </div>
+          <button
+            onClick={handleLogout}
+            className="flex items-center gap-3 px-3 py-2.5 w-full rounded-lg text-sm font-medium text-red-600 hover:bg-red-50 transition-colors"
+          >
+            <LogOut size={18} />
+            <span>Logout</span>
+          </button>
         </div>
-        <button
-          onClick={handleLogout}
-          className="sidebar-link w-full text-danger-600 hover:bg-danger-50"
-        >
-          <LogOut size={20} />
-          <span>Logout</span>
-        </button>
-      </div>
-    </aside>
+      </aside>
+    </>
   );
 };
 

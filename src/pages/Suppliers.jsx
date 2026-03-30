@@ -148,9 +148,16 @@ const Suppliers = () => {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">Supplier Management</h1>
-          <p className="text-gray-500 mt-1">Manage suppliers and their information</p>
+        <div className="flex items-center gap-4">
+          <img 
+            src="/illustrations/Company-amico.svg" 
+            alt="Suppliers" 
+            className="w-16 h-16 object-contain"
+          />
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900">Supplier Management</h1>
+            <p className="text-gray-500 mt-1">Manage suppliers and their information</p>
+          </div>
         </div>
         {isAdmin() && (
           <button onClick={openAddModal} className="btn-primary">

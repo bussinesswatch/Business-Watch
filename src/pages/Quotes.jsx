@@ -56,9 +56,17 @@ const Quotes = () => {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">Quotes</h1>
-          <p className="text-gray-500 mt-1">Projects 2026.xlsx - Generator & other quotes</p>
+        <div className="flex items-center gap-4">
+          <img 
+            src="/illustrations/Investment%20data-amico.svg" 
+            alt="Quotes" 
+            className="w-16 h-16 object-contain"
+            onError={(e) => { e.target.style.display='none'; }}
+          />
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900">Quotes</h1>
+            <p className="text-gray-500 mt-1">Projects 2026.xlsx - Generator & other quotes</p>
+          </div>
         </div>
         <div className="card px-6 py-3 flex items-center gap-3">
           <FileSpreadsheet className="w-6 h-6 text-primary-600" />

@@ -133,9 +133,17 @@ const Documents = () => {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold text-gray-900">Document Management</h1>
-        <p className="text-gray-500 mt-1">Upload, store, and manage all your documents</p>
+      <div className="flex items-center gap-4 mb-6">
+        <img 
+          src="/illustrations/Folder-amico.svg" 
+          alt="Documents" 
+          className="w-16 h-16 object-contain"
+          onError={(e) => { e.target.style.display='none'; }}
+        />
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900">Document Management</h1>
+          <p className="text-gray-500 mt-1">Upload, store, and manage all your documents</p>
+        </div>
       </div>
 
       {/* Upload Section */}

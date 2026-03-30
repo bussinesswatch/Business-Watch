@@ -52,9 +52,17 @@ const Finance = () => {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">Finance</h1>
-          <p className="text-gray-500 mt-1">Masakkaiy & Working calculations</p>
+        <div className="flex items-center gap-4">
+          <img 
+            src="/illustrations/Finance-amico.svg" 
+            alt="Finance" 
+            className="w-16 h-16 object-contain"
+            onError={(e) => { e.target.style.display='none'; }}
+          />
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900">Finance</h1>
+            <p className="text-gray-500 mt-1">Masakkaiy & Working calculations</p>
+          </div>
         </div>
         <div className="card px-6 py-3 flex items-center gap-3">
           <TrendingUp className="w-6 h-6 text-primary-600" />

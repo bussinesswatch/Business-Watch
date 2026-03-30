@@ -191,9 +191,17 @@ const Quotations = () => {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">Quotations</h1>
-          <p className="text-gray-500 mt-1">Create and manage quotations for won bids</p>
+        <div className="flex items-center gap-4">
+          <img 
+            src="/illustrations/Receipt-amico.svg" 
+            alt="Quotations" 
+            className="w-16 h-16 object-contain"
+            onError={(e) => { e.target.style.display='none'; }}
+          />
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900">Quotations</h1>
+            <p className="text-gray-500 mt-1">Create and manage quotations for won bids</p>
+          </div>
         </div>
         <button
           onClick={() => { resetForm(); setShowModal(true); }}

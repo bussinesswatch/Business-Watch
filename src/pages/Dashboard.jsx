@@ -240,9 +240,16 @@ const Dashboard = () => {
   return (
     <div className="space-y-8">
       <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-          <p className="text-gray-500 mt-1">Overview of your tender and procurement activities</p>
+        <div className="flex items-center gap-4">
+          <img 
+            src="/illustrations/At%20the%20office-amico.svg" 
+            alt="Dashboard" 
+            className="w-16 h-16 object-contain"
+          />
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
+            <p className="text-gray-500 mt-1">Overview of your tender and procurement activities</p>
+          </div>
         </div>
         <button
           onClick={fetchDashboardData}

@@ -194,9 +194,16 @@ const Tenders = () => {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">Tender Management</h1>
-          <p className="text-gray-500 mt-1">Track and manage Maldives government tenders</p>
+        <div className="flex items-center gap-4">
+          <img 
+            src="/illustrations/Data%20extraction-amico.svg" 
+            alt="Tenders" 
+            className="w-16 h-16 object-contain"
+          />
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900">Tender Management</h1>
+            <p className="text-gray-500 mt-1">Track and manage Maldives government tenders</p>
+          </div>
         </div>
         {isAdmin() && (
           <button onClick={openAddModal} className="btn-primary">

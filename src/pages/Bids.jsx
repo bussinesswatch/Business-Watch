@@ -479,8 +479,7 @@ const Bids = () => {
       documents: bid.documents || [],
       notes: bid.notes || '',
       deliveryDays: bid.deliveryDays || 35,
-      quotationValidity: bid.quotationValidity || 60,
-      vendorNumber: bid.vendorNumber || '514110'
+      quotationValidity: bid.quotationValidity || 60
     });
     setShowModal(true);
   };
@@ -568,9 +567,16 @@ const Bids = () => {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">Bid Management</h1>
-          <p className="text-gray-500 mt-1">Create and manage tender bids with full details from working_file.json</p>
+        <div className="flex items-center gap-4">
+          <img 
+            src="/illustrations/Business%20Plan-amico.svg" 
+            alt="Bids" 
+            className="w-16 h-16 object-contain"
+          />
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900">Bid Management</h1>
+            <p className="text-gray-500 mt-1">Create and manage tender bids with full details from working_file.json</p>
+          </div>
         </div>
         <div className="flex gap-3">
           {/* View Mode Toggle */}
@@ -839,111 +845,87 @@ const Bids = () => {
         </div>
       ) : (
         /* TABLE VIEW */
-        <div className="card overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Tender Details</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Category</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Deadline</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Days Left</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Result</th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Bid Amount</th>
-                  <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200">
-                {filteredBids.map((bid) => {
-                  const daysRemaining = getDaysRemaining(bid.submissionDeadline);
-                  
-                  return (
-                    <tr key={bid.id} className="hover:bg-gray-50 cursor-pointer" onClick={() => handleEdit(bid)}>
-                      <td className="px-6 py-4">
-                        <div>
-                          <p className="font-medium text-gray-900 line-clamp-2">{bid.title || 'Untitled'}</p>
-                          <p className="text-sm text-gray-500">{bid.authority || 'Unknown Authority'}</p>
-                          {bid.gazetteId && (
-                            <p className="text-xs text-gray-400">Gazette: {bid.gazetteId}</p>
-                          )}
-                        </div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <span className="px-2 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-800">
-                          {bid.category || 'Uncategorized'}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 text-sm text-gray-600">
-                        {bid.submissionDeadline ? (
-                          <div>
-                            <div className="flex items-center gap-1">
-                              <Calendar className="w-4 h-4" />
-                              {bid.submissionDeadline}
-                            </div>
-                            {bid.submissionTime && (
-                              <p className="text-xs text-gray-500 ml-5">{bid.submissionTime}</p>
-                            )}
-                          </div>
-                        ) : 'N/A'}
-                      </td>
-                      <td className="px-6 py-4">
-                        <span className={`px-2 py-1 text-xs font-medium rounded-full ${getUrgencyColor(daysRemaining)}`}>
-                          {getUrgencyLabel(daysRemaining)}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4">
-                        <span className={`px-2 py-1 text-xs font-medium rounded-full ${getStatusColor(bid.status)}`}>
-                          {bid.status}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4">
-                        <select
-                          value={bid.result}
-                          onChange={(e) => {
-                            e.stopPropagation();
-                            updateDoc(doc(db, 'bids', bid.id), { result: e.target.value });
-                            fetchData();
-                          }}
-                          className={`text-xs font-medium rounded-full px-2 py-1 border-0 cursor-pointer ${getResultColor(bid.result)}`}
+        <div className="card overflow-x-auto">
+          <table className="w-full min-w-[800px]">
+            <thead className="bg-gray-50">
+              <tr>
+                <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Tender</th>
+                <th className="px-2 py-2 text-left text-xs font-medium text-gray-500 uppercase hidden sm:table-cell">Cat</th>
+                <th className="px-2 py-2 text-left text-xs font-medium text-gray-500 uppercase hidden md:table-cell">Deadline</th>
+                <th className="px-2 py-2 text-left text-xs font-medium text-gray-500 uppercase">Days</th>
+                <th className="px-2 py-2 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                <th className="px-2 py-2 text-left text-xs font-medium text-gray-500 uppercase hidden sm:table-cell">Result</th>
+                <th className="px-2 py-2 text-right text-xs font-medium text-gray-500 uppercase">Amount</th>
+                <th className="px-2 py-2 text-center text-xs font-medium text-gray-500 uppercase">Act</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-200">
+              {filteredBids.map((bid) => {
+                const daysRemaining = getDaysRemaining(bid.submissionDeadline);
+                
+                return (
+                  <tr key={bid.id} className="hover:bg-gray-50 cursor-pointer text-sm" onClick={() => handleEdit(bid)}>
+                    <td className="px-3 py-2">
+                      <div>
+                        <p className="font-medium text-gray-900 line-clamp-1">{bid.title || 'Untitled'}</p>
+                        <p className="text-xs text-gray-500">{bid.authority || 'Unknown'}</p>
+                      </div>
+                    </td>
+                    <td className="px-2 py-2 hidden sm:table-cell">
+                      <span className="px-2 py-0.5 text-xs rounded-full bg-blue-100 text-blue-800">
+                        {bid.category || '-'}
+                      </span>
+                    </td>
+                    <td className="px-2 py-2 text-xs text-gray-600 hidden md:table-cell">
+                      {bid.submissionDeadline || 'N/A'}
+                    </td>
+                    <td className="px-2 py-2">
+                      <span className={`px-2 py-0.5 text-xs rounded-full ${getUrgencyColor(daysRemaining)}`}>
+                        {daysRemaining !== null ? daysRemaining : '-'}
+                      </span>
+                    </td>
+                    <td className="px-2 py-2">
+                      <span className={`px-2 py-0.5 text-xs rounded-full ${getStatusColor(bid.status)}`}>
+                        {bid.status}
+                      </span>
+                    </td>
+                    <td className="px-2 py-2 hidden sm:table-cell">
+                      <select
+                        value={bid.result}
+                        onChange={(e) => {
+                          e.stopPropagation();
+                          updateDoc(doc(db, 'bids', bid.id), { result: e.target.value });
+                          fetchData();
+                        }}
+                        className={`text-xs rounded-full px-2 py-0.5 border-0 cursor-pointer ${getResultColor(bid.result)}`}
+                      >
+                        {results.map(r => <option key={r} value={r}>{r}</option>)}
+                      </select>
+                    </td>
+                    <td className="px-2 py-2 text-right font-medium text-xs">
+                      {bid.bidAmount ? `${(bid.bidAmount/1000).toFixed(0)}k` : '-'}
+                    </td>
+                    <td className="px-2 py-2">
+                      <div className="flex justify-center gap-1">
+                        <button 
+                          onClick={(e) => { e.stopPropagation(); handleEdit(bid); }}
+                          className="p-1 text-gray-400 hover:text-blue-600"
                         >
-                          {results.map(r => <option key={r} value={r}>{r}</option>)}
-                        </select>
-                      </td>
-                      <td className="px-6 py-4 text-right font-medium">
-                        {bid.bidAmount ? `MVR ${bid.bidAmount.toLocaleString()}` : '-'}
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="flex justify-center gap-2">
-                          <button 
-                            onClick={(e) => { e.stopPropagation(); setViewingBid(bid); }}
-                            className="p-1 text-gray-400 hover:text-blue-600"
-                            title="View"
-                          >
-                            <Eye className="w-4 h-4" />
-                          </button>
-                          <button 
-                            onClick={(e) => { e.stopPropagation(); handleEdit(bid); }}
-                            className="p-1 text-gray-400 hover:text-blue-600"
-                            title="Edit"
-                          >
-                            <Edit2 className="w-4 h-4" />
-                          </button>
-                          <button 
-                            onClick={(e) => { e.stopPropagation(); handleDelete(bid.id); }}
-                            className="p-1 text-gray-400 hover:text-red-600"
-                            title="Delete"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
+                          <Edit2 className="w-4 h-4" />
+                        </button>
+                        <button 
+                          onClick={(e) => { e.stopPropagation(); handleDelete(bid.id); }}
+                          className="p-1 text-gray-400 hover:text-red-600"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
         </div>
       )}
 
