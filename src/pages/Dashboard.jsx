@@ -10,7 +10,10 @@ import {
   RefreshCw,
   ShoppingCart,
   Package,
-  Calendar
+  Calendar,
+  TrendingUp,
+  TrendingDown,
+  Wallet
 } from 'lucide-react';
 import { 
   BarChart, 
@@ -247,9 +250,10 @@ const Dashboard = () => {
   const statCards = [
     { title: 'Active Tenders', value: stats.activeTenders, icon: FileText, color: 'blue' },
     { title: 'Won Tenders', value: stats.wonTenders, icon: Trophy, color: 'green' },
-    { title: 'Purchase Orders', value: stats.poCount || 0, icon: ShoppingCart, color: 'purple' },
-    { title: 'PO Value', value: `MVR ${(stats.totalPOValue || 0).toLocaleString()}`, icon: DollarSign, color: 'teal' },
-    { title: 'In Transit', value: stats.poInTransit || 0, icon: Truck, color: 'orange' }
+    { title: 'Total Bid Value', value: `MVR ${(stats.totalBidValue || 0).toLocaleString()}`, icon: DollarSign, color: 'purple' },
+    { title: 'Total Revenue', value: `MVR ${(stats.totalRevenue || 0).toLocaleString()}`, icon: TrendingUp, color: 'green' },
+    { title: 'Total Cost', value: `MVR ${(stats.totalExpenses || 0).toLocaleString()}`, icon: TrendingDown, color: 'red' },
+    { title: 'Net Profit', value: `MVR ${(stats.netProfit || 0).toLocaleString()}`, icon: Wallet, color: 'teal' }
   ];
 
   const getActivityIcon = (type) => {
