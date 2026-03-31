@@ -2,6 +2,43 @@
 
 All notable changes to the Business Watch project.
 
+## [1.2.0] - 2026-03-31
+
+### ✨ Added
+
+#### Core Features
+- **useData Hook**: New centralized data hook providing bids and tenders data across all pages
+- **Auto Email Alerts**: Automatic email notifications for new tenders, deadline alerts, and bid openings
+- **Subscriber Management**: Email subscription system with preference controls
+- **GitHub Actions Cron Jobs**: Automated deadline checks and gazette scraping via GitHub Actions
+- **Vercel Deployment**: Automated deployment pipeline via GitHub Actions
+
+#### Tech Stack
+- **Node.js Version**: Updated to Node.js 22 in GitHub Actions workflow
+
+### 🔧 Changed
+
+#### Data Architecture
+- **Data Architecture**: Removed Hisaabu.json dependencies; all finance data now derived from bids
+- **Mobile Responsiveness**: Removed sticky headers on all pages for better mobile UX
+- **Finance Page**: Now uses useData hook instead of local accounting data
+- **Cost Calculator**: Updated to use useData hook for item data
+
+### 🐛 Fixed
+
+#### Deployment Issues
+- **Vercel Deployment**: Fixed deployment failure by hardcoding org/project IDs and removing Vercel cron jobs
+- **JSON Parsing Errors**: Removed invalid Hisaabu_clean.json file causing build errors
+- **Import Errors**: Fixed missing useData hook imports across pages
+- **Mobile Overflow**: Fixed sticky header overflow issues on mobile devices
+
+### 📦 Removed
+
+#### Unused Files
+- **Hisaabu Data Files**: Deleted Hisaabu.json and all related references
+- **Vercel Cron Jobs**: Moved cron jobs to GitHub Actions (Hobby plan limitation)
+- **Sticky Headers**: Removed sticky positioning from Bids page headers
+
 ## [1.1.0] - 2026-03-30
 
 ### ✨ Added

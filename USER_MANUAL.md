@@ -6,9 +6,11 @@
 2. [Dashboard](#dashboard)
 3. [Tenders](#tenders)
 4. [Bids](#bids)
-5. [Procurement](#procurement)
-6. [Reports](#reports)
-7. [Administration](#administration)
+5. [Email Notifications](#email-notifications)
+6. [Procurement](#procurement)
+7. [Reports](#reports)
+8. [Administration](#administration)
+9. [Mobile Usage](#mobile-usage)
 
 ---
 

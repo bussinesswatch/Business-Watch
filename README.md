@@ -56,49 +56,6 @@ A full-stack web application for managing Maldives government tenders, bids, pro
 - Firebase account (free tier)
 - Git
 
-## Quick Start
-
-```bash
-# Install dependencies
-npm install
-
-# Start development server
-npm run dev
-```
-
-App will be at http://localhost:5173
-
-## Gazette Tender Data
-
-### Current Dataset (43 Tenders)
-
-**Urgent - Closing Today (March 30, 2026):**
-| ID | Tender | Deadline | Time |
-|---|---|---|---|
-| TND-2026-001 | IUM - 44 Monitors + 1 Laptop | March 30 | 14:00 |
-| TND-2026-002 | IUM - 40 Laptops | March 30 | 14:00 |
-| TND-2026-003 | IUM - 48 Computer Systems | March 30 | 14:00 |
-
-**Categories:**
-- IT Equipment: 17 tenders
-- Medical Equipment: 3 tenders
-- Office Supplies: 2 tenders
-- Construction: 3 tenders (including 58MW Power Plant)
-- And 12 more categories
-
-**Top Authorities:**
-- Islamic University of Maldives: 4 tenders
-- Elections Commission: 3 tenders
-- Male City Council: 2 tenders
-- Ministry of Health: 2 tenders
-
-### Upload Tender Data to Firebase
-
-```bash
-# Upload all 43 tenders to Firestore
-npm run upload-tenders
-```
-
 ## Setup Instructions
 
 ### 1. Clone or Create Project
