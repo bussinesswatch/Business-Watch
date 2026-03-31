@@ -336,14 +336,24 @@ const PurchaseOrderPrint = ({ purchaseOrder, onClose }) => {
               </div>
             </div>
 
-            {/* Signature with E-signature */}
-            <div className="flex justify-end mt-12">
+            {/* Stamp and Signature - Side by Side to save space */}
+            <div className="flex justify-between items-end">
+              {/* Company Stamp */}
+              <div className="flex-1 flex justify-center">
+                <img 
+                  src="/Company Stamp.jpeg" 
+                  alt="Company Stamp" 
+                  className="w-24 h-24 object-contain opacity-80"
+                />
+              </div>
+
+              {/* Signature with E-signature */}
               <div className="text-center">
-                <div className="w-48 mb-2">
+                <div className="w-56 mb-2">
                   <img 
                     src={signatories[selectedSignatory].signature} 
                     alt="E-signature" 
-                    className="w-full h-16 object-contain"
+                    className="w-full h-24 object-contain"
                   />
                 </div>
                 <p className="font-semibold text-sm">{signatories[selectedSignatory].name}</p>

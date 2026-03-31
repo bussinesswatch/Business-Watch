@@ -111,19 +111,21 @@ async function scrapeProperly(url) {
     dhivehiDates.sort();
     
     // For this tender:
-    // - submission_deadline = latest date (March 31) - same as pre-bid meeting
-    // - bid_opening_date = latest date (March 31) - same day
-    // - clarification_deadline = middle date (March 30)
-    // - pre_bid_meeting = latest date (March 31)
+    // - bid_opening_date = March 8 (earliest date)
+    // - clarification_deadline = March 30
+    // - submission_deadline = March 31 (same as pre-bid meeting)
+    // - pre_bid_meeting = March 31 (latest date)
     
     if (dhivehiDates.length >= 1) {
-      // Use the last/latest date for submission and bid opening
+      // Earliest date is bid opening (March 8)
+      bidOpeningDate = dhivehiDates[0];
+      
+      // Latest date is submission and pre-bid meeting (March 31)
       const lastDate = dhivehiDates[dhivehiDates.length - 1];
       submissionDeadline = lastDate;
-      bidOpeningDate = lastDate;
       preBidMeeting = lastDate;
       
-      // Second to last for clarification
+      // Second to last is clarification (March 30)
       if (dhivehiDates.length >= 2) {
         clarificationDeadline = dhivehiDates[dhivehiDates.length - 2];
       } else {

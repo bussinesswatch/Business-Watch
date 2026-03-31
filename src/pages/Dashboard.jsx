@@ -202,15 +202,15 @@ const Dashboard = () => {
       setRecentActivity(activity);
 
       // Calculate expiring bids (next 5-6 days)
-      const today = new Date();
+      const todayDate = new Date();
       const sixDaysFromNow = new Date();
-      sixDaysFromNow.setDate(today.getDate() + 6);
+      sixDaysFromNow.setDate(todayDate.getDate() + 6);
 
       // Expiring submission deadlines
       const expiringSub = bids.filter(bid => {
         if (!bid.submissionDeadline || bid.status === 'Submitted') return false;
         const deadline = new Date(bid.submissionDeadline);
-        return deadline >= today && deadline <= sixDaysFromNow;
+        return deadline >= todayDate && deadline <= sixDaysFromNow;
       }).sort((a, b) => new Date(a.submissionDeadline) - new Date(b.submissionDeadline));
       setExpiringSubmissions(expiringSub);
 
@@ -218,7 +218,7 @@ const Dashboard = () => {
       const expiringReg = bids.filter(bid => {
         if (!bid.registrationDeadline || bid.status === 'Registered') return false;
         const deadline = new Date(bid.registrationDeadline);
-        return deadline >= today && deadline <= sixDaysFromNow;
+        return deadline >= todayDate && deadline <= sixDaysFromNow;
       }).sort((a, b) => new Date(a.registrationDeadline) - new Date(b.registrationDeadline));
       setExpiringRegistrations(expiringReg);
 

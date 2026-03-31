@@ -111,30 +111,23 @@ const BidQuotation = ({ bid, onClose }) => {
 
       pages.push(
         <div key={`page-${idx}`} className="quotation-page mb-8 bg-white p-8 print:p-6">
-          {/* Header with Company Stamp */}
+          {/* Header */}
           <div className="flex justify-between items-start border-b-2 border-gray-800 pb-4 mb-6">
-            <div className="flex items-start gap-4">
-              <img 
-                src="/Company Stamp.jpeg" 
-                alt="Company Stamp" 
-                className="w-24 h-24 object-contain"
-              />
-              <div>
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="text-2xl font-bold text-gray-900">Business Watch</span>
-                  <span className="text-sm text-gray-600">Private Limited</span>
-                </div>
-                <div className="text-xs text-gray-600 space-y-0.5">
-                  <p>Reg No: C0006/2025</p>
-                  <p>TIN: 1169863/GST/T/501</p>
-                  <p>Address: Gulfamge, Lh.Hinnavaru</p>
-                  <p className="flex items-center gap-1">
-                    <Phone className="w-3 h-3" /> (960) 7786629, (960) 9829050
-                  </p>
-                  <p className="flex items-center gap-1">
-                    <Mail className="w-3 h-3" /> businesswatchmv@gmail.com
-                  </p>
-                </div>
+            <div>
+              <div className="flex items-center gap-2 mb-1">
+                <span className="text-2xl font-bold text-gray-900">Business Watch</span>
+                <span className="text-sm text-gray-600">Private Limited</span>
+              </div>
+              <div className="text-xs text-gray-600 space-y-0.5">
+                <p>Reg No: C0006/2025</p>
+                <p>TIN: 1169863/GST/T/501</p>
+                <p>Address: Gulfamge, Lh.Hinnavaru</p>
+                <p className="flex items-center gap-1">
+                  <Phone className="w-3 h-3" /> (960) 7786629, (960) 9829050
+                </p>
+                <p className="flex items-center gap-1">
+                  <Mail className="w-3 h-3" /> businesswatchmv@gmail.com
+                </p>
               </div>
             </div>
             <div className="text-right">
@@ -178,40 +171,26 @@ const BidQuotation = ({ bid, onClose }) => {
           </div>
 
           {/* Items Table */}
-          <table className="w-full border-collapse border border-gray-800 mb-6 text-sm">
+          <table className="w-full border-collapse border border-gray-800 mb-4 text-sm">
             <thead>
               <tr className="bg-gray-100">
-                <th className="border border-gray-800 px-2 py-2 w-12">#</th>
-                <th className="border border-gray-800 px-2 py-2">Item</th>
-                <th className="border border-gray-800 px-2 py-2 w-16">Qty</th>
-                <th className="border border-gray-800 px-2 py-2 w-24">Rate</th>
-                <th className="border border-gray-800 px-2 py-2 w-28">Amount</th>
+                <th className="border border-gray-800 px-2 py-1 w-12">#</th>
+                <th className="border border-gray-800 px-2 py-1">Item</th>
+                <th className="border border-gray-800 px-2 py-1 w-16">Qty</th>
+                <th className="border border-gray-800 px-2 py-1 w-24">Rate</th>
+                <th className="border border-gray-800 px-2 py-1 w-28">Amount</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td className="border border-gray-800 px-2 py-3 text-center">1</td>
-                <td className="border border-gray-800 px-2 py-3">
-                  <div className="font-medium">{item.name || `ITEM-${idx + 1}`}</div>
-                  {item.specification && (
-                    <div className="text-xs text-gray-600 mt-1">{item.specification}</div>
-                  )}
-                  <div className="text-xs text-gray-500 mt-1">as per the requirements of tender document</div>
+                <td className="border border-gray-800 px-2 py-1 text-center text-xs">1</td>
+                <td className="border border-gray-800 px-2 py-1 text-xs">
+                  <div className="font-medium text-xs">{item.name || `ITEM-${idx + 1}`}</div>
                 </td>
-                <td className="border border-gray-800 px-2 py-3 text-center">{qty}</td>
-                <td className="border border-gray-800 px-2 py-3 text-right">{bidPrice.toFixed(2)}</td>
-                <td className="border border-gray-800 px-2 py-3 text-right">{itemTotal.toLocaleString()}.00</td>
+                <td className="border border-gray-800 px-2 py-1 text-center text-xs">{qty}</td>
+                <td className="border border-gray-800 px-2 py-1 text-right text-xs">{bidPrice.toFixed(2)}</td>
+                <td className="border border-gray-800 px-2 py-1 text-right text-xs">{itemTotal.toLocaleString()}.00</td>
               </tr>
-              {/* Empty rows for spacing */}
-              {[...Array(8)].map((_, i) => (
-                <tr key={`empty-${idx}-${i}`}>
-                  <td className="border border-gray-800 px-2 py-2">&nbsp;</td>
-                  <td className="border border-gray-800 px-2 py-2"></td>
-                  <td className="border border-gray-800 px-2 py-2"></td>
-                  <td className="border border-gray-800 px-2 py-2"></td>
-                  <td className="border border-gray-800 px-2 py-2"></td>
-                </tr>
-              ))}
             </tbody>
             <tfoot>
               <tr>
@@ -234,20 +213,30 @@ const BidQuotation = ({ bid, onClose }) => {
           </table>
 
           {/* Footer */}
-          <div className="text-xs text-gray-700 space-y-1 mb-8">
-            <p>All rates and amounts are in MVR..</p>
+          <div className="text-xs text-gray-700 space-y-0.5 mb-4">
+            <p>All rates and amounts are in MVR.</p>
             <p>Delivery period: {bid?.deliveryDays || 35} Days</p>
             <p>Quotation / bid Validity: {bid?.quotationValidity || 60} days from bid opening.</p>
           </div>
 
-          {/* Signature with E-signature */}
-          <div className="flex justify-end mt-12">
+          {/* Stamp and Signature - Side by Side to save space */}
+          <div className="flex justify-between items-end">
+            {/* Company Stamp */}
+            <div className="flex-1 flex justify-center">
+              <img 
+                src="/Company Stamp.jpeg" 
+                alt="Company Stamp" 
+                className="w-24 h-24 object-contain opacity-80"
+              />
+            </div>
+
+            {/* Signature with E-signature */}
             <div className="text-center">
-              <div className="w-48 mb-2">
+              <div className="w-56 mb-2">
                 <img 
                   src={signatories[selectedSignatory].signature} 
                   alt="E-signature" 
-                  className="w-full h-16 object-contain"
+                  className="w-full h-24 object-contain"
                 />
               </div>
               <p className="font-semibold text-sm">{signatories[selectedSignatory].name}</p>
@@ -268,31 +257,24 @@ const BidQuotation = ({ bid, onClose }) => {
   // Render all items in one quotation
   const renderAllItems = () => {
     return (
-      <div className="quotation-page bg-white p-8 print:p-6">
-        {/* Header with Company Stamp */}
-        <div className="flex justify-between items-start border-b-2 border-gray-800 pb-4 mb-6">
-          <div className="flex items-start gap-4">
-            <img 
-              src="/Company Stamp.jpeg" 
-              alt="Company Stamp" 
-              className="w-24 h-24 object-contain"
-            />
-            <div>
-              <div className="flex items-center gap-2 mb-1">
-                <span className="text-2xl font-bold text-gray-900">Business Watch</span>
-                <span className="text-sm text-gray-600">Private Limited</span>
-              </div>
-              <div className="text-xs text-gray-600 space-y-0.5">
-                <p>Reg No: C0006/2025</p>
-                <p>TIN: 1169863/GST/T/501</p>
-                <p>Address: Gulfamge, Lh.Hinnavaru</p>
-                <p className="flex items-center gap-1">
-                  <Phone className="w-3 h-3" /> (960) 7786629, (960) 9829050
-                </p>
-                <p className="flex items-center gap-1">
-                  <Mail className="w-3 h-3" /> businesswatchmv@gmail.com
-                </p>
-              </div>
+      <div className="quotation-page bg-white p-4 print:p-2">
+        {/* Header */}
+        <div className="flex justify-between items-start border-b-2 border-gray-800 pb-2 mb-3">
+          <div>
+            <div className="flex items-center gap-2 mb-1">
+              <span className="text-2xl font-bold text-gray-900">Business Watch</span>
+              <span className="text-sm text-gray-600">Private Limited</span>
+            </div>
+            <div className="text-xs text-gray-600 space-y-0.5">
+              <p>Reg No: C0006/2025</p>
+              <p>TIN: 1169863/GST/T/501</p>
+              <p>Address: Gulfamge, Lh.Hinnavaru</p>
+              <p className="flex items-center gap-1">
+                <Phone className="w-3 h-3" /> (960) 7786629, (960) 9829050
+              </p>
+              <p className="flex items-center gap-1">
+                <Mail className="w-3 h-3" /> businesswatchmv@gmail.com
+              </p>
             </div>
           </div>
           <div className="text-right">
@@ -306,7 +288,7 @@ const BidQuotation = ({ bid, onClose }) => {
         </div>
 
         {/* Quotation Details */}
-        <div className="grid grid-cols-2 gap-4 mb-6 text-sm">
+        <div className="grid grid-cols-2 gap-4 mb-3 text-sm">
           <div>
             <p className="flex items-center gap-2">
               <span className="font-semibold">Quotation No.:</span> 
@@ -335,14 +317,14 @@ const BidQuotation = ({ bid, onClose }) => {
         </div>
 
         {/* Items Table */}
-        <table className="w-full border-collapse border border-gray-800 mb-6 text-sm">
+        <table className="w-full border-collapse border border-gray-800 mb-2 text-xs">
           <thead>
             <tr className="bg-gray-100">
-              <th className="border border-gray-800 px-2 py-2 w-12">#</th>
-              <th className="border border-gray-800 px-2 py-2">Item</th>
-              <th className="border border-gray-800 px-2 py-2 w-16">Qty</th>
-              <th className="border border-gray-800 px-2 py-2 w-24">Rate</th>
-              <th className="border border-gray-800 px-2 py-2 w-28">Amount</th>
+              <th className="border border-gray-800 px-1 py-1 w-10">#</th>
+              <th className="border border-gray-800 px-1 py-1">Item</th>
+              <th className="border border-gray-800 px-1 py-1 w-14">Qty</th>
+              <th className="border border-gray-800 px-1 py-1 w-20">Rate</th>
+              <th className="border border-gray-800 px-1 py-1 w-24">Amount</th>
             </tr>
           </thead>
           <tbody>
@@ -353,78 +335,64 @@ const BidQuotation = ({ bid, onClose }) => {
 
               return (
                 <tr key={item.id}>
-                  <td className="border border-gray-800 px-2 py-3 text-center">{index + 1}</td>
-                  <td className="border border-gray-800 px-2 py-3">
-                    <div className="font-medium">{item.name || 'ITEM-' + (index + 1)}</div>
-                    {item.specification && (
-                      <div className="text-xs text-gray-600 mt-1">{item.specification}</div>
-                    )}
-                    <div className="text-xs text-gray-500 mt-1">as per the requirements of tender document</div>
+                  <td className="border border-gray-800 px-1 py-0.5 text-center text-xs">{index + 1}</td>
+                  <td className="border border-gray-800 px-1 py-0.5 text-xs">
+                    <div className="font-medium text-xs">{item.name || 'ITEM-' + (index + 1)}</div>
                   </td>
-                  <td className="border border-gray-800 px-2 py-3 text-center">{qty}</td>
-                  <td className="border border-gray-800 px-2 py-3 text-right">{bidPrice.toFixed(2)}</td>
-                  <td className="border border-gray-800 px-2 py-3 text-right">{itemTotal.toLocaleString()}.00</td>
+                  <td className="border border-gray-800 px-1 py-0.5 text-center text-xs">{qty}</td>
+                  <td className="border border-gray-800 px-1 py-0.5 text-right text-xs">{bidPrice.toFixed(2)}</td>
+                  <td className="border border-gray-800 px-1 py-0.5 text-right text-xs">{itemTotal.toLocaleString()}.00</td>
                 </tr>
               );
             })}
-            {/* Add empty rows if less than 5 items for spacing */}
-            {items.length < 5 && [...Array(5 - items.length)].map((_, i) => (
-              <tr key={`empty-${i}`}>
-                <td className="border border-gray-800 px-2 py-3">&nbsp;</td>
-                <td className="border border-gray-800 px-2 py-3"></td>
-                <td className="border border-gray-800 px-2 py-3"></td>
-                <td className="border border-gray-800 px-2 py-3"></td>
-                <td className="border border-gray-800 px-2 py-3"></td>
-              </tr>
-            ))}
           </tbody>
           <tfoot>
             <tr>
-              <td colSpan="4" className="border border-gray-800 px-2 py-2 text-right font-semibold">Sub total</td>
-              <td className="border border-gray-800 px-2 py-2 text-right">{subTotal.toLocaleString()}.00</td>
+              <td colSpan="4" className="border border-gray-800 px-1 py-1 text-right font-semibold text-xs">Sub total</td>
+              <td className="border border-gray-800 px-1 py-1 text-right text-xs">{subTotal.toLocaleString()}.00</td>
             </tr>
             {showTax && (
               <tr>
-                <td colSpan="4" className="border border-gray-800 px-2 py-2 text-right font-semibold">GST {gstRate}%</td>
-                <td className="border border-gray-800 px-2 py-2 text-right">{taxAmount.toLocaleString()}.00</td>
+                <td colSpan="4" className="border border-gray-800 px-1 py-1 text-right font-semibold text-xs">GST {gstRate}%</td>
+                <td className="border border-gray-800 px-1 py-1 text-right text-xs">{taxAmount.toLocaleString()}.00</td>
               </tr>
             )}
             <tr>
-              <td colSpan="4" className="border border-gray-800 px-2 py-2 text-left">
+              <td colSpan="4" className="border border-gray-800 px-1 py-1 text-left text-xs">
                 <span className="font-semibold">Total:</span> {numberToWords(total)}
               </td>
-              <td className="border border-gray-800 px-2 py-2 text-right font-bold">{total.toLocaleString()}.00</td>
+              <td className="border border-gray-800 px-1 py-1 text-right font-bold text-xs">{total.toLocaleString()}.00</td>
             </tr>
           </tfoot>
         </table>
 
         {/* Footer */}
-        <div className="text-xs text-gray-700 space-y-1 mb-8">
-          <p>All rates and amounts are in MVR..</p>
-          <p>Delivery period: {bid?.deliveryDays || 35} Days</p>
-          <p>Quotation / bid Validity: {bid?.quotationValidity || 60} days from bid opening.</p>
-          <div className="mt-4 pt-4 border-t border-gray-300">
-            <p className="font-semibold">Bank Account Information:</p>
-            <p>Bank: MIB (Maldives Islamic Bank)</p>
-            <p>Account Name: Business Watch Pvt Ltd</p>
-            <p>MVR Account: 90101480036671000</p>
-            <p>USD Account: 90101480036672000</p>
-          </div>
+        <div className="text-xs text-gray-700 mb-2">
+          <p>All rates in MVR. Delivery: {bid?.deliveryDays || 35} Days. Validity: {bid?.quotationValidity || 60} days.</p>
         </div>
 
-        {/* Signature with E-signature */}
-        <div className="flex justify-end mt-12">
+        {/* Stamp and Signature - Side by Side */}
+        <div className="flex justify-between items-end mt-2">
+          {/* Company Stamp */}
+          <div className="flex-1 flex justify-center">
+            <img 
+              src="/Company Stamp.jpeg" 
+              alt="Company Stamp" 
+              className="w-20 h-20 object-contain opacity-80"
+            />
+          </div>
+
+          {/* Signature with E-signature */}
           <div className="text-center">
-            <div className="w-48 mb-2">
+            <div className="w-48 mb-1">
               <img 
                 src={signatories[selectedSignatory].signature} 
                 alt="E-signature" 
-                className="w-full h-16 object-contain"
+                className="w-full h-20 object-contain"
               />
             </div>
-            <p className="font-semibold text-sm">{signatories[selectedSignatory].name}</p>
+            <p className="font-semibold text-xs">{signatories[selectedSignatory].name}</p>
             <p className="text-xs text-gray-600">{signatories[selectedSignatory].position}</p>
-            <p className="text-xs text-gray-500">Business Watch Pvt Ltd, Gulfamge, Lh.Hinnavaru</p>
           </div>
         </div>
       </div>
@@ -523,7 +491,7 @@ const BidQuotation = ({ bid, onClose }) => {
             @media print {
               @page {
                 size: A4;
-                margin: 15mm;
+                margin: 10mm;
               }
               body {
                 -webkit-print-color-adjust: exact;
@@ -532,7 +500,8 @@ const BidQuotation = ({ bid, onClose }) => {
               }
               .quotation-page {
                 page-break-after: always;
-                min-height: 100vh;
+                min-height: 0 !important;
+                height: auto !important;
                 background: white !important;
                 box-shadow: none !important;
                 margin: 0 !important;
@@ -541,31 +510,21 @@ const BidQuotation = ({ bid, onClose }) => {
               .quotation-page:last-child {
                 page-break-after: avoid;
               }
-              /* Hide all controls and background in print */
               .print\\:hidden {
                 display: none !important;
               }
-              /* Hide the outer container background */
               .bg-gray-100 {
                 background: white !important;
               }
               .bg-black {
                 display: none !important;
               }
-              .bg-opacity-50 {
-                background: transparent !important;
-              }
-              /* Remove max-width constraint in print */
               .max-w-4xl {
                 max-width: none !important;
               }
-              /* Hide shadow in print */
               .shadow-lg {
                 box-shadow: none !important;
               }
-            }
-            .page-break-after {
-              page-break-after: always;
             }
           `}</style>
 

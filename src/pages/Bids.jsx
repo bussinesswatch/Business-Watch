@@ -373,6 +373,7 @@ const Bids = ({ initialFilter }) => {
       clarificationDeadline: '',
       clarificationTime: '',
       preBidMeeting: '',
+      preBidMeetingTime: '',
       
       // Contact Info
       contactEmail: '',
@@ -462,6 +463,7 @@ const Bids = ({ initialFilter }) => {
       clarificationDeadline: bid.clarificationDeadline || '',
       clarificationTime: bid.clarificationTime || '',
       preBidMeeting: bid.preBidMeeting || '',
+      preBidMeetingTime: bid.preBidMeetingTime || '',
       contactEmail: bid.contactEmail || '',
       contactPhones: bid.contactPhones || [],
       contactName: bid.contactName || '',
@@ -1452,6 +1454,15 @@ const Bids = ({ initialFilter }) => {
                       className="input"
                     />
                   </div>
+                  <div>
+                    <label className="label">Pre-Bid Meeting Time</label>
+                    <input
+                      type="time"
+                      value={formData.preBidMeetingTime}
+                      onChange={(e) => setFormData({...formData, preBidMeetingTime: e.target.value})}
+                      className="input"
+                    />
+                  </div>
                   <div className="md:col-span-2">
                     <label className="label">Bid Submission Location</label>
                     <input
@@ -1514,13 +1525,25 @@ const Bids = ({ initialFilter }) => {
                 <div className="grid grid-cols-1 gap-4">
                   <div>
                     <label className="label">Gazette URL</label>
-                    <input
-                      type="url"
-                      value={formData.gazetteUrl}
-                      onChange={(e) => setFormData({...formData, gazetteUrl: e.target.value})}
-                      className="input"
-                      placeholder="https://gazette.gov.mv/iulaan/..."
-                    />
+                    <div className="flex gap-2">
+                      <input
+                        type="url"
+                        value={formData.gazetteUrl}
+                        onChange={(e) => setFormData({...formData, gazetteUrl: e.target.value})}
+                        className="input flex-1"
+                        placeholder="https://gazette.gov.mv/iulaan/..."
+                      />
+                      {formData.gazetteUrl && (
+                        <a
+                          href={formData.gazetteUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="btn-primary flex items-center px-3 py-2"
+                        >
+                          <ExternalLink className="w-4 h-4" />
+                        </a>
+                      )}
+                    </div>
                   </div>
                   <div>
                     <label className="label">Info Sheet URL</label>
