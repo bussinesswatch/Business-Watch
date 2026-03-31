@@ -565,8 +565,8 @@ const Bids = ({ initialFilter }) => {
 
   return (
     <div className="space-y-6">
-      {/* Sticky Header Section - Only sticky on lg screens */}
-      <div className="lg:sticky lg:top-0 z-10 bg-gray-50 space-y-6 pb-4">
+      {/* Header Section - Non-sticky for better mobile experience */}
+      <div className="bg-gray-50 space-y-6 pb-4">
         {/* Header */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div className="flex items-center gap-4">
