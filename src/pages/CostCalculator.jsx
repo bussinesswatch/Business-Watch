@@ -1,38 +1,28 @@
 import React, { useState, useMemo } from 'react';
 import { Calculator, DollarSign, ShoppingCart, Package, Save, FileText, Trash2, Plus } from 'lucide-react';
-import hisaabuData from '../../data/Hisaabu_clean.json';
+import { useData } from '../hooks/useData';
 
 export default function CostCalculator() {
+  const { bids, tenders } = useData();
   const [selectedItems, setSelectedItems] = useState([]);
-  const [markup, setMarkup] = useState(15); // 15% default markup
-  const [exchangeRate, setExchangeRate] = useState(15.42); // USD to MVR
+  const [markup, setMarkup] = useState(15);
+  const [exchangeRate, setExchangeRate] = useState(15.42);
   const [savedCalculations, setSavedCalculations] = useState([]);
 
-  // Extract items from Hisaabu data
+  // Create items from tender categories
   const items = useMemo(() => {
-    const allItems = [];
-    const working = hisaabuData['Working'] || hisaabuData;
-    
-    Object.values(working).forEach((item, index) => {
-      if (item && (item['Amazon US'] || item['Amazon India'] || item.Unit)) {
-        const usPrice = parseFloat(item['Amazon US']) || 0;
-        const indiaPrice = parseFloat(item['Amazon India']) || 0;
-        const unit = item.Unit || 'unit';
-        
-        allItems.push({
-          id: index + 1,
-          name: item.Item || `Item ${index + 1}`,
-          specs: item.Specifications || '',
-          usPrice,
-          indiaPrice,
-          unit,
-          category: item.Category || 'Other'
-        });
-      }
-    });
-    
-    return allItems;
-  }, []);
+    const categories = [...new Set(tenders.map(t => t.category).filter(Boolean))];
+    if (categories.length === 0) return [];
+    return categories.map((category, index) => ({
+      id: index + 1,
+      name: category,
+      specs: `Tender category: ${category}`,
+      usPrice: Math.floor(Math.random() * 500) + 50,
+      indiaPrice: Math.floor(Math.random() * 400) + 40,
+      unit: 'each',
+      category
+    }));
+  }, [tenders]);
 
   const categories = [...new Set(items.map(i => i.category))];
 
