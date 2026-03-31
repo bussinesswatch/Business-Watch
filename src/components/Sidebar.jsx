@@ -29,7 +29,8 @@ import {
   Target,
   Bell,
   History,
-  Search
+  Search,
+  MessageCircle
 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useState, useEffect } from 'react';
@@ -98,6 +99,7 @@ const Sidebar = () => {
     { path: '/risk-assessment', icon: AlertTriangle, label: 'Risk Assessment' },
     { path: '/kpi', icon: Target, label: 'KPI Dashboard' },
     { path: '/notifications', icon: Bell, label: 'Notifications' },
+    { path: '/chat', icon: MessageCircle, label: 'Team Chat' },
     { path: '/search', icon: Search, label: 'Advanced Search' },
   ];
 

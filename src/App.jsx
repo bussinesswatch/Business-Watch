@@ -34,6 +34,7 @@ import KPIDashboard from './pages/KPIDashboard';
 import NotificationCenter from './pages/NotificationCenter';
 import AuditLog from './pages/AuditLog';
 import AdvancedSearch from './pages/AdvancedSearch';
+import Chat from './pages/Chat';
 
 import { useAuth } from './contexts/AuthContext';
 
@@ -298,6 +299,14 @@ function App() {
         <ProtectedRoute>
           <Layout>
             <NotificationCenter />
+          </Layout>
+        </ProtectedRoute>
+      } />
+
+      <Route path="/chat" element={
+        <ProtectedRoute>
+          <Layout>
+            <Chat />
           </Layout>
         </ProtectedRoute>
       } />
