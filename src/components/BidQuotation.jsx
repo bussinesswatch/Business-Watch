@@ -5,6 +5,14 @@ const BidQuotation = ({ bid, onClose }) => {
   const [printMode, setPrintMode] = useState('all'); // 'all' or 'individual'
   const [showTax, setShowTax] = useState(true);
   const [gstRate, setGstRate] = useState(8);
+  const [selectedSignatory, setSelectedSignatory] = useState(0);
+
+  // Signatory options
+  const signatories = [
+    { name: 'Aboobakuru', position: 'Managing Director' },
+    { name: 'Person 2', position: 'Finance Manager' },
+    { name: 'Person 3', position: 'Operations Manager' }
+  ];
 
   // Generate quotation number
   const generateQuotationNo = () => {
@@ -365,6 +373,13 @@ const BidQuotation = ({ bid, onClose }) => {
           <p>All rates and amounts are in MVR..</p>
           <p>Delivery period: {bid?.deliveryDays || 35} Days</p>
           <p>Quotation / bid Validity: {bid?.quotationValidity || 60} days from bid opening.</p>
+          <div className="mt-4 pt-4 border-t border-gray-300">
+            <p className="font-semibold">Bank Account Information:</p>
+            <p>Bank: MIB (Maldives Islamic Bank)</p>
+            <p>Account Name: Business Watch Pvt Ltd</p>
+            <p>MVR Account: 90101480036671000</p>
+            <p>USD Account: 90101480036672000</p>
+          </div>
         </div>
 
         {/* Signature */}
@@ -373,8 +388,8 @@ const BidQuotation = ({ bid, onClose }) => {
             <div className="border-b border-gray-400 w-48 mb-2 pb-8">
               <span className="text-xs text-gray-500">Authorized Signature</span>
             </div>
-            <p className="font-semibold text-sm">Aboobakuru</p>
-            <p className="text-xs text-gray-600">Managing Director</p>
+            <p className="font-semibold text-sm">{signatories[selectedSignatory].name}</p>
+            <p className="text-xs text-gray-600">{signatories[selectedSignatory].position}</p>
             <p className="text-xs text-gray-500">Business Watch Pvt Ltd, Gulfamge, Lh.Hinnavaru</p>
           </div>
         </div>
@@ -416,6 +431,17 @@ const BidQuotation = ({ bid, onClose }) => {
                 Individual Items
               </button>
             </div>
+
+            {/* Signatory Selector */}
+            <select
+              value={selectedSignatory}
+              onChange={(e) => setSelectedSignatory(parseInt(e.target.value))}
+              className="bg-white border border-gray-200 rounded-lg px-3 py-1.5 text-sm"
+            >
+              {signatories.map((sig, idx) => (
+                <option key={idx} value={idx}>{sig.name} - {sig.position}</option>
+              ))}
+            </select>
 
             {/* Tax Toggle */}
             <label className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-lg shadow-sm cursor-pointer">

@@ -39,8 +39,8 @@ const Bids = ({ initialFilter }) => {
   const navigate = useNavigate();
 
   const categories = ['IT', 'Medical Equipment', 'Office Supplies', 'Furniture', 'Electrical', 'Electronics', 'Safety Equipment', 'Machinery', 'Construction', 'Sports Equipment', 'Printing', 'Security/IT', 'Apparel', 'Apparel/Uniform', 'Supply', 'Awards', 'IT/Equipment', 'Construction/Furniture', 'Civil Works'];
-  const statuses = ['Draft', 'Submitted', 'Under Review', 'Accepted', 'Rejected', 'Open', 'Closed', 'Cancelled'];
-  const results = ['Pending', 'Won', 'Lost', 'Cancelled'];
+  const statuses = ['Draft', 'Submitted', 'Under Review', 'Accepted', 'Rejected', 'Open', 'Closed', 'Cancelled', 'Registered'];
+  const results = ['Pending', 'Won', 'Lost', 'Cancelled', 'Registered', 'Missed Registered'];
 
   const [formData, setFormData] = useState({
     // Tender Info
@@ -409,6 +409,11 @@ const Bids = ({ initialFilter }) => {
       deliveryDays: 35,
       quotationValidity: 60,
       vendorNumber: '514110',
+
+      // Evaluation Criteria
+      evaluationPrice: '',
+      evaluationDelivery: '',
+      evaluationExperience: '',
       
       // Documents & Notes
       documents: [],
@@ -479,7 +484,12 @@ const Bids = ({ initialFilter }) => {
       documents: bid.documents || [],
       notes: bid.notes || '',
       deliveryDays: bid.deliveryDays || 35,
-      quotationValidity: bid.quotationValidity || 60
+      quotationValidity: bid.quotationValidity || 60,
+
+      // Evaluation Criteria
+      evaluationPrice: bid.evaluationPrice || '',
+      evaluationDelivery: bid.evaluationDelivery || '',
+      evaluationExperience: bid.evaluationExperience || '',
     });
     setShowModal(true);
   };
@@ -633,7 +643,7 @@ const Bids = ({ initialFilter }) => {
       </div>
 
       {/* Stats - Compact on mobile */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2 sm:gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2 sm:gap-4">
         <div className="card bg-blue-50 border-blue-200 p-2 sm:p-4">
           <div className="flex items-center gap-2 sm:gap-3">
             <FileText className="w-5 h-5 sm:w-8 sm:h-8 text-blue-600" />
@@ -676,13 +686,24 @@ const Bids = ({ initialFilter }) => {
             </div>
           </div>
         </div>
-        <div className="card bg-purple-50 border-purple-200 p-2 sm:p-4 col-span-2 sm:col-span-1">
+        <div className="card bg-purple-50 border-purple-200 p-2 sm:p-4">
           <div className="flex items-center gap-2 sm:gap-3">
             <Clock className="w-5 h-5 sm:w-8 sm:h-8 text-purple-600" />
             <div>
               <p className="text-xs sm:text-sm text-gray-600">Pending</p>
               <p className="text-lg sm:text-2xl font-bold text-purple-700">
                 {bids.filter(b => b.result === 'Pending').length}
+              </p>
+            </div>
+          </div>
+        </div>
+        <div className="card bg-orange-50 border-orange-200 p-2 sm:p-4 col-span-2 sm:col-span-1">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <Calendar className="w-5 h-5 sm:w-8 sm:h-8 text-orange-600" />
+            <div>
+              <p className="text-xs sm:text-sm text-gray-600">Missed Reg</p>
+              <p className="text-lg sm:text-2xl font-bold text-orange-700">
+                {bids.filter(b => b.result === 'Missed Registered' || b.status === 'Missed Registered').length}
               </p>
             </div>
           </div>
@@ -778,12 +799,60 @@ const Bids = ({ initialFilter }) => {
                   {bid.gazetteId && (
                     <p className="text-xs text-gray-400 mt-1">
                       Gazette ID: {bid.gazetteId}
+                      {bid.gazetteUrl && (
+                        <a 
+                          href={bid.gazetteUrl} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          onClick={(e) => e.stopPropagation()}
+                          className="ml-2 text-blue-500 hover:text-blue-700 hover:underline inline-flex items-center gap-1"
+                        >
+                          <ExternalLink className="w-3 h-3" />
+                          View
+                        </a>
+                      )}
                     </p>
                   )}
                 </div>
 
                 {/* Deadline Info */}
                 <div className="px-5 py-4 bg-gray-50 space-y-3">
+                  {/* Registration Deadline */}
+                  {bid.registrationDeadline && (
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2 text-sm">
+                        <Calendar className="w-4 h-4 text-purple-500" />
+                        <span className="text-gray-600">Registration End:</span>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-sm font-medium text-gray-900">
+                          {bid.registrationDeadline}
+                        </p>
+                        {bid.registrationTime && (
+                          <p className="text-xs text-gray-500">{bid.registrationTime}</p>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Clarification Deadline */}
+                  {bid.clarificationDeadline && (
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2 text-sm">
+                        <Clock className="w-4 h-4 text-orange-500" />
+                        <span className="text-gray-600">Clarification:</span>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-sm font-medium text-gray-900">
+                          {bid.clarificationDeadline}
+                        </p>
+                        {bid.clarificationTime && (
+                          <p className="text-xs text-gray-500">{bid.clarificationTime}</p>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
                   {/* Submission Deadline */}
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2 text-sm">
@@ -796,22 +865,6 @@ const Bids = ({ initialFilter }) => {
                       </p>
                       {bid.submissionTime && (
                         <p className="text-xs text-gray-500">{bid.submissionTime}</p>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Bid Opening */}
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2 text-sm">
-                      <Clock className="w-4 h-4 text-green-500" />
-                      <span className="text-gray-600">Bid Opening:</span>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-sm font-medium text-gray-900">
-                        {bid.bidOpeningDate || 'N/A'}
-                      </p>
-                      {bid.bidOpeningTime && (
-                        <p className="text-xs text-gray-500">{bid.bidOpeningTime}</p>
                       )}
                     </div>
                   </div>
@@ -1115,6 +1168,22 @@ const Bids = ({ initialFilter }) => {
                   <div className="space-y-4">
                     {formData.items.map((item, index) => (
                       <div key={item.id} className="bg-white p-4 rounded-lg border border-green-200">
+                        {/* Lot Number Header */}
+                        <div className="flex items-center justify-between mb-3 pb-2 border-b border-green-100">
+                          <div className="flex items-center gap-2">
+                            <span className="bg-green-600 text-white text-xs font-bold px-2 py-1 rounded">
+                              LOT {index + 1}
+                            </span>
+                            <span className="text-xs text-gray-500">Item {index + 1} of {formData.items.length}</span>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => removeItem(item.id)}
+                            className="p-1 text-red-500 hover:bg-red-50 rounded transition-colors"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
                         <div className="grid grid-cols-1 md:grid-cols-12 gap-3">
                           {/* Item Name */}
                           <div className="md:col-span-3">
@@ -1186,17 +1255,6 @@ const Bids = ({ initialFilter }) => {
                               />
                               <span className="text-xs">Tax</span>
                             </label>
-                          </div>
-
-                          {/* Remove Button */}
-                          <div className="md:col-span-1 flex items-end justify-end pb-1">
-                            <button
-                              type="button"
-                              onClick={() => removeItem(item.id)}
-                              className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
-                            >
-                              <Trash2 className="w-4 h-4" />
-                            </button>
                           </div>
                         </div>
 
@@ -1367,12 +1425,41 @@ const Bids = ({ initialFilter }) => {
                     />
                   </div>
                   <div>
+                    <label className="label">Clarification Time</label>
+                    <input
+                      type="time"
+                      value={formData.clarificationTime}
+                      onChange={(e) => setFormData({...formData, clarificationTime: e.target.value})}
+                      className="input"
+                    />
+                  </div>
+                  <div>
+                    <label className="label">Clarification Location/Email</label>
+                    <input
+                      type="text"
+                      value={formData.clarificationLocation}
+                      onChange={(e) => setFormData({...formData, clarificationLocation: e.target.value})}
+                      className="input"
+                      placeholder="Room 101 or email@example.com"
+                    />
+                  </div>
+                  <div>
                     <label className="label">Pre-Bid Meeting</label>
                     <input
                       type="date"
                       value={formData.preBidMeeting}
                       onChange={(e) => setFormData({...formData, preBidMeeting: e.target.value})}
                       className="input"
+                    />
+                  </div>
+                  <div className="md:col-span-2">
+                    <label className="label">Bid Submission Location</label>
+                    <input
+                      type="text"
+                      value={formData.submissionLocation}
+                      onChange={(e) => setFormData({...formData, submissionLocation: e.target.value})}
+                      className="input"
+                      placeholder="e.g., 2nd Floor, Ghazee Building, Male' or https://portal.example.com"
                     />
                   </div>
                 </div>
@@ -1526,40 +1613,49 @@ const Bids = ({ initialFilter }) => {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div>
                     <label className="label">Bid Amount (MVR)</label>
-                    <input
-                      type="number"
-                      value={formData.bidAmount}
-                      onChange={(e) => {
-                        setFormData({...formData, bidAmount: e.target.value});
-                        setTimeout(calculateProfit, 0);
-                      }}
-                      onBlur={calculateProfit}
-                      className="input"
-                      placeholder="0.00"
-                    />
+                    <div className="relative">
+                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-sm">MVR</span>
+                      <input
+                        type="number"
+                        value={formData.bidAmount}
+                        onChange={(e) => {
+                          setFormData({...formData, bidAmount: e.target.value});
+                          setTimeout(calculateProfit, 0);
+                        }}
+                        onBlur={calculateProfit}
+                        className="input pl-12"
+                        placeholder="0.00"
+                      />
+                    </div>
                   </div>
                   <div>
                     <label className="label">Cost Estimate (MVR)</label>
-                    <input
-                      type="number"
-                      value={formData.costEstimate}
-                      onChange={(e) => {
-                        setFormData({...formData, costEstimate: e.target.value});
-                        setTimeout(calculateProfit, 0);
-                      }}
-                      onBlur={calculateProfit}
-                      className="input"
-                      placeholder="0.00"
-                    />
+                    <div className="relative">
+                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-sm">MVR</span>
+                      <input
+                        type="number"
+                        value={formData.costEstimate}
+                        onChange={(e) => {
+                          setFormData({...formData, costEstimate: e.target.value});
+                          setTimeout(calculateProfit, 0);
+                        }}
+                        onBlur={calculateProfit}
+                        className="input pl-12"
+                        placeholder="0.00"
+                      />
+                    </div>
                   </div>
                   <div>
                     <label className="label">Profit Margin (Auto)</label>
-                    <input
-                      type="number"
-                      value={formData.profitMargin}
-                      readOnly
-                      className="input bg-gray-100"
-                    />
+                    <div className="relative">
+                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-sm">MVR</span>
+                      <input
+                        type="number"
+                        value={formData.profitMargin}
+                        readOnly
+                        className="input pl-12 bg-gray-100"
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -1606,7 +1702,58 @@ const Bids = ({ initialFilter }) => {
                 </div>
               </div>
 
-              {/* SECTION 9: Status & Result */}
+              {/* SECTION 9: Evaluation Criteria */}
+              <div className="bg-cyan-50 p-4 rounded-lg">
+                <h3 className="text-lg font-semibold text-cyan-800 mb-4 flex items-center gap-2">
+                  <CheckCircle className="w-5 h-5" />
+                  Evaluation Criteria (Point System)
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div>
+                    <label className="label">Price (%)</label>
+                    <input
+                      type="number"
+                      value={formData.evaluationPrice || ''}
+                      onChange={(e) => setFormData({...formData, evaluationPrice: parseInt(e.target.value) || 0})}
+                      className="input"
+                      placeholder="e.g., 40"
+                      min="0"
+                      max="100"
+                    />
+                  </div>
+                  <div>
+                    <label className="label">Delivery Time (%)</label>
+                    <input
+                      type="number"
+                      value={formData.evaluationDelivery || ''}
+                      onChange={(e) => setFormData({...formData, evaluationDelivery: parseInt(e.target.value) || 0})}
+                      className="input"
+                      placeholder="e.g., 30"
+                      min="0"
+                      max="100"
+                    />
+                  </div>
+                  <div>
+                    <label className="label">Experience (%)</label>
+                    <input
+                      type="number"
+                      value={formData.evaluationExperience || ''}
+                      onChange={(e) => setFormData({...formData, evaluationExperience: parseInt(e.target.value) || 0})}
+                      className="input"
+                      placeholder="e.g., 30"
+                      min="0"
+                      max="100"
+                    />
+                  </div>
+                </div>
+                {(formData.evaluationPrice || 0) + (formData.evaluationDelivery || 0) + (formData.evaluationExperience || 0) !== 100 && (
+                  <p className="text-sm text-red-600 mt-2">
+                    Total should equal 100% (Current: {(formData.evaluationPrice || 0) + (formData.evaluationDelivery || 0) + (formData.evaluationExperience || 0)}%)
+                  </p>
+                )}
+              </div>
+
+              {/* SECTION 10: Status & Result */}
               <div className="bg-gray-50 p-4 rounded-lg">
                 <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
                   <CheckCircle className="w-5 h-5" />

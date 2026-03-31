@@ -54,6 +54,8 @@ const Dashboard = () => {
   const [tenderStatusData, setTenderStatusData] = useState([]);
   const [accounts, setAccounts] = useState([]);
   const [transactions, setTransactions] = useState([]);
+  const [expiringSubmissions, setExpiringSubmissions] = useState([]);
+  const [expiringRegistrations, setExpiringRegistrations] = useState([]);
 
   useEffect(() => {
     fetchDashboardData();
@@ -199,6 +201,27 @@ const Dashboard = () => {
 
       setRecentActivity(activity);
 
+      // Calculate expiring bids (next 5-6 days)
+      const today = new Date();
+      const sixDaysFromNow = new Date();
+      sixDaysFromNow.setDate(today.getDate() + 6);
+
+      // Expiring submission deadlines
+      const expiringSub = bids.filter(bid => {
+        if (!bid.submissionDeadline || bid.status === 'Submitted') return false;
+        const deadline = new Date(bid.submissionDeadline);
+        return deadline >= today && deadline <= sixDaysFromNow;
+      }).sort((a, b) => new Date(a.submissionDeadline) - new Date(b.submissionDeadline));
+      setExpiringSubmissions(expiringSub);
+
+      // Expiring registration deadlines
+      const expiringReg = bids.filter(bid => {
+        if (!bid.registrationDeadline || bid.status === 'Registered') return false;
+        const deadline = new Date(bid.registrationDeadline);
+        return deadline >= today && deadline <= sixDaysFromNow;
+      }).sort((a, b) => new Date(a.registrationDeadline) - new Date(b.registrationDeadline));
+      setExpiringRegistrations(expiringReg);
+
     } catch (error) {
       console.error('Error fetching dashboard data:', error);
     }
@@ -298,6 +321,73 @@ const Dashboard = () => {
               </div>
             ))}
           </div>
+        </div>
+      )}
+
+      {/* Expiring Bids Section */}
+      {(expiringSubmissions.length > 0 || expiringRegistrations.length > 0) && (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Expiring Submission Deadlines */}
+          {expiringSubmissions.length > 0 && (
+            <div className="card border-l-4 border-l-red-500">
+              <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                <Clock className="w-5 h-5 text-red-500" />
+                Submission Expiring (Next 5-6 Days)
+                <span className="ml-auto bg-red-100 text-red-700 text-xs font-bold px-2 py-1 rounded-full">
+                  {expiringSubmissions.length}
+                </span>
+              </h2>
+              <div className="space-y-3 max-h-64 overflow-y-auto">
+                {expiringSubmissions.map((bid, index) => (
+                  <div key={bid.id || index} className="p-3 bg-red-50 rounded-lg border border-red-100">
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <p className="text-sm font-medium text-gray-900 line-clamp-1">{bid.title}</p>
+                        <p className="text-xs text-gray-500">{bid.authority}</p>
+                      </div>
+                      <span className="text-xs font-bold text-red-600 bg-red-100 px-2 py-1 rounded">
+                        {Math.ceil((new Date(bid.submissionDeadline) - new Date()) / (1000 * 60 * 60 * 24))} days
+                      </span>
+                    </div>
+                    <p className="text-xs text-gray-600 mt-1">
+                      Deadline: {bid.submissionDeadline} {bid.submissionTime && `at ${bid.submissionTime}`}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Expiring Registration Deadlines */}
+          {expiringRegistrations.length > 0 && (
+            <div className="card border-l-4 border-l-orange-500">
+              <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                <Calendar className="w-5 h-5 text-orange-500" />
+                Registration Expiring (Next 5-6 Days)
+                <span className="ml-auto bg-orange-100 text-orange-700 text-xs font-bold px-2 py-1 rounded-full">
+                  {expiringRegistrations.length}
+                </span>
+              </h2>
+              <div className="space-y-3 max-h-64 overflow-y-auto">
+                {expiringRegistrations.map((bid, index) => (
+                  <div key={bid.id || index} className="p-3 bg-orange-50 rounded-lg border border-orange-100">
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <p className="text-sm font-medium text-gray-900 line-clamp-1">{bid.title}</p>
+                        <p className="text-xs text-gray-500">{bid.authority}</p>
+                      </div>
+                      <span className="text-xs font-bold text-orange-600 bg-orange-100 px-2 py-1 rounded">
+                        {Math.ceil((new Date(bid.registrationDeadline) - new Date()) / (1000 * 60 * 60 * 24))} days
+                      </span>
+                    </div>
+                    <p className="text-xs text-gray-600 mt-1">
+                      Registration: {bid.registrationDeadline} {bid.registrationTime && `at ${bid.registrationTime}`}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       )}
 

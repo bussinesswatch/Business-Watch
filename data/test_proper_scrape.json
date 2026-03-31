@@ -1,0 +1,57 @@
+{
+  "metadata": {
+    "total_tenders": 1,
+    "last_updated": "2026-03-31T10:31:43.620Z",
+    "source": "gazette.gov.mv",
+    "description": "Properly scraped with Dhivehi title"
+  },
+  "tenders": [
+    {
+      "id": "384475",
+      "gazette_id": "384475",
+      "title": "Procurement of 44 Monitors and 01 Laptop for Islamic University of Maldives",
+      "title_dhivehi": "ދިވެހިރާއްޖޭގެ އިސްލާމީ ޔުނިވަރސިޓީގެ ބޭނުމަށް 44 މޮނިޓަރ، އަދި 01 ލެޕްޓޮޕް ސަޕްލައިކޮށްދޭނެ ފަރާތެއް ހޯދުމާ ގުޅޭ",
+      "authority": "އިސްލާމީ ޔުނިވަރސިޓީ",
+      "category": "IT",
+      "tender_no": "384475",
+      "requirements": {
+        "monitors": 44,
+        "laptop": 1
+      },
+      "submission_deadline": "2026-03-08",
+      "submission_time": "14:00",
+      "bid_opening_date": "2026-03-08",
+      "bid_opening_time": "13:00",
+      "registration_deadline": "",
+      "registration_time": "",
+      "bid_submission": "",
+      "bid_time": "",
+      "clarification_deadline": "2026-03-31",
+      "clarification_time": "14:00",
+      "pre_bid_meeting": "2026-03-08",
+      "pre_bid_time": "13:00",
+      "pre_bid_location": "އިސްލާމީ ޔުނިވަރސިޓީ",
+      "inquiry_deadline": "",
+      "inquiry_time": "",
+      "contact_email": "procurement@ium.edu.mv",
+      "contact_phones": [
+        "0450 1950",
+        "2745312311568",
+        "1165 1200"
+      ],
+      "contact_name": "",
+      "gazette_url": "https://gazette.gov.mv/iulaan/384475",
+      "info_sheet_url": "https://storage.googleapis.com/gazette.gov.mv/docs/iulaan/272012.pdf",
+      "portal": "gazette.gov.mv",
+      "eligibility": "",
+      "bid_security": "",
+      "performance_guarantee": "",
+      "funding": "",
+      "project": "",
+      "lots": null,
+      "status": "Open",
+      "result": "Pending",
+      "scraped_at": "2026-03-31T10:31:43.613Z"
+    }
+  ]
+}

@@ -116,8 +116,6 @@ export const useChat = () => {
       return trimmed;
     });
   }, []);
-    localStorage.setItem('bw_chat_messages', JSON.stringify(messages.slice(-50)));
-  }, [messages]);
 
   return {
     messages,
