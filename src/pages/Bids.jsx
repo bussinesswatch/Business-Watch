@@ -565,23 +565,23 @@ const Bids = ({ initialFilter }) => {
 
   return (
     <div className="space-y-6">
-      {/* Sticky Header Section */}
-      <div className="sticky top-0 z-10 bg-gray-50 space-y-6 pb-4">
+      {/* Sticky Header Section - Only sticky on lg screens */}
+      <div className="lg:sticky lg:top-0 z-10 bg-gray-50 space-y-6 pb-4">
         {/* Header */}
-        <div className="flex justify-between items-center">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div className="flex items-center gap-4">
           <img 
             src="/illustrations/Business%20Plan-amico.svg" 
             alt="Bids" 
-            className="w-16 h-16 object-contain"
+            className="w-12 h-12 sm:w-16 sm:h-16 object-contain"
           />
           <div>
-            <div className="flex items-center gap-3">
-              <h1 className="text-3xl font-bold text-gray-900">
+            <div className="flex items-center gap-2 flex-wrap">
+              <h1 className="text-xl sm:text-3xl font-bold text-gray-900">
                 {initialFilter ? `${initialFilter} Bids` : 'Bid Management'}
               </h1>
               {initialFilter && (
-                <span className={`px-3 py-1 text-sm font-medium rounded-full ${
+                <span className={`px-2 py-1 text-xs font-medium rounded-full ${
                   initialFilter === 'Won' ? 'bg-green-100 text-green-800' : 
                   initialFilter === 'Pending' ? 'bg-purple-100 text-purple-800' : 
                   'bg-gray-100 text-gray-800'
@@ -590,97 +590,98 @@ const Bids = ({ initialFilter }) => {
                 </span>
               )}
             </div>
-            <p className="text-gray-500 mt-1">
+            <p className="text-gray-500 mt-1 text-sm hidden sm:block">
               {initialFilter 
                 ? `Showing bids with result: ${initialFilter}` 
                 : 'Create and manage tender bids with full details'}
             </p>
           </div>
         </div>
-        <div className="flex gap-3">
+        <div className="flex gap-2 sm:gap-3 w-full sm:w-auto">
           {/* View Mode Toggle */}
-          <div className="flex bg-gray-100 rounded-lg p-1">
+          <div className="flex bg-gray-100 rounded-lg p-1 flex-1 sm:flex-none">
             <button
               onClick={() => setViewMode('cards')}
-              className={`flex items-center gap-2 px-3 py-2 rounded-md transition-all ${
+              className={`flex items-center justify-center gap-1 sm:gap-2 px-2 sm:px-3 py-2 rounded-md transition-all text-sm ${
                 viewMode === 'cards' 
                   ? 'bg-white shadow-sm text-blue-600' 
                   : 'text-gray-600 hover:text-gray-900'
               }`}
             >
               <LayoutGrid className="w-4 h-4" />
-              Cards
+              <span className="hidden sm:inline">Cards</span>
             </button>
             <button
               onClick={() => setViewMode('table')}
-              className={`flex items-center gap-2 px-3 py-2 rounded-md transition-all ${
+              className={`flex items-center justify-center gap-1 sm:gap-2 px-2 sm:px-3 py-2 rounded-md transition-all text-sm ${
                 viewMode === 'table' 
                   ? 'bg-white shadow-sm text-blue-600' 
                   : 'text-gray-600 hover:text-gray-900'
               }`}
             >
               <Table2 className="w-4 h-4" />
-              Table
+              <span className="hidden sm:inline">Table</span>
             </button>
           </div>
           
-          <button onClick={openAddModal} className="btn-primary flex items-center gap-2">
-            <Plus className="w-5 h-5" />
-            Create Bid
+          <button onClick={openAddModal} className="btn-primary flex items-center gap-1 sm:gap-2 text-sm">
+            <Plus className="w-4 h-4 sm:w-5 sm:h-5" />
+            <span className="hidden sm:inline">Create</span>
+            <span className="sm:hidden">Add</span>
           </button>
         </div>
       </div>
 
-      {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-        <div className="card bg-blue-50 border-blue-200">
-          <div className="flex items-center gap-3">
-            <FileText className="w-8 h-8 text-blue-600" />
+      {/* Stats - Compact on mobile */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2 sm:gap-4">
+        <div className="card bg-blue-50 border-blue-200 p-2 sm:p-4">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <FileText className="w-5 h-5 sm:w-8 sm:h-8 text-blue-600" />
             <div>
-              <p className="text-sm text-gray-600">Total Bids</p>
-              <p className="text-2xl font-bold text-blue-700">{bids.length}</p>
+              <p className="text-xs sm:text-sm text-gray-600">Total</p>
+              <p className="text-lg sm:text-2xl font-bold text-blue-700">{bids.length}</p>
             </div>
           </div>
         </div>
-        <div className="card bg-green-50 border-green-200">
-          <div className="flex items-center gap-3">
-            <CheckCircle className="w-8 h-8 text-green-600" />
+        <div className="card bg-green-50 border-green-200 p-2 sm:p-4">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <CheckCircle className="w-5 h-5 sm:w-8 sm:h-8 text-green-600" />
             <div>
-              <p className="text-sm text-gray-600">Open</p>
-              <p className="text-2xl font-bold text-green-700">
+              <p className="text-xs sm:text-sm text-gray-600">Open</p>
+              <p className="text-lg sm:text-2xl font-bold text-green-700">
                 {bids.filter(b => b.status === 'Open').length}
               </p>
             </div>
           </div>
         </div>
-        <div className="card bg-yellow-50 border-yellow-200">
-          <div className="flex items-center gap-3">
-            <DollarSign className="w-8 h-8 text-yellow-600" />
+        <div className="card bg-yellow-50 border-yellow-200 p-2 sm:p-4">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <DollarSign className="w-5 h-5 sm:w-8 sm:h-8 text-yellow-600" />
             <div>
-              <p className="text-sm text-gray-600">Won</p>
-              <p className="text-2xl font-bold text-yellow-700">
+              <p className="text-xs sm:text-sm text-gray-600">Won</p>
+              <p className="text-lg sm:text-2xl font-bold text-yellow-700">
                 {bids.filter(b => b.result === 'Won').length}
               </p>
             </div>
           </div>
         </div>
-        <div className="card bg-red-50 border-red-200">
-          <div className="flex items-center gap-3">
-            <XCircle className="w-8 h-8 text-red-600" />
+        <div className="card bg-red-50 border-red-200 p-2 sm:p-4">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <XCircle className="w-5 h-5 sm:w-8 sm:h-8 text-red-600" />
             <div>
-              <p className="text-sm text-gray-600">Lost</p>
-              <p className="text-2xl font-bold text-red-700">
+              <p className="text-xs sm:text-sm text-gray-600">Lost</p>
+              <p className="text-lg sm:text-2xl font-bold text-red-700">
                 {bids.filter(b => b.result === 'Lost').length}
               </p>
             </div>
           </div>
         </div>
-        <div className="card bg-purple-50 border-purple-200">
-          <div className="flex items-center gap-3">
-            <Clock className="w-8 h-8 text-purple-600" />
+        <div className="card bg-purple-50 border-purple-200 p-2 sm:p-4 col-span-2 sm:col-span-1">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <Clock className="w-5 h-5 sm:w-8 sm:h-8 text-purple-600" />
             <div>
-              <p className="text-sm text-gray-600">Pending</p>
-              <p className="text-2xl font-bold text-purple-700">
+              <p className="text-xs sm:text-sm text-gray-600">Pending</p>
+              <p className="text-lg sm:text-2xl font-bold text-purple-700">
                 {bids.filter(b => b.result === 'Pending').length}
               </p>
             </div>
@@ -689,21 +690,21 @@ const Bids = ({ initialFilter }) => {
       </div>
 
       {/* Filters */}
-      <div className="flex flex-wrap gap-4">
-        <div className="relative flex-1 min-w-[300px]">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+      <div className="flex flex-col sm:flex-row flex-wrap gap-2 sm:gap-4">
+        <div className="relative flex-1 min-w-[200px]">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4 sm:w-5 sm:h-5" />
           <input
             type="text"
-            placeholder="Search by title, authority, category..."
+            placeholder="Search..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="input pl-10"
+            className="input pl-9 sm:pl-10 text-sm"
           />
         </div>
         <select
           value={filterCategory}
           onChange={(e) => setFilterCategory(e.target.value)}
-          className="input w-48"
+          className="input w-full sm:w-48 text-sm"
         >
           <option value="All">All Categories</option>
           {categories.map(c => <option key={c} value={c}>{c}</option>)}
@@ -711,7 +712,7 @@ const Bids = ({ initialFilter }) => {
         <select
           value={filterStatus}
           onChange={(e) => setFilterStatus(e.target.value)}
-          className="input w-48"
+          className="input w-full sm:w-48 text-sm"
         >
           <option value="All">All Statuses</option>
           {statuses.map(s => <option key={s} value={s}>{s}</option>)}
@@ -719,7 +720,7 @@ const Bids = ({ initialFilter }) => {
         <select
           value={filterResult}
           onChange={(e) => setFilterResult(e.target.value)}
-          className="input w-48"
+          className="input w-full sm:w-48 text-sm"
           disabled={initialFilter}
           title={initialFilter ? `Filter locked to ${initialFilter}` : 'Filter by result'}
         >
