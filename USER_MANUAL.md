@@ -1,16 +1,33 @@
 # User Manual - Business Watch
 
+Complete guide for using the Business Watch tender management system.
+
 ## Table of Contents
 
 1. [Getting Started](#getting-started)
 2. [Dashboard](#dashboard)
-3. [Tenders](#tenders)
-4. [Bids](#bids)
-5. [Email Notifications](#email-notifications)
-6. [Procurement](#procurement)
-7. [Reports](#reports)
-8. [Administration](#administration)
-9. [Mobile Usage](#mobile-usage)
+3. [Navigation Overview](#navigation-overview)
+4. [Tenders](#tenders)
+5. [Bids](#bids)
+6. [Quotations](#quotations)
+7. [Procurement](#procurement)
+8. [Suppliers](#suppliers)
+9. [Deliveries](#deliveries)
+10. [Documents](#documents)
+11. [Projects](#projects)
+12. [Finance](#finance)
+13. [Analytics](#analytics)
+14. [Reports](#reports)
+15. [Calendar](#calendar)
+16. [KPI Dashboard](#kpi-dashboard)
+17. [Cost Calculator](#cost-calculator)
+18. [Advanced Search](#advanced-search)
+19. [Email Notifications](#email-notifications)
+20. [Administration](#administration)
+21. [Mobile Usage](#mobile-usage)
+22. [Data Sources](#data-sources)
+23. [Troubleshooting](#troubleshooting)
+24. [Quick Reference](#quick-reference)
 
 ---
 
@@ -18,191 +35,532 @@
 
 ### Login
 
-1. Open the application at `http://localhost:5173`
+1. Open the application at `http://localhost:5173` (local) or your Vercel URL
 2. Enter your email and password
 3. Click "Sign In"
 
 **Default Roles:**
-- **Admin**: Full system access
+- **Admin**: Full system access including user management
 - **Staff**: Limited access (cannot delete or manage users)
-
-### Navigation
-
-The sidebar contains all main modules:
-- Dashboard
-- Tenders (Gazette + Internal)
-- Bids
-- Quotations
-- Procurement
-- Suppliers
-- Deliveries
-- Documents
-- Projects
-- Finance
-- Users (Admin only)
 
 ---
 
 ## Dashboard
 
+The Dashboard is your command center showing key business metrics and urgent alerts.
+
 ### Overview Cards
 
-The dashboard displays key metrics:
-- **Total Tenders**: 43 Gazette tenders
-- **Active Bids**: Current bidding activities
-- **Won Projects**: Successfully won tenders
+- **Total Tenders**: 43 Gazette tenders from government sources
+- **Active Bids**: Current bidding activities in progress
+- **Won Projects**: Successfully awarded tenders
 - **Pending Deliveries**: Items awaiting delivery
-- **Total Revenue**: Financial summary
+- **Total Revenue**: Financial summary of all projects
 
-### Urgent Alerts
+### Urgent Alerts Section
 
-**Today's Urgent Tenders (March 30, 2026):**
-1. IUM - 44 Monitors + 1 Laptop (14:00)
-2. IUM - 40 Laptops (14:00)
-3. IUM - 48 Computer Systems (14:00)
+Displays tenders with deadlines today or within 24 hours:
+- Tender title and ID
+- Deadline time
+- Authority name
+- Direct link to tender details
 
-### Charts
+### Dashboard Charts
 
-- Revenue by quarter
-- Tenders by category
-- Bid success rate
-- Delivery status
+- **Revenue by Quarter**: Track income trends
+- **Tenders by Category**: Visual breakdown (IT, Medical, Construction, etc.)
+- **Bid Success Rate**: Win/loss ratio over time
+- **Delivery Status**: Project completion tracking
+
+---
+
+## Navigation Overview
+
+The sidebar contains 25+ modules organized by function:
+
+### Main Modules
+| Module | Description | Access |
+|--------|-------------|--------|
+| Dashboard | Overview and alerts | All users |
+| Tenders | Browse all tenders | All users |
+| Bids | Manage your bids | All users |
+| Quotations | Create and track quotes | All users |
+| Procurement | Purchase orders and tracking | All users |
+| Suppliers | Vendor management | All users |
+| Deliveries | Track shipments | All users |
+| Documents | File management | All users |
+| Projects | Won tender projects | All users |
+| Finance | Budget and accounting | All users |
+
+### Analytics & Reports
+| Module | Description | Access |
+|--------|-------------|--------|
+| Analytics | Data visualization | All users |
+| Reports | Generate exports | All users |
+| Calendar | Deadline timeline | All users |
+| KPI Dashboard | Key metrics | All users |
+| Cost Calculator | Bid estimation | All users |
+| Advanced Search | Powerful filtering | All users |
+
+### Administration
+| Module | Description | Access |
+|--------|-------------|--------|
+| Users | User management | Admin only |
+| Upload Excel | Bulk data import | Admin only |
 
 ---
 
 ## Tenders
 
+Browse and search all 43+ Gazette tenders from Maldives government sources.
+
 ### Viewing Tenders
 
-The Tenders page shows all 43 Gazette tenders with:
-- **ID**: TND-2026-XXX
+Each tender displays:
+- **ID**: Unique identifier (TND-2026-XXX)
 - **Title**: Tender description
 - **Authority**: Government organization
 - **Category**: IT, Construction, Medical, etc.
-- **Deadline**: Submission deadline
+- **Deadline**: Submission deadline with countdown
 - **Status**: Open, Closed, Won, Lost
+- **Estimated Budget**: Project value range
 
 ### Search & Filter
 
 **Search by:**
 - Title keywords
 - Authority name
-- Category
+- Category dropdown
 - Tender ID
 
 **Filter by:**
-- Category dropdown
-- Status
-- Deadline range
+- Status (Open/Closed/Won/Lost)
+- Category (18 categories)
+- Authority (20+ organizations)
+- Deadline range (Next 7/30/90 days)
 
-### Tender Details
+### Tender Details Modal
 
 Click any tender to view:
-- Full description
-- Requirements (quantities, specifications)
+- Full description and requirements
+- Quantities and specifications
 - Contact information
-- Gazette URL (opens external link)
-- Info Sheet URL (downloads PDF)
+- Gazette URL (external link)
+- Info Sheet URL (PDF download)
 - Bid opening date/time
-- Estimated budget
-- Your bid amount (if any)
+- Your bid amount (if submitted)
+- Submission history
 
-### Adding a Bid
+### Creating a Bid from Tender
 
-1. Click on a tender
+1. Click on tender card
 2. Click "Create Bid" button
-3. Enter:
-   - Your bid amount
-   - Cost estimate
-   - Notes
-4. Save
-
-The system calculates:
-- Profit margin percentage
-- Profit amount
+3. Enter bid amount and cost estimate
+4. Add notes and attachments
+5. Save - system calculates profit margin automatically
 
 ---
 
 ## Bids
 
-### Managing Bids
+Manage all your bidding activities in one place.
 
-View all your bids with status:
-- **Pending**: Bid submitted, waiting result
+### Bid Status Types
+
+- **Draft**: Bid in preparation
+- **Submitted**: Bid sent to authority
+- **Pending**: Awaiting results
 - **Won**: Successfully awarded
 - **Lost**: Not awarded
-- **Submitted**: Internal tracking
+- **Withdrawn**: Bid retracted
 
-### Bid Calculator
+### Bid List Views
 
-When creating a bid:
-```
-Bid Amount: 235,000 MVR
-Cost Estimate: 200,000 MVR
---------------------------------
-Profit: 35,000 MVR (17.5%)
-```
+**Card View:**
+- Visual grid layout
+- Color-coded by status
+- Quick action buttons
 
-### Converting to Project
+**Table View:**
+- Sortable columns
+- Bulk actions
+- Export to Excel
 
-Winning a bid automatically creates a project for procurement tracking.
+### Bid Statistics
+
+Top of page shows:
+- Total bids count
+- Total value (all bids)
+- Won count and value
+- Win rate percentage
+- Pending count
+
+### Bid Management Actions
+
+- **Edit**: Modify draft bids
+- **Submit**: Send to authority
+- **Duplicate**: Copy for similar tender
+- **Convert to Project**: When won
+- **Delete**: Remove draft bids
+
+---
+
+## Quotations
+
+Create and manage quotations for clients.
+
+### Quotation Features
+
+- Create custom quotes
+- Add line items with quantities
+- Calculate totals with tax
+- Track quotation status
+- Convert to orders
+- Export as PDF
+
+### Quotation Status
+
+- **Draft**: In preparation
+- **Sent**: Delivered to client
+- **Accepted**: Client approved
+- **Rejected**: Client declined
+- **Expired**: Past validity date
 
 ---
 
 ## Procurement
 
+Manage purchase orders and supplier interactions.
+
 ### Purchase Orders
 
-For won tenders, create purchase orders:
-1. Select the tender/project
+Create POs for won tenders:
+1. Select project/tender
 2. Add items to purchase
 3. Select suppliers
-4. Track costs
+4. Set quantities and prices
+5. Track delivery dates
 
-### Supplier Selection
+### Procurement Workflow
 
-Choose from saved suppliers or add new:
-- Supplier name
-- Contact person
-- Email/Phone
-- Items they supply
-- Historical pricing
+- **Requisition**: Request items
+- **Approved**: PO authorized
+- **Ordered**: Sent to supplier
+- **Shipped**: In transit
+- **Delivered**: Items received
+- **Invoiced**: Bill received
 
-### Cost Tracking
+---
 
-Track all procurement costs:
-- Item costs
-- Shipping
-- Taxes
-- Total project cost
+## Suppliers
+
+Vendor and supplier management database.
+
+### Supplier Information
+
+Store and manage:
+- Company name and contact details
+- Primary contact person
+- Email and phone
+- Items/categories supplied
+- Historical pricing data
+- Performance ratings
+
+### Supplier Actions
+
+- Add new suppliers
+- Edit existing records
+- View purchase history
+- Track performance
+- Rate and review
+
+---
+
+## Deliveries
+
+Track all incoming shipments and deliveries.
+
+### Delivery Tracking
+
+- Track shipment status
+- Expected delivery dates
+- Actual receipt dates
+- Delivery notes
+- Item condition records
+
+### Delivery Status
+
+- **Pending**: Awaiting shipment
+- **Shipped**: In transit
+- **In Customs**: Clearing customs
+- **Out for Delivery**: Local delivery
+- **Delivered**: Items received
+- **Delayed**: Late shipment
+
+---
+
+## Documents
+
+Centralized document management system.
+
+### Document Types
+
+- Tender documents
+- Bid submissions
+- Contracts
+- Invoices
+- Delivery receipts
+- Correspondence
+
+### Document Features
+
+- Upload PDFs, images, Excel files
+- Categorize by project
+- Version control
+- Search by name/date
+- Download anytime
+- Share with team
+
+---
+
+## Projects
+
+Track won tenders converted to active projects.
+
+### Project Overview
+
+Each project shows:
+- Tender reference
+- Contract value
+- Start and end dates
+- Project status
+- Team assignments
+- Budget vs actual costs
+
+### Project Status
+
+- **Planning**: Initial setup
+- **Active**: In progress
+- **On Hold**: Temporarily paused
+- **Completed**: Finished
+- **Cancelled**: Terminated
+
+---
+
+## Finance
+
+Financial management and budget tracking.
+
+### Financial Dashboard
+
+- **Accounts**: Bank and cash accounts
+- **Transactions**: All financial movements
+- **Budget Summary**: Budget vs actual spending
+- **Revenue Tracking**: Income by project
+
+### Key Metrics
+
+- Total revenue
+- Total expenses
+- Net profit
+- Budget utilization
+- Outstanding invoices
+- Pending payments
+
+### Data Source
+
+Finance data is derived from:
+- Bid amounts (revenue)
+- Procurement costs (expenses)
+- Project budgets
+
+---
+
+## Analytics
+
+Deep data visualization and analysis.
+
+### Analytics Views
+
+- **Tender Analytics**: Trends over time
+- **Bid Analytics**: Success patterns
+- **Financial Analytics**: Revenue/expense trends
+- **Supplier Analytics**: Vendor performance
+
+### Chart Types
+
+- Line charts (trends)
+- Bar charts (comparisons)
+- Pie charts (breakdowns)
+- Heat maps (activity)
 
 ---
 
 ## Reports
 
-### Available Reports
+Generate and export business reports.
 
-1. **Tender Summary**
-   - By category
-   - By authority
-   - By deadline
+### Report Types
 
-2. **Financial Reports**
-   - Revenue by quarter
-   - Profit margins
-   - Cost breakdowns
+**Tender Reports:**
+- Summary by category
+- By authority
+- By deadline status
+- New tenders report
 
-3. **Performance Reports**
-   - Bid success rate
-   - Won vs Lost
-   - Delivery performance
+**Financial Reports:**
+- Revenue by quarter
+- Profit margins
+- Cost breakdowns
+- Budget variance
 
-### Exporting Data
+**Performance Reports:**
+- Bid success rate
+- Won vs Lost analysis
+- Delivery performance
+- Supplier ratings
 
-Export reports to:
+### Export Formats
+
 - Excel (.xlsx)
 - PDF
 - CSV
+- Print-friendly
+
+---
+
+## Calendar
+
+Visual timeline of all tender deadlines.
+
+### Calendar Views
+
+- **Month View**: Overview of all deadlines
+- **Week View**: Detailed weekly schedule
+- **Day View**: Hour-by-hour on busy days
+
+### Calendar Events
+
+- Tender submission deadlines
+- Bid opening dates
+- Project milestones
+- Delivery schedules
+- Meeting reminders
+
+### Color Coding
+
+- Red: Urgent (today/tomorrow)
+- Orange: This week
+- Yellow: Next week
+- Green: Future
+
+---
+
+## KPI Dashboard
+
+Key Performance Indicators at a glance.
+
+### KPIs Tracked
+
+- **Total Bids**: Number submitted
+- **Won Bids**: Successfully awarded
+- **Win Rate**: Percentage won
+- **Total Value**: All bid amounts
+- **Won Value**: Revenue from wins
+- **Average Profit Margin**: Bid profitability
+
+### Time Periods
+
+Filter KPIs by:
+- This month
+- This quarter
+- This year
+- All time
+
+---
+
+## Cost Calculator
+
+Estimate costs for tender submissions.
+
+### Calculator Features
+
+- Select items from database
+- Adjust quantities
+- Add markup percentage
+- Calculate exchange rates
+- Factor in shipping costs
+- Include tax calculations
+
+### Cost Components
+
+- Base item costs
+- Shipping and freight
+- Import duties
+- Handling fees
+- Insurance
+- Contingency (10-15%)
+
+---
+
+## Advanced Search
+
+Powerful search across all data.
+
+### Search Capabilities
+
+- **Tenders**: Search by any field
+- **Bids**: Find by status, value, date
+- **Suppliers**: Search by name, items
+- **Projects**: Find by status, value
+
+### Search Filters
+
+- Date ranges
+- Value ranges
+- Status filters
+- Category filters
+- Authority filters
+
+---
+
+## Email Notifications
+
+Stay informed with automatic alerts.
+
+### Notification Types
+
+**Tender Alerts:**
+- New tenders matching your criteria
+- Tender deadline reminders (7, 3, 1 days)
+- Bid opening reminders
+
+**Bid Alerts:**
+- Bid result updates
+- Status change notifications
+
+**Deadline Alerts:**
+- Daily summary of urgent tenders
+- Weekly digest of upcoming deadlines
+
+### Setting Up Notifications
+
+1. Click the **bell icon** in the top navigation
+2. Click "Notification Settings"
+3. Enter your email
+4. Select alert types:
+   - Deadline alerts
+   - Bid opening reminders
+   - New tender alerts
+   - Result updates
+5. Click "Subscribe"
+
+### Managing Preferences
+
+- Enable/disable specific alert types
+- Change email address
+- Unsubscribe anytime
+- Set quiet hours (no night emails)
 
 ---
 
@@ -211,23 +569,25 @@ Export reports to:
 ### User Management
 
 **Create New User:**
-1. Go to Users page
+1. Go to Users page (sidebar)
 2. Click "Add User"
 3. Enter:
-   - Name
-   - Email
-   - Password
+   - Full name
+   - Email address
+   - Temporary password
    - Role (Admin/Staff)
-4. Save
+4. Click Save
 
 **Edit User:**
 - Click user row
 - Modify details
+- Change role if needed
 - Save changes
 
 **Delete User:**
 - Click delete icon
 - Confirm deletion
+- User data archived
 
 ### Data Upload
 
@@ -235,15 +595,19 @@ Export reports to:
 ```bash
 npm run upload-tenders
 ```
-
-This uploads all 43 tenders from `working_file.json` to Firebase.
+This uploads all 43 tenders from `data/working_file.json` to Firebase.
 
 **Upload Excel Data:**
 1. Go to "Upload Excel" page
-2. Select file type (Suppliers, Purchases, etc.)
+2. Select file type:
+   - Suppliers
+   - Purchases
+   - Projects
+   - Deliveries
 3. Upload Excel file
-4. Map columns
-5. Import
+4. Map columns to system fields
+5. Preview data
+6. Import to system
 
 ### Firestore Rules
 
@@ -267,6 +631,45 @@ firebase deploy --only firestore:rules --project bussiness-watch
 
 ---
 
+## Mobile Usage
+
+Business Watch is fully responsive for mobile devices.
+
+### Mobile Navigation
+
+- **Hamburger Menu**: Tap to open sidebar
+- **Swipe**: Swipe right to open menu
+- **Touch-friendly**: All buttons sized for touch
+- **Scrollable**: Smooth scrolling on all pages
+
+### Mobile-Optimized Pages
+
+**Dashboard:**
+- Cards stack vertically
+- Charts resize to fit screen
+- Alerts in scrollable list
+
+**Tenders & Bids:**
+- Card view default on mobile
+- Table view available via toggle
+- Horizontal scroll for tables
+- Touch to open details
+
+**Forms:**
+- Full-width inputs
+- Large touch targets
+- Number pad for amounts
+- Date pickers optimized
+
+### Mobile Tips
+
+- Use landscape mode for tables
+- Pinch to zoom on charts
+- Pull down to refresh data
+- Long press for quick actions
+
+---
+
 ## Data Sources
 
 ### Gazette Tenders
@@ -287,19 +690,19 @@ firebase deploy --only firestore:rules --project bussiness-watch
 ### Categories
 
 Most common tender categories:
-1. IT Equipment (17)
-2. Medical Equipment (3)
-3. Construction (3)
-4. Office Supplies (2)
-5. Apparel/Uniform (2)
+1. IT Equipment (17 tenders)
+2. Medical Equipment (3 tenders)
+3. Construction (3 tenders)
+4. Office Supplies (2 tenders)
+5. Apparel/Uniform (2 tenders)
 
 ### Top Authorities
 
 Tenders by organization:
-1. Islamic University of Maldives (4)
-2. Elections Commission (3)
-3. Male City Council (2)
-4. Ministry of Health (2)
+1. Islamic University of Maldives (4 tenders)
+2. Elections Commission (3 tenders)
+3. Male City Council (2 tenders)
+4. Ministry of Health (2 tenders)
 
 ---
 
@@ -333,6 +736,13 @@ Tenders by organization:
 3. Check local data file exists
 4. Force refresh: `useTenders(true)` for local mode
 
+### Email Notifications Not Working
+
+1. Check SMTP settings in `.env`
+2. Verify subscriber exists in `data/subscribers.json`
+3. Check GitHub Actions cron job status
+4. Verify `CRON_SECRET` is set correctly
+
 ---
 
 ## Quick Reference
@@ -340,38 +750,46 @@ Tenders by organization:
 ### Keyboard Shortcuts
 
 | Key | Action |
-|---|---|
+|-----|--------|
 | `Ctrl + K` | Search |
 | `Esc` | Close modal |
 | `Ctrl + S` | Save form |
+| `Ctrl + N` | New item |
+| `Ctrl + E` | Export |
 
 ### Common Tasks
 
 | Task | Steps |
-|---|---|
+|------|-------|
 | View urgent tenders | Dashboard → Urgent Alerts |
 | Search tenders | Tenders page → Search bar |
 | Create bid | Tenders → Select tender → Create Bid |
 | Upload data | Admin → Upload Excel / Run script |
 | Export report | Reports → Select report → Export |
+| Subscribe to alerts | Click bell icon → Notification Settings |
+| Check deadlines | Calendar page or Dashboard |
+| Calculate costs | Cost Calculator page |
 
-### Important Dates
+### Important Dates (Sample)
 
 **Urgent Deadlines**:
 - March 30, 2026: 3 IUM tenders (14:00)
 - April 2, 2026: Multiple deadlines
 - April 5-9, 2026: Various submissions
 
-### Contact
+---
 
-For technical issues:
+## Version Information
+
+**Document Version**: 1.2.0  
+**Last Updated**: March 31, 2026  
+**App Version**: 1.2.0  
+**Total Tenders**: 43
+
+---
+
+**For technical support:**
 1. Check this manual
 2. Review README.md
 3. Check CHANGELOG.md
 4. Contact system administrator
-
----
-
-**Document Version**: 1.1.0  
-**Last Updated**: March 30, 2026  
-**Total Tenders**: 43
