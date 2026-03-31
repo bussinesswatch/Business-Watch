@@ -4,7 +4,7 @@ import Pusher from 'pusher-js';
 
 // Pusher free tier: 200k messages/day, no credit card, no expiration
 // Replace with your actual Pusher key from pusher.com
-const PUSHER_KEY = 'a6f9d8c2a8e8c2a8e8c2'; // Placeholder - replace with real key
+const PUSHER_KEY = '37a7a8f3ebe70c481e08'; // Your actual Pusher key
 const PUSHER_CLUSTER = 'ap2'; // Mumbai cluster
 const IS_DUMMY_KEY = PUSHER_KEY === 'a6f9d8c2a8e8c2a8e8c2';
 
