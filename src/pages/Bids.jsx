@@ -35,6 +35,12 @@ const Bids = ({ initialFilter }) => {
   const [showQuotation, setShowQuotation] = useState(false);
   const [quotationBid, setQuotationBid] = useState(null);
   
+  // User-defined cost types persisted in localStorage
+  const [userDefinedCostTypes, setUserDefinedCostTypes] = useState(() => {
+    const saved = localStorage.getItem('userDefinedCostTypes');
+    return saved ? JSON.parse(saved) : [];
+  });
+  
   const { isAdmin } = useAuth();
   const navigate = useNavigate();
 
@@ -98,6 +104,9 @@ const Bids = ({ initialFilter }) => {
     
     // Requirement Items
     items: [],
+    
+    // Additional Costs (Commission, Installation, Transport, etc.)
+    additionalCosts: [],
     
     // Quotation Details
     deliveryDays: 35,
@@ -260,7 +269,7 @@ const Bids = ({ initialFilter }) => {
   const removeItem = (id) => {
     setFormData(prev => {
       const updatedItems = prev.items.filter(item => item.id !== id);
-      const totals = calculateTotals(updatedItems);
+      const totals = calculateTotals(updatedItems, prev.additionalCosts);
       
       return {
         ...prev,
@@ -272,8 +281,91 @@ const Bids = ({ initialFilter }) => {
     });
   };
 
-  const calculateTotals = (items) => {
-    return items.reduce((acc, item) => {
+  // Additional Costs Management
+  const addAdditionalCost = (costType = '', amount = 0) => {
+    const newCost = {
+      id: Date.now(),
+      type: costType,
+      amount: amount,
+      isCustom: !predefinedCostTypes.includes(costType)
+    };
+    setFormData(prev => {
+      const updatedCosts = [...(prev.additionalCosts || []), newCost];
+      const totals = calculateTotals(prev.items, updatedCosts);
+      return {
+        ...prev,
+        additionalCosts: updatedCosts,
+        bidAmount: totals.totalBid,
+        costEstimate: totals.totalCost,
+        profitMargin: totals.totalProfit
+      };
+    });
+  };
+
+  const updateAdditionalCost = (id, field, value) => {
+    setFormData(prev => {
+      const updatedCosts = (prev.additionalCosts || []).map(cost => {
+        if (cost.id === id) {
+          // If updating type and it's a new custom type, save it
+          if (field === 'type' && value && !predefinedCostTypes.includes(value)) {
+            saveUserDefinedCostType(value);
+          }
+          return { ...cost, [field]: value };
+        }
+        return cost;
+      });
+      const totals = calculateTotals(prev.items, updatedCosts);
+      return {
+        ...prev,
+        additionalCosts: updatedCosts,
+        bidAmount: totals.totalBid,
+        costEstimate: totals.totalCost,
+        profitMargin: totals.totalProfit
+      };
+    });
+  };
+
+  const removeAdditionalCost = (id) => {
+    setFormData(prev => {
+      const updatedCosts = (prev.additionalCosts || []).filter(cost => cost.id !== id);
+      const totals = calculateTotals(prev.items, updatedCosts);
+      return {
+        ...prev,
+        additionalCosts: updatedCosts,
+        bidAmount: totals.totalBid,
+        costEstimate: totals.totalCost,
+        profitMargin: totals.totalProfit
+      };
+    });
+  };
+
+  // Calculate total additional costs
+  const calculateAdditionalCostsTotal = (additionalCosts) => {
+    return (additionalCosts || []).reduce((sum, cost) => sum + (parseFloat(cost.amount) || 0), 0);
+  };
+
+  // Predefined additional cost types + user-defined
+  const predefinedCostTypes = [
+    'Commission',
+    'Installation', 
+    'Boat Naal',
+    'Helpers Charge',
+    'Unloading Charge',
+    'Loading Charge',
+    'Tea / Dinner Charge',
+    ...userDefinedCostTypes
+  ];
+
+  // Function to save new custom cost type
+  const saveUserDefinedCostType = (costType) => {
+    if (!costType || predefinedCostTypes.includes(costType)) return;
+    const updated = [...userDefinedCostTypes, costType];
+    setUserDefinedCostTypes(updated);
+    localStorage.setItem('userDefinedCostTypes', JSON.stringify(updated));
+  };
+
+  const calculateTotals = (items, additionalCosts = []) => {
+    const itemsTotal = items.reduce((acc, item) => {
       const qty = parseFloat(item.quantity) || 0;
       const cost = parseFloat(item.costPrice) || 0;
       const bid = parseFloat(item.bidPrice) || 0;
@@ -284,6 +376,15 @@ const Bids = ({ initialFilter }) => {
       
       return acc;
     }, { totalCost: 0, totalBid: 0, totalProfit: 0 });
+
+    // Add additional costs to totals
+    const additionalCostsTotal = calculateAdditionalCostsTotal(additionalCosts);
+    
+    return {
+      totalCost: itemsTotal.totalCost + additionalCostsTotal,
+      totalBid: itemsTotal.totalBid + additionalCostsTotal,
+      totalProfit: itemsTotal.totalProfit
+    };
   };
 
   const handleSubmit = async (e) => {
@@ -406,6 +507,9 @@ const Bids = ({ initialFilter }) => {
       // Requirement Items
       items: [],
       
+      // Additional Costs
+      additionalCosts: [],
+      
       // Quotation Details
       deliveryDays: 35,
       quotationValidity: 60,
@@ -483,6 +587,7 @@ const Bids = ({ initialFilter }) => {
       profitMargin: bid.profitMargin || '',
       vendorNumber: bid.vendorNumber || '514110',
       items: bid.items || [],
+      additionalCosts: bid.additionalCosts || [],
       documents: bid.documents || [],
       notes: bid.notes || '',
       deliveryDays: bid.deliveryDays || 35,
@@ -1351,7 +1456,131 @@ const Bids = ({ initialFilter }) => {
                           </p>
                         </div>
                       </div>
+                      
+                      {/* Additional Costs Summary */}
+                      {(formData.additionalCosts || []).length > 0 && (
+                        <div className="mt-3 pt-3 border-t border-blue-200">
+                          <p className="text-xs font-medium text-blue-700 mb-2">Additional Costs Breakdown:</p>
+                          <div className="flex flex-wrap gap-2">
+                            {(formData.additionalCosts || []).map((cost, idx) => (
+                              <span key={idx} className="text-xs bg-white px-2 py-1 rounded">
+                                {cost.type}: MVR {parseFloat(cost.amount || 0).toLocaleString()}
+                              </span>
+                            ))}
+                          </div>
+                          <p className="text-xs font-semibold text-blue-800 mt-2">
+                            Total Additional Costs: MVR {calculateAdditionalCostsTotal(formData.additionalCosts).toLocaleString()}
+                          </p>
+                        </div>
+                      )}
                     </div>
+                  </div>
+                )}
+              </div>
+
+              {/* SECTION 2.5: Additional Costs */}
+              <div className="bg-rose-50 p-4 rounded-lg">
+                <h3 className="text-lg font-semibold text-rose-800 mb-4 flex items-center gap-2">
+                  <DollarSign className="w-5 h-5" />
+                  Additional Costs
+                </h3>
+                <p className="text-sm text-gray-600 mb-4">
+                  Add any additional costs like commission, installation, transportation, etc.
+                </p>
+                
+                {/* Predefined Cost Types Buttons */}
+                <div className="mb-4">
+                  <label className="label text-sm">Quick Add Common Costs</label>
+                  <div className="flex flex-wrap gap-2 mt-2">
+                    {predefinedCostTypes.map((costType) => (
+                      <button
+                        key={costType}
+                        type="button"
+                        onClick={() => addAdditionalCost(costType)}
+                        className="btn-secondary text-xs px-3 py-1.5"
+                      >
+                        + {costType}
+                      </button>
+                    ))}
+                    <button
+                      type="button"
+                      onClick={() => addAdditionalCost('')}
+                      className="btn-primary text-xs px-3 py-1.5"
+                    >
+                      + Custom
+                    </button>
+                  </div>
+                </div>
+
+                {/* Additional Costs List */}
+                {(formData.additionalCosts || []).length > 0 && (
+                  <div className="space-y-3">
+                    {(formData.additionalCosts || []).map((cost) => (
+                      <div key={cost.id} className="bg-white p-3 rounded border border-rose-200">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                          <div className="md:col-span-1">
+                            <label className="label text-xs">Cost Type</label>
+                            {predefinedCostTypes.includes(cost.type) ? (
+                              <input
+                                type="text"
+                                value={cost.type}
+                                readOnly
+                                className="input text-sm bg-gray-50"
+                              />
+                            ) : (
+                              <input
+                                type="text"
+                                value={cost.type}
+                                onChange={(e) => updateAdditionalCost(cost.id, 'type', e.target.value)}
+                                placeholder="Enter cost type"
+                                className="input text-sm"
+                              />
+                            )}
+                          </div>
+                          <div className="md:col-span-1">
+                            <label className="label text-xs">Amount (MVR)</label>
+                            <div className="relative">
+                              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-xs">MVR</span>
+                              <input
+                                type="number"
+                                value={cost.amount}
+                                onChange={(e) => updateAdditionalCost(cost.id, 'amount', parseFloat(e.target.value) || 0)}
+                                placeholder="0.00"
+                                className="input text-sm pl-10"
+                              />
+                            </div>
+                          </div>
+                          <div className="md:col-span-1 flex items-end">
+                            <button
+                              type="button"
+                              onClick={() => removeAdditionalCost(cost.id)}
+                              className="text-red-500 hover:text-red-700 text-sm flex items-center gap-1 px-2 py-1.5"
+                            >
+                              <Trash className="w-4 h-4" />
+                              Remove
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                    
+                    {/* Total Additional Costs */}
+                    <div className="bg-rose-100 p-3 rounded-lg">
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm font-medium text-rose-800">Total Additional Costs:</span>
+                        <span className="text-lg font-bold text-rose-900">
+                          MVR {calculateAdditionalCostsTotal(formData.additionalCosts).toLocaleString()}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {(formData.additionalCosts || []).length === 0 && (
+                  <div className="text-center py-6 text-gray-400">
+                    <DollarSign className="w-8 h-8 mx-auto mb-2" />
+                    <p className="text-sm">No additional costs added yet</p>
+                    <p className="text-xs mt-1">Click a button above to add costs</p>
                   </div>
                 )}
               </div>

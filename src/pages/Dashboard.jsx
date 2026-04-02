@@ -249,7 +249,8 @@ const Dashboard = () => {
 
   const statCards = [
     { title: 'Active Tenders', value: stats.activeTenders, icon: FileText, color: 'blue' },
-    { title: 'Won Tenders', value: stats.wonTenders, icon: Trophy, color: 'green' },
+    { title: 'Active Won Tenders', value: bids.filter(b => b.result === 'Won' && (b.status === 'Open' || b.status === 'In Progress')).length, icon: Trophy, color: 'green' },
+    { title: 'Won Tenders', value: stats.wonTenders, icon: CheckCircle, color: 'green' },
     { title: 'Total Bid Value', value: `MVR ${(stats.totalBidValue || 0).toLocaleString()}`, icon: DollarSign, color: 'purple' },
     { title: 'Total Revenue', value: `MVR ${(stats.totalRevenue || 0).toLocaleString()}`, icon: TrendingUp, color: 'green' },
     { title: 'Total Cost', value: `MVR ${(stats.totalExpenses || 0).toLocaleString()}`, icon: TrendingDown, color: 'red' },
