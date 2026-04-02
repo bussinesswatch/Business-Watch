@@ -76,7 +76,7 @@ const Login = () => {
         <div className="w-full lg:w-1/2 p-8 md:p-12">
           <div className="text-center mb-8">
             <img 
-              src="/logo/logo.png" 
+              src="/logo/logo.jpeg" 
               alt="Business Watch" 
               className="w-16 h-16 mx-auto mb-4 object-contain"
             />

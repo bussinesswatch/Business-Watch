@@ -13,7 +13,7 @@ const Footer = () => {
           {/* Left - Logo & Company */}
           <div className="flex items-center gap-4">
             <img 
-              src="/logo/logo.png" 
+              src="/logo/logo.jpeg" 
               alt="Business Watch" 
               className="h-12 w-auto bg-white rounded-lg p-1"
             />

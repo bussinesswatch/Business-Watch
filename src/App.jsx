@@ -35,6 +35,7 @@ import NotificationCenter from './pages/NotificationCenter';
 import AuditLog from './pages/AuditLog';
 import AdvancedSearch from './pages/AdvancedSearch';
 import Chat from './pages/Chat';
+import StaffExpense from './pages/StaffExpense';
 
 import { useAuth } from './contexts/AuthContext';
 
@@ -131,6 +132,14 @@ function App() {
         <ProtectedRoute>
           <Layout>
             <Deliveries />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      
+      <Route path="/staff-expense" element={
+        <ProtectedRoute>
+          <Layout>
+            <StaffExpense />
           </Layout>
         </ProtectedRoute>
       } />

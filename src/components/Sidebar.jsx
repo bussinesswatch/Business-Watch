@@ -30,7 +30,8 @@ import {
   Bell,
   History,
   Search,
-  MessageCircle
+  MessageCircle,
+  Wallet
 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useState, useEffect } from 'react';
@@ -84,6 +85,7 @@ const Sidebar = () => {
     { path: '/procurement', icon: ShoppingCart, label: 'Procurement' },
     { path: '/suppliers', icon: Building2, label: 'Suppliers' },
     { path: '/deliveries', icon: Truck, label: 'Deliveries' },
+    { path: '/staff-expense', icon: Wallet, label: 'Staff Expense' },
     { path: '/analytics', icon: BarChart3, label: 'Analytics' },
     { path: '/cost-calculator', icon: Calculator, label: 'Cost Calculator' },
     { path: '/documents', icon: FolderOpen, label: 'Documents' },
@@ -137,7 +139,7 @@ const Sidebar = () => {
         <div className="p-4 lg:p-6 border-b border-gray-200">
           <div className="flex items-center gap-3">
             <img 
-              src="/logo/logo.png" 
+              src="/logo/logo.jpeg" 
               alt="Business Watch" 
               className="h-10 w-auto object-contain"
             />

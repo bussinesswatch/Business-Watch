@@ -495,6 +495,9 @@ const Bids = ({ initialFilter }) => {
       project: '',
       lots: null,
       
+      // Lot Configuration
+      lotMode: 'single',
+      
       // Bid Status
       status: 'Draft',
       result: 'Pending',
@@ -580,6 +583,7 @@ const Bids = ({ initialFilter }) => {
       funding: bid.funding || '',
       project: bid.project || '',
       lots: bid.lots || '',
+      lotMode: bid.lotMode || 'single',
       status: bid.status || 'Draft',
       result: bid.result || 'Pending',
       bidAmount: bid.bidAmount || '',
@@ -1250,6 +1254,42 @@ const Bids = ({ initialFilter }) => {
                   </button>
                 </div>
 
+                {/* Lot Mode Toggle */}
+                {(formData.items || []).length > 0 && (
+                  <div className="mb-4 p-3 bg-white rounded-lg border border-green-200">
+                    <label className="label text-sm font-medium text-gray-700 mb-2">Lot Configuration</label>
+                    <div className="flex gap-2">
+                      <button
+                        type="button"
+                        onClick={() => setFormData(prev => ({ ...prev, lotMode: 'single' }))}
+                        className={`flex-1 py-2 px-3 rounded-lg text-sm font-medium transition-all ${
+                          formData.lotMode === 'single' 
+                            ? 'bg-green-600 text-white shadow-md' 
+                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                        }`}
+                      >
+                        Many Items with One Lot
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setFormData(prev => ({ ...prev, lotMode: 'multiple' }))}
+                        className={`flex-1 py-2 px-3 rounded-lg text-sm font-medium transition-all ${
+                          formData.lotMode === 'multiple' 
+                            ? 'bg-green-600 text-white shadow-md' 
+                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                        }`}
+                      >
+                        Each Item with 1 Lot
+                      </button>
+                    </div>
+                    <p className="text-xs text-gray-500 mt-2">
+                      {formData.lotMode === 'single' 
+                        ? 'All items will be grouped under LOT 1' 
+                        : 'Each item will have its own LOT number'}
+                    </p>
+                  </div>
+                )}
+
                 {(formData.items || []).length === 0 ? (
                   <div className="text-center py-4">
                     <p className="text-gray-500 mb-3">No items added.</p>
@@ -1279,7 +1319,7 @@ const Bids = ({ initialFilter }) => {
                         <div className="flex items-center justify-between mb-3 pb-2 border-b border-green-100">
                           <div className="flex items-center gap-2">
                             <span className="bg-green-600 text-white text-xs font-bold px-2 py-1 rounded">
-                              LOT {index + 1}
+                              LOT {formData.lotMode === 'single' ? 1 : index + 1}
                             </span>
                             <span className="text-xs text-gray-500">Item {index + 1} of {formData.items.length}</span>
                           </div>
