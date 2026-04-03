@@ -17,16 +17,39 @@
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="-1" />
     <script>
-      // Clear browser cache and force reload if old bundle detected
-      if (performance && performance.getEntriesByType) {
-        const resources = performance.getEntriesByType('resource');
-        const hasOldBundle = resources.some(r => r.name.includes('index-CS_NE1Sy'));
-        if (hasOldBundle) {
-          console.log('Old bundle detected, clearing cache...');
-          caches.keys().then(names => names.forEach(name => caches.delete(name)));
-          location.reload(true);
+      // AGGRESSIVE CACHE CLEAR - Run immediately before anything else
+      (function() {
+        const CACHE_KEY = 'bw_cache_cleared_v2';
+        const lastClear = sessionStorage.getItem(CACHE_KEY);
+        
+        // Clear cache on every new deployment (check every page load)
+        if (!lastClear || Date.now() - parseInt(lastClear) > 5000) {
+          console.log('[CACHE] Clearing all caches...');
+          
+          // Clear all browser caches
+          if (caches && caches.keys) {
+            caches.keys().then(names => {
+              names.forEach(name => caches.delete(name));
+            });
+          }
+          
+          // Unregister all service workers
+          if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistrations().then(regs => {
+              regs.forEach(reg => reg.unregister());
+            });
+          }
+          
+          // Mark as cleared
+          sessionStorage.setItem(CACHE_KEY, Date.now().toString());
+          
+          // Force hard reload once
+          if (!window.location.hash.includes('nocache')) {
+            window.location.hash = 'nocache' + Date.now();
+            window.location.reload(true);
+          }
         }
-      }
+      })();
     </script>
     <title>Business Watch - Tender & Procurement Management</title>
   </head>
