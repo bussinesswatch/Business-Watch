@@ -77,8 +77,16 @@ const StaffExpense = () => {
     hasInterest: false,
     purpose: '',
     source: '',
+    sourceType: 'Other Party', // 'Company Staff' or 'Other Party'
     notes: ''
   });
+
+  // Predefined company staff/directors
+  const companyStaff = [
+    { name: 'Abobakuru Qasim', position: 'Managing Director' },
+    { name: 'Abdul Rasheed Ali', position: 'Director' },
+    { name: 'Ziyad Rashadh', position: 'Director' }
+  ];
 
   // Predefined expense types + user-defined
   const predefinedTypes = [
@@ -281,6 +289,7 @@ const StaffExpense = () => {
       hasInterest: false,
       purpose: '',
       source: '',
+      sourceType: 'Other Party',
       notes: ''
     });
   };
@@ -301,6 +310,7 @@ const StaffExpense = () => {
       hasInterest: entry.hasInterest || false,
       purpose: entry.purpose || '',
       source: entry.source || '',
+      sourceType: entry.sourceType || 'Other Party',
       notes: entry.notes || ''
     });
     setShowCapitalModal(true);
@@ -617,6 +627,7 @@ const StaffExpense = () => {
                 <thead>
                   <tr className="bg-purple-50 border-b border-purple-200">
                     <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Source</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Type</th>
                     <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Purpose</th>
                     <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Borrowed</th>
                     <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Paid</th>
@@ -630,9 +641,17 @@ const StaffExpense = () => {
                     const borrowed = parseFloat(entry.borrowedAmount) || 0;
                     const paid = parseFloat(entry.paidAmount) || 0;
                     const balance = borrowed - paid;
+                    const isStaff = entry.sourceType === 'Company Staff';
                     return (
                       <tr key={entry.id} className="hover:bg-purple-50/50">
                         <td className="px-4 py-3 text-sm text-gray-900 font-medium">{entry.source || '-'}</td>
+                        <td className="px-4 py-3">
+                          <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                            isStaff ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-700'
+                          }`}>
+                            {entry.sourceType || 'Other Party'}
+                          </span>
+                        </td>
                         <td className="px-4 py-3 text-sm text-gray-600">{entry.purpose || '-'}</td>
                         <td className="px-4 py-3 text-sm text-blue-600 font-medium">
                           MVR {borrowed.toLocaleString()}
@@ -857,17 +876,64 @@ const StaffExpense = () => {
               </div>
 
               <form onSubmit={handleCapitalSubmit} className="space-y-4">
-                {/* Source */}
+                {/* Source Type Selection */}
                 <div>
-                  <label className="label">Source (Staff/Investor)</label>
-                  <input
-                    type="text"
-                    value={capitalFormData.source}
-                    onChange={(e) => setCapitalFormData(prev => ({ ...prev, source: e.target.value }))}
-                    placeholder="e.g., Ahmed Mohamed, Bank Loan"
-                    className="input"
-                    required
-                  />
+                  <label className="label">Source Type</label>
+                  <div className="flex gap-4 mb-3">
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="radio"
+                        name="sourceType"
+                        value="Company Staff"
+                        checked={capitalFormData.sourceType === 'Company Staff'}
+                        onChange={(e) => setCapitalFormData(prev => ({ ...prev, sourceType: e.target.value, source: '' }))}
+                        className="w-4 h-4 text-purple-600"
+                      />
+                      <span className="text-sm">Company Staff</span>
+                    </label>
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="radio"
+                        name="sourceType"
+                        value="Other Party"
+                        checked={capitalFormData.sourceType === 'Other Party'}
+                        onChange={(e) => setCapitalFormData(prev => ({ ...prev, sourceType: e.target.value, source: '' }))}
+                        className="w-4 h-4 text-purple-600"
+                      />
+                      <span className="text-sm">Other Party</span>
+                    </label>
+                  </div>
+                </div>
+
+                {/* Source - Conditional based on type */}
+                <div>
+                  <label className="label">
+                    {capitalFormData.sourceType === 'Company Staff' ? 'Select Staff' : 'Source Name'}
+                  </label>
+                  {capitalFormData.sourceType === 'Company Staff' ? (
+                    <select
+                      value={capitalFormData.source}
+                      onChange={(e) => setCapitalFormData(prev => ({ ...prev, source: e.target.value }))}
+                      className="input"
+                      required
+                    >
+                      <option value="">Select a staff member...</option>
+                      {companyStaff.map((staff) => (
+                        <option key={staff.name} value={staff.name}>
+                          {staff.name} - {staff.position}
+                        </option>
+                      ))}
+                    </select>
+                  ) : (
+                    <input
+                      type="text"
+                      value={capitalFormData.source}
+                      onChange={(e) => setCapitalFormData(prev => ({ ...prev, source: e.target.value }))}
+                      placeholder="e.g., Bank Loan, External Investor"
+                      className="input"
+                      required
+                    />
+                  )}
                 </div>
 
                 {/* Purpose */}

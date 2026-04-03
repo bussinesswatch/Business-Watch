@@ -145,6 +145,28 @@ const Dashboard = () => {
       const totalPaid = capitalEntries.reduce((sum, e) => sum + (parseFloat(e.paidAmount) || 0), 0);
       const outstandingCapital = totalBorrowed - totalPaid;
       
+      // Separate Staff vs Other Party capital
+      const staffCapital = capitalEntries.filter(e => e.sourceType === 'Company Staff');
+      const otherPartyCapital = capitalEntries.filter(e => e.sourceType !== 'Company Staff');
+      
+      // Calculate totals by source type
+      const staffBorrowed = staffCapital.reduce((sum, e) => sum + (parseFloat(e.borrowedAmount) || 0), 0);
+      const staffPaid = staffCapital.reduce((sum, e) => sum + (parseFloat(e.paidAmount) || 0), 0);
+      const otherPartyBorrowed = otherPartyCapital.reduce((sum, e) => sum + (parseFloat(e.borrowedAmount) || 0), 0);
+      const otherPartyPaid = otherPartyCapital.reduce((sum, e) => sum + (parseFloat(e.paidAmount) || 0), 0);
+      
+      // Individual staff calculations
+      const staffBreakdown = {};
+      staffCapital.forEach(entry => {
+        const source = entry.source || 'Unknown';
+        if (!staffBreakdown[source]) {
+          staffBreakdown[source] = { borrowed: 0, paid: 0, balance: 0 };
+        }
+        staffBreakdown[source].borrowed += parseFloat(entry.borrowedAmount) || 0;
+        staffBreakdown[source].paid += parseFloat(entry.paidAmount) || 0;
+        staffBreakdown[source].balance = staffBreakdown[source].borrowed - staffBreakdown[source].paid;
+      });
+      
       const budget = budgets[0] || {};
       const totalBalance = accounts.reduce((sum, acc) => sum + (acc.balance || 0), 0);
       const totalPOValue = purchaseOrders.reduce((sum, po) => sum + (po.totalAmount || 0), 0);
@@ -174,7 +196,12 @@ const Dashboard = () => {
         // Capital stats (standalone)
         totalBorrowed,
         totalPaid,
-        outstandingCapital
+        outstandingCapital,
+        staffBorrowed,
+        staffPaid,
+        otherPartyBorrowed,
+        otherPartyPaid,
+        staffBreakdown
       });
 
       // Tender status data for pie chart
@@ -366,7 +393,9 @@ const Dashboard = () => {
             Standalone - Does not affect profit calculations
           </span>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        
+        {/* Overall Totals */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
           <div className="bg-blue-50 p-4 rounded-lg">
             <div className="flex items-center gap-3">
               <div className="p-2 bg-blue-100 rounded-lg">
@@ -402,6 +431,98 @@ const Dashboard = () => {
                 <p className="text-sm text-gray-600">Outstanding Balance</p>
                 <p className="text-xl font-bold text-orange-700">
                   MVR {(stats.outstandingCapital || 0).toLocaleString()}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Detailed Breakdown: Other Party (consolidated) */}
+        <div className="border-t border-gray-200 pt-4 mb-4">
+          <h3 className="text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
+            <Users className="w-4 h-4" />
+            Other Party Capital (Consolidated)
+          </h3>
+          <div className="bg-gray-50 p-3 rounded-lg">
+            <div className="grid grid-cols-3 gap-4 text-center">
+              <div>
+                <p className="text-xs text-gray-500">Borrowed</p>
+                <p className="text-lg font-semibold text-blue-600">
+                  MVR {(stats.otherPartyBorrowed || 0).toLocaleString()}
+                </p>
+              </div>
+              <div>
+                <p className="text-xs text-gray-500">Paid</p>
+                <p className="text-lg font-semibold text-green-600">
+                  MVR {(stats.otherPartyPaid || 0).toLocaleString()}
+                </p>
+              </div>
+              <div>
+                <p className="text-xs text-gray-500">Outstanding</p>
+                <p className="text-lg font-semibold text-orange-600">
+                  MVR {((stats.otherPartyBorrowed || 0) - (stats.otherPartyPaid || 0)).toLocaleString()}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Detailed Breakdown: Staff (by individual) */}
+        <div className="border-t border-gray-200 pt-4">
+          <h3 className="text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
+            <Users className="w-4 h-4" />
+            Company Staff Capital (By Person)
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {Object.entries(stats.staffBreakdown || {}).length > 0 ? (
+              Object.entries(stats.staffBreakdown).map(([name, data]) => (
+                <div key={name} className="bg-blue-50 p-3 rounded-lg">
+                  <p className="text-xs font-medium text-gray-700 mb-2">{name}</p>
+                  <div className="space-y-1 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-gray-500">Borrowed:</span>
+                      <span className="font-medium text-blue-600">
+                        MVR {data.borrowed.toLocaleString()}
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-500">Paid:</span>
+                      <span className="font-medium text-green-600">
+                        MVR {data.paid.toLocaleString()}
+                      </span>
+                    </div>
+                    <div className="flex justify-between border-t border-blue-200 pt-1 mt-1">
+                      <span className="text-gray-500">Balance:</span>
+                      <span className="font-medium text-orange-600">
+                        MVR {data.balance.toLocaleString()}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <p className="text-sm text-gray-400 col-span-3">No staff capital entries yet</p>
+            )}
+          </div>
+          {/* Staff Totals */}
+          <div className="mt-3 bg-indigo-50 p-3 rounded-lg">
+            <div className="grid grid-cols-3 gap-4 text-center">
+              <div>
+                <p className="text-xs text-gray-500">Total Borrowed (Staff)</p>
+                <p className="text-lg font-semibold text-indigo-600">
+                  MVR {(stats.staffBorrowed || 0).toLocaleString()}
+                </p>
+              </div>
+              <div>
+                <p className="text-xs text-gray-500">Total Paid (Staff)</p>
+                <p className="text-lg font-semibold text-green-600">
+                  MVR {(stats.staffPaid || 0).toLocaleString()}
+                </p>
+              </div>
+              <div>
+                <p className="text-xs text-gray-500">Total Outstanding (Staff)</p>
+                <p className="text-lg font-semibold text-orange-600">
+                  MVR {((stats.staffBorrowed || 0) - (stats.staffPaid || 0)).toLocaleString()}
                 </p>
               </div>
             </div>
