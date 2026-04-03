@@ -1642,7 +1642,7 @@ const Bids = ({ initialFilter }) => {
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                           <div className="md:col-span-1">
                             <label className="label text-xs">Cost Type</label>
-                            {predefinedCostTypes.includes(cost.type) ? (
+                            {cost.isCustom === false ? (
                               <input
                                 type="text"
                                 value={cost.type}
@@ -1654,6 +1654,11 @@ const Bids = ({ initialFilter }) => {
                                 type="text"
                                 value={cost.type}
                                 onChange={(e) => updateAdditionalCost(cost.id, 'type', e.target.value)}
+                                onBlur={(e) => {
+                                  if (e.target.value && !predefinedCostTypes.includes(e.target.value)) {
+                                    saveUserDefinedCostType(e.target.value);
+                                  }
+                                }}
                                 placeholder="Enter cost type"
                                 className="input text-sm"
                               />

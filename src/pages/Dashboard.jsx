@@ -13,7 +13,10 @@ import {
   Calendar,
   TrendingUp,
   TrendingDown,
-  Wallet
+  Wallet,
+  PiggyBank,
+  ArrowDownLeft,
+  ArrowUpRight
 } from 'lucide-react';
 import { 
   BarChart, 
@@ -50,7 +53,11 @@ const Dashboard = () => {
     totalBalance: 0,
     totalRevenue: 0,
     totalExpenses: 0,
-    netProfit: 0
+    netProfit: 0,
+    // Capital stats (standalone - not affecting profit)
+    totalBorrowed: 0,
+    totalPaid: 0,
+    outstandingCapital: 0
   });
   const [recentActivity, setRecentActivity] = useState([]);
   const [alerts, setAlerts] = useState([]);
@@ -89,6 +96,7 @@ const Dashboard = () => {
       const transactionsSnapshot = await getDocs(collection(db, 'transactions'));
       const budgetsSnapshot = await getDocs(collection(db, 'budgets'));
       const poSnapshot = await getDocs(collection(db, 'purchaseOrders'));
+      const capitalSnapshot = await getDocs(collection(db, 'capital'));
       
       const tenders = tendersSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       const bids = bidsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
@@ -99,6 +107,7 @@ const Dashboard = () => {
       const transactions = transactionsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       const budgets = budgetsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       const purchaseOrders = poSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      const capitalEntries = capitalSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       
       setAccounts(accounts);
       setTransactions(transactions);
@@ -131,6 +140,11 @@ const Dashboard = () => {
       const totalStaffExpenses = staffExpenses.reduce((sum, e) => sum + (parseFloat(e.amount) || 0), 0);
       const netProfitAfterStaffExpenses = wonBidProfit - totalStaffExpenses;
       
+      // Capital calculations (standalone - not affecting profit)
+      const totalBorrowed = capitalEntries.reduce((sum, e) => sum + (parseFloat(e.borrowedAmount) || 0), 0);
+      const totalPaid = capitalEntries.reduce((sum, e) => sum + (parseFloat(e.paidAmount) || 0), 0);
+      const outstandingCapital = totalBorrowed - totalPaid;
+      
       const budget = budgets[0] || {};
       const totalBalance = accounts.reduce((sum, acc) => sum + (acc.balance || 0), 0);
       const totalPOValue = purchaseOrders.reduce((sum, po) => sum + (po.totalAmount || 0), 0);
@@ -156,7 +170,11 @@ const Dashboard = () => {
         totalPOValue,
         poCount: purchaseOrders.length,
         poInTransit,
-        poReceived
+        poReceived,
+        // Capital stats (standalone)
+        totalBorrowed,
+        totalPaid,
+        outstandingCapital
       });
 
       // Tender status data for pie chart
@@ -335,6 +353,60 @@ const Dashboard = () => {
             </div>
           </div>
         ))}
+      </div>
+
+      {/* Capital Summary Section (Standalone - not affecting profit) */}
+      <div className="card border-l-4 border-l-purple-500">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
+            <PiggyBank className="w-5 h-5 text-purple-600" />
+            Capital Summary
+          </h2>
+          <span className="text-xs text-gray-500 bg-purple-50 px-3 py-1 rounded-full">
+            Standalone - Does not affect profit calculations
+          </span>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="bg-blue-50 p-4 rounded-lg">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-blue-100 rounded-lg">
+                <ArrowDownLeft className="w-5 h-5 text-blue-600" />
+              </div>
+              <div>
+                <p className="text-sm text-gray-600">Total Borrowed</p>
+                <p className="text-xl font-bold text-blue-700">
+                  MVR {(stats.totalBorrowed || 0).toLocaleString()}
+                </p>
+              </div>
+            </div>
+          </div>
+          <div className="bg-green-50 p-4 rounded-lg">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-green-100 rounded-lg">
+                <ArrowUpRight className="w-5 h-5 text-green-600" />
+              </div>
+              <div>
+                <p className="text-sm text-gray-600">Total Paid Back</p>
+                <p className="text-xl font-bold text-green-700">
+                  MVR {(stats.totalPaid || 0).toLocaleString()}
+                </p>
+              </div>
+            </div>
+          </div>
+          <div className="bg-orange-50 p-4 rounded-lg">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-orange-100 rounded-lg">
+                <Wallet className="w-5 h-5 text-orange-600" />
+              </div>
+              <div>
+                <p className="text-sm text-gray-600">Outstanding Balance</p>
+                <p className="text-xl font-bold text-orange-700">
+                  MVR {(stats.outstandingCapital || 0).toLocaleString()}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Alerts Section */}
