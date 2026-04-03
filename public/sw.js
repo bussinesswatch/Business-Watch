@@ -1,4 +1,4 @@
-const CACHE_NAME = 'business-watch-v2';
+const CACHE_NAME = 'business-watch-v3';
 const urlsToCache = [
   '/',
   '/index.html',
@@ -70,6 +70,29 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
+  // Always fetch fresh for HTML files (network-first strategy)
+  if (request.mode === 'navigate' || url.endsWith('.html')) {
+    event.respondWith(
+      fetch(request)
+        .then((networkResponse) => {
+          // Update cache with fresh response
+          if (networkResponse && networkResponse.status === 200) {
+            const responseToCache = networkResponse.clone();
+            caches.open(CACHE_NAME).then((cache) => {
+              cache.put(request, responseToCache);
+            });
+          }
+          return networkResponse;
+        })
+        .catch(() => {
+          // Fallback to cache if network fails
+          return caches.match(request);
+        })
+    );
+    return;
+  }
+
+  // For other assets, use cache-first strategy
   event.respondWith(
     caches.match(request)
       .then((response) => {
