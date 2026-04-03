@@ -40,6 +40,8 @@ const Bids = ({ initialFilter }) => {
     const saved = localStorage.getItem('userDefinedCostTypes');
     return saved ? JSON.parse(saved) : [];
   });
+  const [fetchingGazette, setFetchingGazette] = useState(false);
+  const [fetchGazetteError, setFetchGazetteError] = useState('');
   
   const { isAdmin } = useAuth();
   const navigate = useNavigate();
@@ -254,7 +256,7 @@ const Bids = ({ initialFilter }) => {
       });
       
       // Calculate totals
-      const totals = calculateTotals(updatedItems);
+      const totals = calculateTotals(updatedItems, prev.additionalCosts);
       
       return {
         ...prev,
@@ -385,6 +387,69 @@ const Bids = ({ initialFilter }) => {
       totalBid: itemsTotal.totalBid + additionalCostsTotal,
       totalProfit: itemsTotal.totalProfit
     };
+  };
+
+  // Fetch tender data from Gazette URL
+  const fetchGazetteData = async () => {
+    if (!formData.gazetteUrl) {
+      setFetchGazetteError('Please enter a Gazette URL first');
+      return;
+    }
+
+    setFetchingGazette(true);
+    setFetchGazetteError('');
+
+    try {
+      const response = await fetch('/api/fetch-gazette', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url: formData.gazetteUrl })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch gazette data');
+      }
+
+      const data = await response.json();
+
+      // Populate form with fetched data
+      setFormData(prev => ({
+        ...prev,
+        title: data.title || prev.title,
+        titleDhivehi: data.titleDhivehi || prev.titleDhivehi,
+        authority: data.authority || prev.authority,
+        category: data.category || prev.category,
+        tenderNo: data.tenderNo || prev.tenderNo,
+        gazetteId: data.gazetteId || prev.gazetteId,
+        submissionDeadline: data.submissionDeadline || prev.submissionDeadline,
+        submissionTime: data.submissionTime || prev.submissionTime,
+        bidOpeningDate: data.bidOpeningDate || prev.bidOpeningDate,
+        bidOpeningTime: data.bidOpeningTime || prev.bidOpeningTime,
+        registrationDeadline: data.registrationDeadline || prev.registrationDeadline,
+        registrationTime: data.registrationTime || prev.registrationTime,
+        clarificationDeadline: data.clarificationDeadline || prev.clarificationDeadline,
+        clarificationTime: data.clarificationTime || prev.clarificationTime,
+        preBidMeeting: data.preBidMeeting || prev.preBidMeeting,
+        preBidMeetingTime: data.preBidMeetingTime || prev.preBidMeetingTime,
+        contactEmail: data.contactEmail || prev.contactEmail,
+        contactPhones: data.contactPhones || prev.contactPhones,
+        contactName: data.contactName || prev.contactName,
+        bidSecurity: data.bidSecurity || prev.bidSecurity,
+        performanceGuarantee: data.performanceGuarantee || prev.performanceGuarantee,
+        funding: data.funding || prev.funding,
+        project: data.project || prev.project,
+        eligibility: data.eligibility || prev.eligibility,
+        requirements: data.requirements || prev.requirements,
+        items: data.items ? requirementsToItems(data.requirements) : prev.items
+      }));
+
+      alert('Tender data fetched successfully!');
+    } catch (error) {
+      console.error('Error fetching gazette data:', error);
+      setFetchGazetteError('Failed to fetch data. Please check the URL and try again.');
+    } finally {
+      setFetchingGazette(false);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -657,7 +722,13 @@ const Bids = ({ initialFilter }) => {
     return colors[result] || 'bg-gray-100 text-gray-800';
   };
 
-  const totalBidValue = bids.reduce((sum, bid) => sum + (bid.bidAmount || 0), 0);
+  const getAdditionalCostsTotal = (bid) => {
+    const list = bid?.additionalCosts || [];
+    if (!Array.isArray(list)) return 0;
+    return list.reduce((sum, c) => sum + (parseFloat(c?.amount) || 0), 0);
+  };
+
+  const totalBidValue = bids.reduce((sum, bid) => sum + (bid.bidAmount || 0) + getAdditionalCostsTotal(bid), 0);
   const totalProfit = bids.reduce((sum, bid) => sum + (bid.profitMargin || 0), 0);
   const wonBids = bids.filter(b => b.result === 'Won').length;
 
@@ -1814,16 +1885,37 @@ const Bids = ({ initialFilter }) => {
                         placeholder="https://gazette.gov.mv/iulaan/..."
                       />
                       {formData.gazetteUrl && (
-                        <a
-                          href={formData.gazetteUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="btn-primary flex items-center px-3 py-2"
-                        >
-                          <ExternalLink className="w-4 h-4" />
-                        </a>
+                        <>
+                          <button
+                            type="button"
+                            onClick={fetchGazetteData}
+                            disabled={fetchingGazette}
+                            className="btn-secondary flex items-center px-3 py-2"
+                            title="Fetch tender data from Gazette"
+                          >
+                            {fetchingGazette ? (
+                              <div className="animate-spin h-4 w-4 border-2 border-primary-600 border-t-transparent rounded-full" />
+                            ) : (
+                              <Download className="w-4 h-4" />
+                            )}
+                          </button>
+                          <a
+                            href={formData.gazetteUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="btn-primary flex items-center px-3 py-2"
+                          >
+                            <ExternalLink className="w-4 h-4" />
+                          </a>
+                        </>
                       )}
                     </div>
+                    {fetchGazetteError && (
+                      <p className="text-sm text-red-600 mt-1">{fetchGazetteError}</p>
+                    )}
+                    <p className="text-xs text-gray-500 mt-1">
+                      Paste Gazette URL and click fetch to auto-fill tender details
+                    </p>
                   </div>
                   <div>
                     <label className="label">Info Sheet URL</label>

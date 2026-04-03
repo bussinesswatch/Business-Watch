@@ -84,6 +84,7 @@ const Dashboard = () => {
       const bidsSnapshot = await getDocs(collection(db, 'bids'));
       const deliveriesSnapshot = await getDocs(collection(db, 'deliveries'));
       const purchasesSnapshot = await getDocs(collection(db, 'purchases'));
+      const staffExpensesSnapshot = await getDocs(collection(db, 'staffExpenses'));
       const accountsSnapshot = await getDocs(collection(db, 'accounts'));
       const transactionsSnapshot = await getDocs(collection(db, 'transactions'));
       const budgetsSnapshot = await getDocs(collection(db, 'budgets'));
@@ -93,6 +94,7 @@ const Dashboard = () => {
       const bids = bidsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       const deliveries = deliveriesSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       const purchases = purchasesSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      const staffExpenses = staffExpensesSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       const accounts = accountsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       const transactions = transactionsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       const budgets = budgetsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
@@ -109,16 +111,25 @@ const Dashboard = () => {
       const completedProjects = deliveries.filter(d => d.completed).length;
       
       // Calculate financials from bids
-      const totalBidValue = bids.reduce((sum, b) => sum + (b.bidAmount || 0), 0);
-      const totalBidCost = bids.reduce((sum, b) => sum + (b.costEstimate || 0), 0);
+      const getAdditionalCostsTotal = (bid) => {
+        const list = bid?.additionalCosts || [];
+        if (!Array.isArray(list)) return 0;
+        return list.reduce((sum, c) => sum + (parseFloat(c?.amount) || 0), 0);
+      };
+
+      const totalBidValue = bids.reduce((sum, b) => sum + (b.bidAmount || 0) + getAdditionalCostsTotal(b), 0);
+      const totalBidCost = bids.reduce((sum, b) => sum + (b.costEstimate || 0) + getAdditionalCostsTotal(b), 0);
       const totalBidProfit = bids.reduce((sum, b) => sum + (b.profitMargin || 0), 0);
       
       // Won bids financials
       const wonBids = bids.filter(b => b.result === 'Won' || b.status === 'Won');
       const activeWonTenders = bids.filter(b => b.result === 'Won' && (b.status === 'Open' || b.status === 'In Progress')).length;
-      const wonBidRevenue = wonBids.reduce((sum, b) => sum + (b.bidAmount || 0), 0);
-      const wonBidCost = wonBids.reduce((sum, b) => sum + (b.costEstimate || 0), 0);
+      const wonBidRevenue = wonBids.reduce((sum, b) => sum + (b.bidAmount || 0) + getAdditionalCostsTotal(b), 0);
+      const wonBidCost = wonBids.reduce((sum, b) => sum + (b.costEstimate || 0) + getAdditionalCostsTotal(b), 0);
       const wonBidProfit = wonBids.reduce((sum, b) => sum + (b.profitMargin || 0), 0);
+
+      const totalStaffExpenses = staffExpenses.reduce((sum, e) => sum + (parseFloat(e.amount) || 0), 0);
+      const netProfitAfterStaffExpenses = wonBidProfit - totalStaffExpenses;
       
       const budget = budgets[0] || {};
       const totalBalance = accounts.reduce((sum, acc) => sum + (acc.balance || 0), 0);
@@ -136,8 +147,8 @@ const Dashboard = () => {
         totalAccounts: accounts.length,
         totalBalance,
         totalRevenue: wonBidRevenue || budget.total_revenue || 0,
-        totalExpenses: wonBidCost || budget.total_expenses || 0,
-        netProfit: wonBidProfit || budget.net_profit || 0,
+        totalExpenses: (wonBidCost + totalStaffExpenses) || budget.total_expenses || 0,
+        netProfit: netProfitAfterStaffExpenses || budget.net_profit || 0,
         totalBidValue,
         totalBidCost,
         totalBidProfit,
@@ -175,18 +186,19 @@ const Dashboard = () => {
       }
 
       bids.forEach(bid => {
-        if (bid.createdAt) {
+        const dateSource = bid.submittedAt || bid.submissionDate || bid.submissionDeadline || bid.createdAt;
+        if (dateSource) {
           try {
-            const dateValue = bid.createdAt?.toDate ? bid.createdAt.toDate() : new Date(bid.createdAt);
+            const dateValue = dateSource?.toDate ? dateSource.toDate() : new Date(dateSource);
             if (isNaN(dateValue.getTime())) return; // Skip invalid dates
             const monthKey = format(dateValue, 'MMM yyyy');
             if (monthlyData[monthKey]) {
-              monthlyData[monthKey].revenue += bid.bidAmount || 0;
-              monthlyData[monthKey].expenses += bid.costEstimate || 0;
+              monthlyData[monthKey].revenue += (bid.bidAmount || 0) + getAdditionalCostsTotal(bid);
+              monthlyData[monthKey].expenses += (bid.costEstimate || 0) + getAdditionalCostsTotal(bid);
               monthlyData[monthKey].profit += bid.profitMargin || 0;
             }
           } catch (e) {
-            console.warn('Invalid bid date:', bid.createdAt);
+            console.warn('Invalid bid date:', dateSource);
           }
         }
       });

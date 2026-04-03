@@ -1,17 +1,44 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Wallet, CreditCard, TrendingUp, TrendingDown, DollarSign, PieChart, ArrowUpRight, ArrowDownRight } from 'lucide-react';
 import { useData } from '../hooks/useData';
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from '../services/firebase';
 
 const Finance = () => {
   const [activeTab, setActiveTab] = useState('accounts');
+  const [staffExpensesTotal, setStaffExpensesTotal] = useState(0);
 
   const { bids, loading } = useData();
 
+  useEffect(() => {
+    const loadStaffExpenses = async () => {
+      try {
+        const snapshot = await getDocs(collection(db, 'staffExpenses'));
+        const total = snapshot.docs.reduce((sum, doc) => sum + (parseFloat(doc.data()?.amount) || 0), 0);
+        setStaffExpensesTotal(total);
+      } catch {
+        setStaffExpensesTotal(0);
+      }
+    };
+
+    loadStaffExpenses();
+  }, []);
+
+  const getAdditionalCostsTotal = (bid) => {
+    const list = bid?.additionalCosts || bid?.additional_costs || [];
+    if (!Array.isArray(list)) return 0;
+    return list.reduce((sum, c) => sum + (parseFloat(c?.amount) || 0), 0);
+  };
+
+  const getBidAmount = (bid) => (bid?.bidAmount ?? bid?.bid_amount ?? 0);
+  const getCostEstimate = (bid) => (bid?.costEstimate ?? bid?.cost_estimate ?? 0);
+  const getProfitMargin = (bid) => (bid?.profitMargin ?? bid?.profit_margin ?? 0);
+
   const accounts = useMemo(() => {
-    const totalBidValue = bids.reduce((sum, b) => sum + (b.bid_amount || 0), 0);
-    const wonValue = bids.filter(b => b.result === 'Won').reduce((sum, b) => sum + (b.bid_amount || 0), 0);
-    const pendingValue = bids.filter(b => !b.result || b.result === 'Pending').reduce((sum, b) => sum + (b.bid_amount || 0), 0);
-    const lostValue = bids.filter(b => b.result === 'Lost').reduce((sum, b) => sum + (b.bid_amount || 0), 0);
+    const totalBidValue = bids.reduce((sum, b) => sum + getBidAmount(b) + getAdditionalCostsTotal(b), 0);
+    const wonValue = bids.filter(b => b.result === 'Won').reduce((sum, b) => sum + getBidAmount(b) + getAdditionalCostsTotal(b), 0);
+    const pendingValue = bids.filter(b => !b.result || b.result === 'Pending').reduce((sum, b) => sum + getBidAmount(b) + getAdditionalCostsTotal(b), 0);
+    const lostValue = bids.filter(b => b.result === 'Lost').reduce((sum, b) => sum + getBidAmount(b) + getAdditionalCostsTotal(b), 0);
 
     return [
       {
@@ -52,24 +79,25 @@ const Finance = () => {
         date: b.submission_deadline || b.bid_opening_date || '',
         description: b.tender_title || b.title || 'Bid',
         category: b.category || 'Bid',
-        amount: b.bid_amount || 0,
+        amount: getBidAmount(b) + getAdditionalCostsTotal(b),
         reference: b.result || b.status || ''
       }))
       .sort((a, b) => (b.date || '').localeCompare(a.date || ''));
   }, [bids]);
 
   const budgetSummary = useMemo(() => {
-    const wonValue = bids.filter(b => b.result === 'Won').reduce((sum, b) => sum + (b.bid_amount || 0), 0);
-    const estimatedCost = wonValue * 0.75;
-    const netProfit = wonValue - estimatedCost;
+    const wonBids = bids.filter(b => b.result === 'Won');
+    const wonValue = wonBids.reduce((sum, b) => sum + getBidAmount(b) + getAdditionalCostsTotal(b), 0);
+    const estimatedCost = wonBids.reduce((sum, b) => sum + getCostEstimate(b) + getAdditionalCostsTotal(b), 0);
+    const netProfit = wonBids.reduce((sum, b) => sum + getProfitMargin(b), 0) - staffExpensesTotal;
     const profitMargin = wonValue > 0 ? ((netProfit / wonValue) * 100).toFixed(1) : 0;
     return {
       total_revenue: wonValue,
-      total_expenses: estimatedCost,
+      total_expenses: estimatedCost + staffExpensesTotal,
       net_profit: netProfit,
       profit_margin: profitMargin
     };
-  }, [bids]);
+  }, [bids, staffExpensesTotal]);
 
   const totalAssets = accounts
     .filter(a => a.account_type === 'Asset')
