@@ -329,6 +329,7 @@ Create an admin user through Firebase console or registration, then manually set
 
 MIT License - feel free to use for your business.
 
+
 ## Support
 
 For issues or questions:
