@@ -22,6 +22,9 @@
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
     <script>
+      // Service Worker temporarily disabled to clear stuck cache
+      // Re-enable after confirming deployment works
+      /*
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
           navigator.serviceWorker.register('/sw.js')
@@ -35,6 +38,7 @@
             });
         });
       }
+      */
     </script>
   </body>
 </html>
