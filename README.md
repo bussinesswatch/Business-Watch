@@ -17,9 +17,22 @@ A full-stack web application for managing Maldives government tenders, bids, pro
 - **Per-Item Tracking**: Individual costs, bid prices, and profit calculations per item
 - **Additional Costs**: Commission, installation, transport, and custom cost types
 
-### Visual Updates
-- **New Logo**: Updated logo across login page, sidebar, and footer
-- **Install Logo**: Updated PWA manifest.json to use new JPEG logo for app installation
+### Gazette URL Auto-Fetch
+- **Paste Gazette URL**: When creating a bid, paste a Gazette link (e.g., `https://gazette.gov.mv/iulaan/384248`)
+- **Auto-Populate Form**: System fetches tender details including:
+  - Title (translated from Dhivehi to English)
+  - Ministry/Authority name
+  - Submission & registration deadlines
+  - Contact information (email, phone)
+  - Bid security and performance guarantee amounts
+  - Tender category and funding source
+- **Dhivehi Translation**: Built-in dictionary translates 150+ common tender terms
+- **One-Click Fetch**: Download icon button next to Gazette URL field
+
+### Financial Calculation Updates
+- **Additional Costs in Totals**: Bid values now include additional costs (commission, installation, transport, etc.) in all statistics
+- **Expenses Deducted from Profit**: Net profit calculations now subtract staff expenses
+- **Monthly Profit by Submission Date**: Dashboard monthly charts group profit by bid submission date (not entry date)
 
 ### Notification System
 - **Email Notifications**: Automatic email alerts when new bids are created
@@ -297,8 +310,8 @@ Create an admin user through Firebase console or registration, then manually set
 - Delete `node_modules` and `package-lock.json`
 - Run `npm install` again
 
-**Last Updated**: March 30, 2026  
-**Total Tenders**: 43  
+**Last Updated**: April 3, 2026  
+**Total Tenders**: 50+  
 **Data Source**: https://gazette.gov.mv/iulaan
 
 MIT License - feel free to use for your business.

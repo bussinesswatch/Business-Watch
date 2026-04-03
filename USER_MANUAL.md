@@ -52,11 +52,11 @@ The Dashboard is your command center showing key business metrics and urgent ale
 
 ### Overview Cards
 
-- **Total Tenders**: 43 Gazette tenders from government sources
+- **Total Tenders**: 50+ Gazette tenders from government sources
 - **Active Bids**: Current bidding activities in progress
 - **Won Projects**: Successfully awarded tenders
 - **Pending Deliveries**: Items awaiting delivery
-- **Total Revenue**: Financial summary of all projects
+- **Net Profit**: Revenue minus costs minus staff expenses
 
 ### Urgent Alerts Section
 
@@ -248,7 +248,39 @@ Add extra costs to your bid calculation:
 4. Enter amount for each cost
 5. Total automatically calculated
 
----
+### Gazette URL Auto-Fetch
+
+Quickly populate bid forms by pasting a Gazette URL. The system fetches tender details and auto-fills the form.
+
+**How to Use:**
+1. In the bid creation form, find the "Gazette URL" field
+2. Paste a Gazette link (e.g., `https://gazette.gov.mv/iulaan/384248`)
+3. Click the **download icon** button next to the field
+4. Wait for data to load (usually 2-3 seconds)
+5. Form fields auto-populate with tender details
+
+**Fields Auto-Populated:**
+- **Title** (translated from Dhivehi to English)
+- **Title in Dhivehi** (original text)
+- **Authority/Ministry** name
+- **Category** (auto-detected)
+- **Gazette ID** and **Tender Number**
+- **Deadlines**: Submission, registration, opening, closing
+- **Contact Information**: Email and phone numbers
+- **Bid Security** amount
+- **Performance Guarantee** amount
+- **Funding Source** and **Project Name**
+- **Eligibility Criteria**
+
+**Translation:**
+- System uses a built-in dictionary with 150+ common tender terms
+- Translates ministry names, equipment types, and technical terms
+- Original Dhivehi text preserved for reference
+
+**Notes:**
+- Requires internet connection to fetch Gazette data
+- Some fields may remain empty if not available on Gazette page
+- Always review and verify auto-populated data before saving
 
 ## Quotations
 
@@ -854,10 +886,10 @@ Business Watch is fully responsive for mobile devices.
 **Source**: https://gazette.gov.mv/iulaan
 
 **Current Dataset**:
-- 43 active tenders
+- 50+ active tenders
 - 18 categories
 - 20+ authorities
-- Updated: March 30, 2026
+- Updated: April 3, 2026
 
 **File Locations**:
 - Local: `data/working_file.json`
@@ -959,10 +991,10 @@ Tenders by organization:
 
 ## Version Information
 
-**Document Version**: 1.3.0  
-**Last Updated**: April 2, 2026  
-**App Version**: 1.3.0  
-**Total Tenders**: 43
+**Document Version**: 1.4.0  
+**Last Updated**: April 3, 2026  
+**App Version**: 1.4.0  
+**Total Tenders**: 50+
 
 ---
 

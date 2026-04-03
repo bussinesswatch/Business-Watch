@@ -2,6 +2,51 @@
 
 All notable changes to the Business Watch project.
 
+## [1.4.0] - 2026-04-03
+
+### ✨ Added
+
+#### Gazette URL Auto-Fetch
+- **New API Endpoint**: `/api/fetch-gazette` for fetching tender data from Gazette URLs
+- **Dhivehi to English Translation**: Dictionary-based translation with 150+ common tender terms
+- **Auto-Populate Bid Form**: Fetches and fills tender details automatically
+  - Title, authority, deadlines (submission/registration/opening/closing)
+  - Contact info (email, phone), bid security, performance guarantee
+  - Category, funding source, project name, eligibility criteria
+- **Fetch Button**: Download icon button next to Gazette URL field in Bids.jsx
+
+#### Financial Calculation Improvements
+- **Additional Costs in Totals**: All bid value calculations now include additionalCosts
+  - Dashboard stats, Finance page, Bids list totals
+  - Revenue, cost, and profit calculations updated
+- **Staff Expenses Deducted**: Net profit now subtracts total staff expenses
+  - Dashboard netProfit calculation updated
+  - Finance page budget summary updated
+- **Monthly Profit by Submission Date**: Dashboard monthly chart now uses submissionDate/deadline (not createdAt)
+
+### 🔧 Changed
+- **Bids.jsx**: Added getAdditionalCostsTotal helper, totals include additional costs
+- **Dashboard.jsx**: Added staffExpenses fetch, updated financial calculations, monthly data grouped by submission date
+- **Finance.jsx**: Added staffExpenses fetch, updated budgetSummary to deduct expenses
+- **API Consolidation**: Combined 3 notification endpoints into `/api/notifications/index.js`
+- **Test Files Moved**: Moved test files from `api/` to `scripts/testing/` to reduce serverless function count
+
+### 🐛 Fixed
+- **Vercel Deployment**: Reduced API function count from 13+ to under 12 for Hobby plan
+- **Notification API**: Consolidated subscribe/unsubscribe/new-bid into single endpoint
+
+### 📁 New Files
+```
+business-watch/
+├── api/
+│   ├── fetch-gazette.js (new endpoint for Gazette URL fetching)
+│   └── notifications/
+│       └── index.js (consolidated notification endpoint)
+└── scripts/testing/ (moved test files)
+```
+
+---
+
 ## [1.3.0] - 2026-04-02
 
 ### ✨ Added
@@ -226,4 +271,4 @@ business-watch/
 
 ---
 
-**Last Updated**: March 30, 2026
+**Last Updated**: April 3, 2026
