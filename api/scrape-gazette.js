@@ -25,6 +25,25 @@ export default async function handler(req, res) {
     const workingData = JSON.parse(readFileSync(workingFilePath, 'utf8'));
     const existingTenders = workingData.tenders || [];
 
+    // Load subscribers for notifications
+    const subscribersPath = join(__dirname, '../../data/subscribers.json');
+    let subscribers = [];
+    try {
+      subscribers = JSON.parse(readFileSync(subscribersPath, 'utf8'));
+    } catch {
+      subscribers = [];
+    }
+    
+    // Add subscribers to notification service
+    subscribers.forEach((sub, index) => {
+      notificationService.addSubscriber(`sub-${index}`, {
+        email: sub.email,
+        phone: sub.phone,
+        preferences: sub.preferences
+      });
+    });
+    console.log(`📧 Loaded ${subscribers.length} subscriber(s) for notifications`);
+
     // Scrape new tenders
     const newTenders = await gazetteScraper.fetchLatestTenders();
 

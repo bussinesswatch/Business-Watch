@@ -21,13 +21,14 @@ Complete guide for using the Business Watch tender management system.
 15. [Calendar](#calendar)
 16. [KPI Dashboard](#kpi-dashboard)
 17. [Cost Calculator](#cost-calculator)
-18. [Advanced Search](#advanced-search)
-19. [Email Notifications](#email-notifications)
-20. [Administration](#administration)
-21. [Mobile Usage](#mobile-usage)
-22. [Data Sources](#data-sources)
-23. [Troubleshooting](#troubleshooting)
-24. [Quick Reference](#quick-reference)
+18. [Staff Expense](#staff-expense)
+19. [Advanced Search](#advanced-search)
+20. [Email Notifications](#email-notifications)
+21. [Administration](#administration)
+22. [Mobile Usage](#mobile-usage)
+23. [Data Sources](#data-sources)
+24. [Troubleshooting](#troubleshooting)
+25. [Quick Reference](#quick-reference)
 
 ---
 
@@ -91,6 +92,7 @@ The sidebar contains 25+ modules organized by function:
 | Documents | File management | All users |
 | Projects | Won tender projects | All users |
 | Finance | Budget and accounting | All users |
+| Staff Expense | Track staff-related costs | All users |
 
 ### Analytics & Reports
 | Module | Description | Access |
@@ -202,6 +204,49 @@ Top of page shows:
 - **Duplicate**: Copy for similar tender
 - **Convert to Project**: When won
 - **Delete**: Remove draft bids
+
+### Lot Configuration
+
+When creating or editing a bid with requirement items, you can configure how LOT numbers are assigned:
+
+**Lot Mode Options:**
+- **Many Items with One Lot**: All items grouped under LOT 1 (default)
+- **Each Item with 1 Lot**: Each item gets its own LOT number (LOT 1, LOT 2, etc.)
+
+**How to Configure:**
+1. Add requirement items to your bid
+2. Look for "Lot Configuration" toggle that appears above the items list
+3. Click your preferred option
+4. LOT display updates automatically for all items
+
+**When to Use:**
+- Use "Many Items with One Lot" when bidding on a single contract covering multiple items
+- Use "Each Item with 1 Lot" when each item is a separate contract/lot
+
+### Additional Costs
+
+Add extra costs to your bid calculation:
+
+**Predefined Cost Types:**
+- Commission
+- Installation
+- Boat Naal (transport)
+- Helpers Charge
+- Unloading Charge
+- Loading Charge
+- Tea / Dinner Charge
+
+**Custom Costs:**
+- Add any custom cost type
+- Automatically saved for future use
+- Included in total bid calculation
+
+**How to Add:**
+1. In bid form, scroll to "Additional Costs" section
+2. Click quick-add buttons for common costs
+3. Or click "+ Custom" for custom types
+4. Enter amount for each cost
+5. Total automatically calculated
 
 ---
 
@@ -503,6 +548,88 @@ Estimate costs for tender submissions.
 
 ---
 
+## Staff Expense
+
+Track and manage all staff-related expenses with detailed categorization.
+
+### Dashboard Overview
+
+The Staff Expense page provides a comprehensive dashboard with:
+
+- **Total Expenses**: All-time expense summary
+- **This Month**: Current month's expenses
+- **Staff Count**: Number of unique staff members with expenses
+- **Expense Entries**: Total number of expense records
+
+### Expense Types
+
+**Predefined Categories:**
+- **Salary**: Staff salaries and wages
+- **Printing Charge**: Document printing costs
+- **Binding**: Book and document binding
+- **Laminating**: Document lamination services
+- **Transport**: Transportation and travel expenses
+- **Meals**: Food and meal expenses
+- **Office Supplies**: General office materials
+- **Utilities**: Electricity, water, internet bills
+- **Maintenance**: Equipment and facility maintenance
+
+**Custom Types:**
+- Add any custom expense type
+- Automatically saved to localStorage for future use
+- Unlimited custom categories supported
+
+### Managing Expenses
+
+**Add New Expense:**
+1. Click "Add Expense" button
+2. Select expense type (or enter custom)
+3. Enter description
+4. Set amount (MVR)
+5. Choose date
+6. Add staff name (optional)
+7. Add notes (optional)
+8. Click Save
+
+**Edit Expense:**
+1. Find expense in table
+2. Click edit (pencil) icon
+3. Modify fields
+4. Save changes
+
+**Delete Expense:**
+1. Find expense in table
+2. Click delete (trash) icon
+3. Confirm deletion
+
+### Expense by Type Breakdown
+
+Visual summary showing:
+- Total amount per expense type
+- Percentage distribution
+- Top expense categories
+- Historical trends
+
+### Search and Filter
+
+**Search by:**
+- Description keywords
+- Staff name
+- Expense type
+
+**Filter by:**
+- Expense type (dropdown)
+- Date range (use search)
+
+### Data Storage
+
+- **Primary**: Firebase Firestore (`staffExpenses` collection)
+- **Custom Types**: localStorage for persistence
+- **Real-time**: Synced across all users
+- **Secure**: Authentication required
+
+---
+
 ## Advanced Search
 
 Powerful search across all data.
@@ -538,6 +665,7 @@ Stay informed with automatic alerts.
 **Bid Alerts:**
 - Bid result updates
 - Status change notifications
+- **New bid created** (automatic email to all subscribers)
 
 **Deadline Alerts:**
 - Daily summary of urgent tenders
@@ -818,6 +946,7 @@ Tenders by organization:
 | Subscribe to alerts | Click bell icon → Notification Settings |
 | Check deadlines | Calendar page or Dashboard |
 | Calculate costs | Cost Calculator page |
+| Track staff expenses | Staff Expense page → Add Expense |
 
 ### Important Dates (Sample)
 
@@ -830,9 +959,9 @@ Tenders by organization:
 
 ## Version Information
 
-**Document Version**: 1.2.0  
-**Last Updated**: March 31, 2026  
-**App Version**: 1.2.0  
+**Document Version**: 1.3.0  
+**Last Updated**: April 2, 2026  
+**App Version**: 1.3.0  
 **Total Tenders**: 43
 
 ---

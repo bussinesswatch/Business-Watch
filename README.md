@@ -2,7 +2,32 @@
 
 A full-stack web application for managing Maldives government tenders, bids, procurement, and project tracking with real-time Firebase integration.
 
-## 🌟 New Features (March 2026)
+## 🌟 New Features (April 2026)
+
+### Staff Expense Management
+- **Track Staff Expenses**: Salary, printing, binding, laminating, and custom expense types
+- **Expense Dashboard**: Visual statistics by type and time period
+- **User-Defined Categories**: Add custom expense types with localStorage persistence
+- **Staff-wise Tracking**: Assign expenses to specific staff members
+- **Firebase Integration**: All data stored in Firestore with real-time sync
+
+### Bid Lot Configuration
+- **Flexible Lot Options**: Choose between "Many Items with One Lot" or "Each Item with 1 Lot"
+- **Dynamic LOT Display**: Automatic LOT numbering based on selected mode
+- **Per-Item Tracking**: Individual costs, bid prices, and profit calculations per item
+- **Additional Costs**: Commission, installation, transport, and custom cost types
+
+### Visual Updates
+- **New Logo**: Updated logo across login page, sidebar, and footer
+- **Install Logo**: Updated PWA manifest.json to use new JPEG logo for app installation
+
+### Notification System
+- **Email Notifications**: Automatic email alerts when new bids are created
+  - Sends to all subscribed users
+  - Includes bid details, amount, and items count
+  - Integration with notification preferences
+
+## 🌟 Previous Features (March 2026)
 
 ### Gazette Tender Integration
 - **43 Live Tenders**: Automatically scraped from gazette.gov.mv

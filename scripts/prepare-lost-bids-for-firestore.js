@@ -1,7 +1,7 @@
-const fs = require('fs');
+import { readFileSync, writeFileSync } from 'fs';
 
 // Read the lost bids file
-const data = JSON.parse(fs.readFileSync('./data/lost_bids.json', 'utf8'));
+const data = JSON.parse(readFileSync('./data/lost_bids.json', 'utf8'));
 
 // Transform tenders to Firestore bid format
 const firestoreBids = data.tenders.map(tender => ({
@@ -63,7 +63,7 @@ const firestoreBids = data.tenders.map(tender => ({
 }));
 
 // Write to output file
-fs.writeFileSync('./data/lost_bids_for_firestore.json', JSON.stringify({
+writeFileSync('./data/lost_bids_for_firestore.json', JSON.stringify({
   metadata: {
     total_bids: firestoreBids.length,
     generated_at: new Date().toISOString(),

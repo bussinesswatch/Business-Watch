@@ -2,6 +2,68 @@
 
 All notable changes to the Business Watch project.
 
+## [1.3.0] - 2026-04-02
+
+### ✨ Added
+
+#### Staff Expense Module
+- **New Staff Expense Page**: Complete expense tracking system
+  - Predefined types: Salary, Printing Charge, Binding, Laminating, Transport, Meals, Office Supplies, Utilities, Maintenance
+  - User-defined custom expense types with localStorage persistence
+  - Dashboard with 4 stat cards (Total, This Month, Staff Count, Entries)
+  - Expense breakdown by type visualization
+  - Staff-wise expense assignment
+  - Search and filter by type
+  - Firebase Firestore integration (`staffExpenses` collection)
+
+#### Bid Lot Configuration
+- **Lot Mode Toggle**: Choose between two lot configurations
+  - "Many Items with One Lot": All items grouped under LOT 1
+  - "Each Item with 1 Lot": Each item gets its own LOT number
+- **Dynamic LOT Display**: Automatic LOT numbering based on selected mode
+- **Enhanced Bid Items**: Individual cost, bid price, profit, and tax tracking per item
+- **Additional Costs Section**: Commission, Installation, Boat Naal, Helpers Charge, Unloading Charge, Loading Charge, Tea/Dinner Charge, plus user-defined custom costs
+
+#### Visual Updates
+- **Logo Update**: Changed from PNG to JPEG format
+- **Updated Logo Locations**: Login page, Footer, Sidebar
+- **PWA Manifest**: Updated manifest.json to use new JPEG logo for app installation
+
+#### Notification System
+- **New Bid Email Alerts**: Automatic email notifications when new bids are created
+  - API endpoint: `/api/notifications/new-bid`
+  - Sends to all subscribed users
+  - Includes bid title, amount, cost estimate, profit margin, and items count
+  - Integrated into Bids.jsx handleSubmit
+- **Email Templates**: New responsive HTML email template for bid notifications
+
+### 📁 New Files
+```
+business-watch/
+├── src/
+│   └── pages/
+│       └── StaffExpense.jsx (new page)
+├── api/
+│   └── notifications/
+│       └── new-bid.js (new endpoint)
+└── public/
+    └── logo/
+        └── logo.jpeg (updated logo)
+```
+
+### 🔧 Changed
+- **Bids.jsx**: Added lotMode field to formData, lot configuration UI, dynamic LOT display, integrated bid notification API call
+- **Sidebar.jsx**: Added Staff Expense navigation with Wallet icon
+- **App.jsx**: Added Staff Expense route `/staff-expense`
+- **manifest.json**: Updated all icon paths from logo.png to logo.jpeg
+- **notificationService.js**: Added sendNewBidAlert() and generateNewBidEmail() functions
+
+### 📊 Statistics
+- **Total Pages**: 30+ pages
+- **Navigation Items**: 27 sidebar items
+- **Expense Types**: 9 predefined + unlimited custom
+- **Notification Types**: 5 (deadline, bid opening, new tender, result update, new bid)
+
 ## [1.2.0] - 2026-03-31
 
 ### ✨ Added

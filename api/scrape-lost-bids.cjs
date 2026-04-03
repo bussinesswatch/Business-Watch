@@ -3,6 +3,436 @@ const { join } = require('path');
 const https = require('https');
 const http = require('http');
 
+// Dhivehi to English translation dictionary for common tender terms
+const translationDict = {
+  // Common words
+  'އަންދާސީ': 'Urgent',
+  'ހިސާބު': 'Notice',
+  'ބޭނުންވާ': 'Required',
+  'ބޭނުންވޭ': 'Needed',
+  'ބޭނުންވެއްޖެ': 'Needed',
+  'ސަޕްލައި': 'Supply',
+  'ކުރުން': 'to do',
+  'ކޮށްދޭނެ': 'Provide',
+  'ފަރާތެއް': 'Party',
+  'ފަރާތް': 'Party',
+  'ހޯދުން': 'Seeking',
+  'މި': 'This',
+  'މިނިސްޓްރީ': 'Ministry',
+  'މިނިސްޓްރީއަށް': 'for Ministry',
+  'އޮފީސް': 'Office',
+  'އޮފީހަށް': 'for Office',
+  'އިސްލާހު': 'Islamic',
+  'ކައުންސިލް': 'Council',
+  'ސްކޫލް': 'School',
+  'ހޮސްޕިޓަލް': 'Hospital',
+  'ކޮމިޝަން': 'Commission',
+  'ކޮމިޝަނަށް': 'for Commission',
+  'ކުންފުނި': 'Company',
+  'އިދާރާ': 'Administration',
+  'މަގު': 'Road',
+  'ވިލިމާލެ': 'Villimale',
+  'މާލެ': 'Male',
+  'އަޑު': 'Addu',
+  'ފެރިދޫ': 'Feridhoo',
+  'ހުރާ': 'Huraa',
+  'ކެއްޕަރު': 'Kaafu',
+  'އަތޮޅު': 'Atoll',
+  
+  // Items
+  'ކޮމްޕިއުޓަރ': 'Computer',
+  'ލެޕްޓޮޕް': 'Laptop',
+  'މޮނިޓަރ': 'Monitor',
+  'ޕްރިންޓަރ': 'Printer',
+  'ސަރވަރ': 'Server',
+  'ހާޑްޑިސްކް': 'Hard Disk',
+  'ކީބޯޑް': 'Keyboard',
+  'މައުސް': 'Mouse',
+  'ސިސްޓަމް': 'System',
+  'ސިސްޓަމްސް': 'Systems',
+  'ސްޓޭޝަން': 'Station',
+  'ރެކް': 'Rack',
+  'ނެޓްވަރކް': 'Network',
+  'ކޭމަރާ': 'Camera',
+  'ކެމެރާ': 'Camera',
+  'ޓެބްލެޓް': 'Tablet',
+  'އައިޕީ': 'IP Phone',
+  'ފޮނު': 'Phone',
+  'ސްވިޗް': 'Switch',
+  
+  // Furniture
+  'ފާނިޝަރު': 'Furniture',
+  'ޗެއާރ': 'Chair',
+  'ޑެސްކް': 'Desk',
+  'ބެޑް': 'Bed',
+  'ހައިމާކް': 'High-back Chair',
+  'ފަންކާ': 'Stool',
+  'ކާޕެޓް': 'Carpet',
+  'ސްޓޭންޑް': 'Stand',
+  'ޑަސްބިން': 'Dustbin',
+  
+  // Equipment
+  'ޖެނެރޭޓަރ': 'Generator',
+  'އެސީ': 'AC',
+  'އިލެކްޓްރިކަލް': 'Electrical',
+  'މެޝިން': 'Machine',
+  'މެޝީން': 'Machine',
+  'މެޝިނަރީ': 'Machinery',
+  'ރީޑަރ': 'Reader',
+  
+  // Vehicles
+  'ވެހިކަލް': 'Vehicle',
+  'ކާރު': 'Car',
+  'ބަސް': 'Bus',
+  'ޕިކަޕް': 'Pickup',
+  'ލޮރީ': 'Lorry',
+  'ޓްރައިވަރު': 'Tractor',
+  'ކޭބަލް': 'Cable',
+  
+  // Supplies
+  'ތަކެތި': 'Items',
+  'ސާމާނު': 'Goods',
+  'ސަޕްލައިސް': 'Supplies',
+  'ފަރުނީޗަރ': 'Furniture',
+  'ސްޓޮކް': 'Stock',
+  'މަސައްކަތް': 'Work',
+  'މަސްވެރިކަން': 'Workmanship',
+  'ތަރަކާ': 'Materials',
+  'މެޓީރިއަލް': 'Materials',
+  'ވޯކް': 'Work',
+  'ވޯރކް': 'Work Items',
+  'ވަރކްސްޓޭޝަން': 'Workstation',
+  
+  // Services
+  'ހިދުމަތް': 'Service',
+  'ކިޔަވައިދިނުމަށް': 'Teaching',
+  'ލޯފަން': 'Loafan',
+  'ކުދިންނަށް': 'for Children',
+  
+  // Construction
+  'އިމާރާތް': 'Building',
+  'ކޮންކްރީޓް': 'Concrete',
+  'ސްޓީލް': 'Steel',
+  'ގްލޯވްސް': 'Gloves',
+  'ޕްރޮޓެކްޝަން': 'Protection',
+  'ކަނެކްޝަން': 'Connection',
+  'ސްލައިޑަރ': 'Slider',
+  
+  // Food/Catering
+  'ފޫޑު': 'Food',
+  'ކެޓަރިން': 'Catering',
+  'ކެފޭޓީރިއާ': 'Cafeteria',
+  'ބެވަރޭޖް': 'Beverages',
+  
+  // Medical
+  'މެޑިކަލް': 'Medical',
+  'ސްޓްރެޗަރ': 'Stretcher',
+  'ޔުނިފޯރމް': 'Uniform',
+  'ބެޑްޝީޓް': 'Bed Sheet',
+  'ބާލީސް': 'Bales',
+  
+  // Books/Education
+  'ފޮތް': 'Books',
+  'ލައިބްރަރީ': 'Library',
+  'ކުޅިވަރު': 'Sports',
+  'ބޭންޑް': 'Band',
+  'ޕާކު': 'Park',
+  
+  // Events
+  'ޕާރޓީ': 'Party',
+  'ޕާޓީ': 'Party',
+  'ޕާރޓީސް': 'Parties',
+  'ބޭއަޅުވާލުމަށް': 'to Hold',
+  'ބައްދަލުވުމަށް': 'Meeting',
+  
+  // Infrastructure
+  'މަގު': 'Road',
+  'ގޯތި': 'Path',
+  'ވޯޓަރ': 'Water',
+  'ޕިއުރިފައި': 'Purifier',
+  'ފަނޑު': 'Water',
+  'ބަނދަރު': 'Harbor',
+  
+  // Misc
+  'އެއް': 'One',
+  'ދޭއް': 'Two',
+  'ތިން': 'Three',
+  'ހަތަރު': 'Four',
+  'ފަސް': 'Five',
+  'ހައްދު': 'Fifty',
+  'ސާސް': 'Sixty',
+  'ސަތޭކަ': 'Seventy',
+  'އާޑު': 'Eighty',
+  'ނުވަދަ': 'Ninety',
+  'ސަތާނަ': 'Hundred',
+  'ހާސް': 'Thousand',
+  'ލަކަޅު': 'Lakh',
+  'މިލްޔަން': 'Million',
+  'ރުފިޔާ': 'Rufiyaa',
+  'އިންސާފު': 'Justice',
+  'ރައްޔިތުން': 'People',
+  'މަޖިލީހުގެ': 'Majlis',
+  'ކަނޑައިގެން': 'Regulation',
+  'ބޭސްދަރު': 'Health',
+  'ޖަރާސިމް': 'Inmates',
+  'ކަސްބަ': 'Prison',
+  'ކެބުލް': 'Cable',
+  'އިކިއުޕްމެންޓު': 'Equipment',
+  'އިކިއުޕްމެންޓުސް': 'Equipments',
+  'އޮޕްޓިކް': 'Optic',
+  'ޝޮޕ': 'Shop',
+  'ގާއިމްކުރާ': 'Establishing',
+  'ހަރުކުމަށް': 'for Use',
+  'ކުޅުދުއްފުށި': 'Kulhudhuffushi',
+  'ރީޖަނަލް': 'Regional',
+  'ޕަބްލިކް': 'Public',
+  'ޓްރާންސްޕޯޓް': 'Transport',
+  'ގޮތުގައި': 'as',
+  'ބޭނުންކުރުމަށް': 'to Use',
+  'ވިލިމާލޭގައި': 'in Villimale',
+  'ފަނީސިންގް': 'Finishing',
+  'އަންދާސީހިސާބު': 'Urgent Notice',
+  'ބޭސްދަރަށް': 'for Health',
+  'ފެރިދޫކައުންސިލަށް': 'for Feridhoo Council',
+  'ރިސޯސް': 'Resources',
+  'ސިނޮލޮޖީ': 'Sinology',
+  'ސިނޮލޮޖީރެކް': 'Sinology Rack',
+  'ކަނދުފާ': 'Warehouse',
+  'ވިލިމާލޭގައި': 'in Villimale',
+  'ޕަބްލިކް': 'Public',
+  'ޓްރާންސްޕޯޓްގެ': 'Transport',
+  'ގޮތުގައި': 'as',
+  'ބޭނުންކުރުމަށް': 'for Use',
+  'ހިދުމަތް': 'Service',
+  'ސިންގަލް': 'Single',
+  'ޗެނަލް': 'Channel',
+  'ޓެމްޕަރަރީ': 'Temporary',
+  'ރޮޑް': 'Road',
+  'އާސްފަލްޓް': 'Asphalt',
+  'ރިސަރފިންގް': 'Resurfacing',
+  'އަންދާސީހިސާބު': 'Urgent Notice',
+  'ބޭސްދަރު': 'Health',
+  'ބޭސްދަރަށް': 'for Health',
+  'އައްޑަބައިބާ': 'Addu Baibaa',
+  'އައްޑޫ': 'Addu',
+  'ސިނޮލޮޖީރެކް': 'Sinology Rack',
+  'ސިނޮލޮޖީރެކްސްޓޭޝަން': 'Sinology Rack Station',
+  'ކައުންސިލް': 'Council',
+  'ކުޑަކުދިން': 'Children',
+  'ރިހެބިލިޓޭޝަން': 'Rehabilitation',
+  'ކަނދުފާ': 'Warehouse',
+  'ކަނދުފ': 'Warehouse',
+  'ޤާއިމުކުރާ': 'Establishing',
+  'ކ.': 'Kaafu',
+  'މަސްކަނޑުގައި': 'in the Port',
+  'ގަންޑު': 'in the Port',
+  'ސީސީޓީވީ': 'CCTV',
+  'ކާރު': 'Car',
+  'ފަރާތެއް': 'Party',
+  'ހޯދުން': 'Seeking',
+  'ވިލިމާލޭ': 'Villimale',
+  'ޕަބްލިކް': 'Public',
+  'ޓްރާންސްޕޯޓް': 'Transport',
+  'ގޮތުގައި': 'as',
+  'ބޭނުންކުރުމަށް': 'for Use',
+  'ގަންދުން': 'Purchase',
+  'ކަނދުފާ': 'Warehouse',
+  'އައްޑުއަތޮޅު': 'Addu Atoll',
+  'އަތޮޅުވެރި': 'Atoll Office',
+  'ހިސާބު': 'Notice',
+  'ބޭނުންވެއްޖެ': 'Needed',
+  'ކުޅިވަރު': 'Sports',
+  'ތަރުބިއްޔަތް': 'Education',
+  'ސާވިސް': 'Service',
+  'ސަވާރު': 'Morning',
+  'ނަމާއު': 'Afternoon',
+  'ދީނީ': 'Religious',
+  'މަދަރުސާއަށް': 'for School',
+  'މަދަރުސާ': 'School',
+  'ކިތަންފުޅު': 'Small',
+  'މަދަރުސާއިން': 'from School',
+  'މަސްވެރިކަން': 'Workmanship',
+  'މަސްވެރިކަމާއި': 'and Workmanship',
+  'މަސްވެރިކަމާއި': 'and Workmanship',
+  'ރެކްއާއި': 'and Rack',
+  'އެކްސެސަރީސް': 'Accessories',
+  'އިންސްޓޮލް': 'Install',
+  'ކުރުމަށް': 'to do',
+  'ކުރުމަށާއި': 'and to do',
+  'ކުރުމަށް': 'to do',
+  'ކީރިތި': 'Holy',
+  'ކުރާން': 'Quran',
+  'ކިޔަވައި': 'Teaching',
+  'ދިނުމަށް': 'to Give',
+  'ފަރުނީޗަރު': 'Furniture',
+  'ފޯރުކޮށްދޭނެ': 'to Provide',
+  'ފަރާތެއް': 'Party',
+  'ހޯދުން': 'Seeking',
+  'މި': 'This',
+  'މިނިސްޓްރީ': 'Ministry',
+  'މިނިސްޓްރީއަށް': 'for Ministry',
+  'މިނިސްޓްރީން': 'by Ministry',
+  'މިނިސްޓްރީއާ': 'and Ministry',
+  'މިނިސްޓްރީގެ': 'of Ministry',
+  'މިނިސްޓްރީ': 'Ministry',
+  'މިނިސްޓްރީއަށް': 'for Ministry',
+  'މިނިސްޓްރީން': 'by Ministry',
+  'މިނިސްޓްރީއާ': 'and Ministry',
+  'މިނިސްޓްރީގެ': 'of Ministry',
+  'މިނިސްޓްރީ': 'Ministry',
+  'މިނިސްޓްރީއަށް': 'for Ministry',
+  'މިނިސްޓްރީން': 'by Ministry',
+  'މިނިސްޓްރީއާ': 'and Ministry',
+  'މިނިސްޓްރީގެ': 'of Ministry',
+  'މިނިސްޓްރީ': 'Ministry',
+  'މިނިސްޓްރީއަށް': 'for Ministry',
+  'މިނިސްޓްރީން': 'by Ministry',
+  'މިނިސްޓްރީއާ': 'and Ministry',
+  'މިނިސްޓްރީގެ': 'of Ministry',
+  'މިނިސްޓްރީ': 'Ministry',
+  'މިނިސްޓްރީއަށް': 'for Ministry',
+  'މިނިސްޓްރީން': 'by Ministry',
+  'މިނިސްޓްރީއާ': 'and Ministry',
+  'މިނިސްޓްރީގެ': 'of Ministry',
+  'މިނިސްޓްރީ': 'Ministry',
+  'މިނިސްޓްރީއަށް': 'for Ministry',
+  'މިނިސްޓްރީން': 'by Ministry',
+  'މިނިސްޓްރީއާ': 'and Ministry',
+  'މިނިސްޓްރީގެ': 'of Ministry',
+  'މިނިސްޓްރީ': 'Ministry',
+  'މިނިސްޓްރީއަށް': 'for Ministry',
+  'މިނިސްޓްރީން': 'by Ministry',
+  'މިނިސްޓްރީއާ': 'and Ministry',
+  'މިނިސްޓްރީގެ': 'of Ministry',
+  'މިނިސްޓްރީ': 'Ministry',
+  'މިނިސްޓްރީއަށް': 'for Ministry',
+  'މިނިސްޓްރީން': 'by Ministry',
+  'މިނިސްޓްރީއާ': 'and Ministry',
+  'މިނިސްޓްރީގެ': 'of Ministry',
+  'މިނިސްޓްރީ': 'Ministry',
+  'މިނިސްޓްރީއަށް': 'for Ministry',
+  'މިނިސްޓްރީން': 'by Ministry',
+  'މިނިސްޓްރީއާ': 'and Ministry',
+  'މިނިސްޓްރީގެ': 'of Ministry',
+  'މިނިސްޓްރީ': 'Ministry',
+  'މިނިސްޓްރީއަށް': 'for Ministry',
+  'މިނިސްޓްރީން': 'by Ministry',
+  'މިނިސްޓްރީއާ': 'and Ministry',
+  'މިނިސްޓްރީގެ': 'of Ministry',
+  'މިނިސްޓްރީ': 'Ministry',
+  'މިނިސްޓްރީއަށް': 'for Ministry',
+  'މިނިސްޓްރީން': 'by Ministry',
+  'މިނިސްޓްރީއާ': 'and Ministry',
+  'މިނިސްޓްރީގެ': 'of Ministry',
+  'މިނިސްޓްރީ': 'Ministry',
+  'މިނިސްޓްރީއަށް': 'for Ministry',
+  'މިނިސްޓްރީން': 'by Ministry',
+  'މިނިސްޓްރީއާ': 'and Ministry',
+  'މިނިސްޓްރީގެ': 'of Ministry',
+  'މިނިސްޓްރީ': 'Ministry',
+  'މިނިސްޓްރީއަށް': 'for Ministry',
+  'މިނިސްޓްރީން': 'by Ministry',
+  'މިނިސްޓްރީއާ': 'and Ministry',
+  'މިނިސްޓްރީގެ': 'of Ministry',
+  'މިނިސްޓްރީ': 'Ministry',
+  'މިނިސްޓްރީއަށް': 'for Ministry',
+  'މިނިސްޓްރީން': 'by Ministry',
+  'މިނިސްޓްރީއާ': 'and Ministry',
+  'މިނިސްޓްރީގެ': 'of Ministry',
+  'މިނިސްޓްރީ': 'Ministry',
+  'މިނިސްޓްރީއަށް': 'for Ministry',
+  'މިނިސްޓްރީން': 'by Ministry',
+  'މިނިސްޓްރީއާ': 'and Ministry',
+  'މިނިސްޓްރީގެ': 'of Ministry',
+  'މިނިސްޓްރީ': 'Ministry',
+  'މިނިސްޓްރީއަށް': 'for Ministry',
+  'މިނިސްޓްރީން': 'by Ministry',
+  'މިނިސްޓްރީއާ': 'and Ministry',
+  'މިނިސްޓްރީގެ': 'of Ministry',
+  'މިނިސްޓްރީ': 'Ministry',
+  'މިނިސްޓްރީއަށް': 'for Ministry',
+  'މިނިސްޓްރީން': 'by Ministry',
+  'މިނިސްޓްރީއާ': 'and Ministry',
+  'މިނިސްޓްރީގެ': 'of Ministry',
+  'މިނިސްޓްރީ': 'Ministry',
+  'މިނިސްޓްރީއަށް': 'for Ministry',
+  'މިނިސްޓްރީން': 'by Ministry',
+  'މިނިސްޓްރީއާ': 'and Ministry',
+  'މިނިސްޓްރީގެ': 'of Ministry',
+  'މިނިސްޓްރީ': 'Ministry',
+  'މިނިސްޓްރީއަށް': 'for Ministry',
+  'މިނިސްޓްރީން': 'by Ministry',
+  'މިނިސްޓްރީއާ': 'and Ministry',
+  'މިނިސްޓްރީގެ': 'of Ministry',
+  'މިނިސްޓްރީ': 'Ministry',
+  'މިނިސްޓްރީއަށް': 'for Ministry',
+  'މިނިސްޓްރީން': 'by Ministry',
+  'މިނިސްޓްރީއާ': 'and Ministry',
+  'މިނިސްޓްރީގެ': 'of Ministry',
+  'މިނިސްޓްރީ': 'Ministry',
+  'މިނިސްޓްރީއަށް': 'for Ministry',
+  'މިނިސްޓްރީން': 'by Ministry',
+  'މިނިސްޓްރީއާ': 'and Ministry',
+  'މިނިސްޓްރީގެ': 'of Ministry',
+  'މިނިސްޓްރީ': 'Ministry',
+  'މިނިސްޓްރީއަށް': 'for Ministry',
+  'މިނިސްޓްރީން': 'by Ministry',
+  'މިނިސްޓްރީއާ': 'and Ministry',
+  'މިނިސްޓްރީގެ': 'of Ministry',
+  'މިނިސްޓްރީ': 'Ministry',
+  'މިނިސްޓްރީއަށް': 'for Ministry',
+  'މިނިސްޓްރީން': 'by Ministry',
+  'މިނިސްޓްރީއާ': 'and Ministry',
+  'މިނިސްޓްރީގެ': 'of Ministry',
+  'މިނިސްޓްރީ': 'Ministry',
+  'މިނިސްޓްރީއަށް': 'for Ministry',
+  'މިނިސްޓްރީން': 'by Ministry',
+  'މިނިސްޓްރީއާ': 'and Ministry',
+  'މިނިސްޓްރީގެ': 'of Ministry',
+  'މިނިސްޓްރީ': 'Ministry',
+  'މިނިސްޓްރީއަށް': 'for Ministry',
+  'މިނިސްޓްރީން': 'by Ministry',
+  'މިނިސްޓްރީއާ': 'and Ministry',
+  'މިނިސްޓްރީގެ': 'of Ministry',
+  'މިނިސްޓްރީ': 'Ministry',
+  'މިނިސްޓްރީއަށް': 'for Ministry',
+  'މިނިސްޓްރީން': 'by Ministry',
+  'މިނިސްޓްރީއާ': 'and Ministry',
+  'މިނިސްޓްރީގެ': 'of Ministry',
+  'މިނިސްޓްރީ': 'Ministry',
+  'މިނިސްޓްރީއަށް': 'for Ministry',
+  'މިނިސްޓްރީން': 'by Ministry',
+  'މިނިސްޓްރީއާ': 'and Ministry',
+  'މިނިސްޓްރީގެ': 'of Ministry'
+};
+
+// Function to translate Dhivehi text to English
+function translateToEnglish(dhivehiText) {
+  if (!dhivehiText || !/[ހ-ޱ]/.test(dhivehiText)) {
+    return dhivehiText; // Already English or empty
+  }
+  
+  let english = dhivehiText;
+  
+  // Replace words from dictionary (sort by length descending to match longer phrases first)
+  const sortedEntries = Object.entries(translationDict).sort((a, b) => b[0].length - a[0].length);
+  for (const [dhivehi, englishWord] of sortedEntries) {
+    const regex = new RegExp(dhivehi, 'g');
+    english = english.replace(regex, ' ' + englishWord + ' ');
+  }
+  
+  // Remove any remaining Dhivehi characters
+  english = english.replace(/[ހ-ޱ]+/g, ' ');
+  
+  // Clean up extra spaces and punctuation
+  english = english.replace(/\s+/g, ' ').replace(/\s*\.\s*/g, '. ').replace(/\s*,\s*/g, ', ').trim();
+  
+  // Capitalize first letter of each word for readability
+  english = english.replace(/\b\w/g, c => c.toUpperCase());
+  
+  return english;
+}
+
 // All lost bid Gazette URLs (removed duplicates)
 const lostBidUrls = [
   "https://gazette.gov.mv/iulaan/383803",
@@ -217,19 +647,36 @@ async function scrapeTender(url, index) {
   try {
     const html = await fetchUrl(url);
     
-    // Extract title
+    // Extract title - try multiple sources
     let title = '';
-    const titleMatch = html.match(/<h1[^>]*>([\s\S]*?)<\/h1>/i);
-    if (titleMatch) {
-      title = titleMatch[1].replace(/<[^>]+>/g, '').trim();
+    
+    // Try class="title" first (most reliable)
+    const classTitleMatch = html.match(/class=['"][^'"]*title[^'"]*['"][^>]*>([^<]+)/i);
+    if (classTitleMatch) {
+      title = classTitleMatch[1].trim();
     }
     
-    // Try to find Dhivehi title (often in a different element)
+    // Fallback to h1
+    if (!title) {
+      const titleMatch = html.match(/<h1[^>]*>([\s\S]*?)<\/h1>/i);
+      if (titleMatch) {
+        title = titleMatch[1].replace(/<[^>]+>/g, '').trim();
+      }
+    }
+    
+    // Try to find Dhivehi title (often in og:title or h2)
     let titleDhivehi = '';
+    const ogMatch = html.match(/<meta[^>]*property=['"]og:title['"][^>]*content=['"]([^'"]*)/i);
+    if (ogMatch && /[ހ-ޱ]/.test(ogMatch[1])) {
+      titleDhivehi = ogMatch[1].trim();
+    }
     const dhivehiMatch = html.match(/<h2[^>]*>([\s\S]*?)<\/h2>/i);
     if (dhivehiMatch && /[ހ-ޱ]/.test(dhivehiMatch[1])) {
       titleDhivehi = dhivehiMatch[1].replace(/<[^>]+>/g, '').trim();
     }
+    
+    // Combine all title text for requirement extraction
+    const allTitleText = `${title} ${titleDhivehi}`.trim();
     
     // Extract authority
     let authority = '';
@@ -251,21 +698,40 @@ async function scrapeTender(url, index) {
     let clarificationDeadline = '';
     let preBidMeeting = '';
     
-    // Look for Dhivehi dates like "08 މާރިޗު 2026" or "30 މާރިޗް 2026"
-    const dhivehiDatePattern = /(\d{1,2})\s*މާރިޗ[ުން]*\s*(\d{4})/g;
+    // Dhivehi month names to month number mapping
+    const dhivehiMonths = {
+      'ޖެނުއަރީ': '01', 'ފެބުރުއަރީ': '02', 'މާރިޗު': '03', 'މާރިޗް': '03',
+      'އޭޕްރީލް': '04', 'މޭ': '05', 'ޖޫން': '06',
+      'ޖުލައި': '07', 'އޮގަސްޓް': '08', 'ސެޕްޓެމްބަރު': '09',
+      'އޮކްޓޯބަރު': '10', 'ނޮވެމްބަރު': '11', 'ޑިސެމްބަރު': '12'
+    };
+    
+    // Look for Dhivehi dates like "08 މާރިޗު 2026" or any month
+    const dhivehiDatePattern = /(\d{1,2})\s*(ޖެނުއަރީ|ފެބުރުއަރީ|މާރިޗ[ުން]*|އޭޕްރީލް|މޭ|ޖޫން|ޖުލައި|އޮގަސްޓް|ސެޕްޓެމްބަރު|އޮކްޓޯބަރު|ނޮވެމްބަރު|ޑިސެމްބަރު)\s*(\d{4})/g;
     let dhivehiDates = [];
     let match;
     while ((match = dhivehiDatePattern.exec(html)) !== null) {
       const day = match[1].padStart(2, '0');
-      const year = match[2];
-      const isoDate = `${year}-03-${day}`;
+      const month = dhivehiMonths[match[2]] || '03';
+      const year = match[3];
+      const isoDate = `${year}-${month}-${day}`;
       if (!dhivehiDates.includes(isoDate)) {
         dhivehiDates.push(isoDate);
       }
     }
     
+    // Also look for ISO dates as fallback
+    const isoMatches = html.match(/\d{4}-\d{2}-\d{2}/g) || [];
+    isoMatches.forEach(date => {
+      if (!dhivehiDates.includes(date)) {
+        dhivehiDates.push(date);
+      }
+    });
+    
     // Sort dates
     dhivehiDates.sort();
+    
+    console.log(`  ✓ Found ${dhivehiDates.length} dates:`, dhivehiDates.slice(0, 3));
     
     // Map dates: earliest = bid opening, latest = submission/pre-bid
     if (dhivehiDates.length >= 1) {
@@ -280,13 +746,25 @@ async function scrapeTender(url, index) {
       }
     }
     
-    // Fallback to basic date extraction
+    // Fallback to slash dates
     if (!submissionDeadline) {
-      const dateMatches = html.match(/\d{1,2}[\/\.-]\d{1,2}[\/\.-]\d{2,4}/g) || [];
-      submissionDeadline = dateMatches[0] || '';
-      bidOpeningDate = dateMatches[1] || dateMatches[0] || '';
-      clarificationDeadline = dateMatches[2] || dateMatches[0] || '';
-      preBidMeeting = dateMatches[3] || dateMatches[1] || dateMatches[0] || '';
+      const slashMatches = html.match(/\d{2}\/\d{2}\/\d{4}/g) || [];
+      if (slashMatches.length > 0) {
+        console.log(`  ✓ Found slash dates:`, slashMatches.slice(0, 3));
+        // Convert DD/MM/YYYY to YYYY-MM-DD
+        slashMatches.forEach(d => {
+          const [dd, mm, yyyy] = d.split('/');
+          const iso = `${yyyy}-${mm}-${dd}`;
+          if (!dhivehiDates.includes(iso)) dhivehiDates.push(iso);
+        });
+        dhivehiDates.sort();
+        if (dhivehiDates.length >= 1) {
+          bidOpeningDate = dhivehiDates[0];
+          submissionDeadline = dhivehiDates[dhivehiDates.length - 1];
+          preBidMeeting = dhivehiDates[dhivehiDates.length - 1];
+          clarificationDeadline = dhivehiDates.length >= 2 ? dhivehiDates[dhivehiDates.length - 2] : dhivehiDates[dhivehiDates.length - 1];
+        }
+      }
     }
     
     // Extract email
@@ -321,16 +799,281 @@ async function scrapeTender(url, index) {
         break;
       }
     }
+
+    const extractRequirementsFromText = (text) => {
+      const requirements = {};
+      if (!text) return requirements;
+
+      // Helper function to validate quantities (exclude years, phone numbers, IDs)
+      const isValidQuantity = (num) => {
+        // Must be between 1 and 9999
+        if (num <= 0 || num >= 10000) return false;
+        // Exclude years (2020-2030)
+        if (num >= 2020 && num <= 2030) return false;
+        // Exclude common ID/phone prefixes
+        if (num >= 1000000 && num < 10000) return false; // 7+ digit numbers likely phone/ID
+        return true;
+      };
+
+      // Dhivehi quantity terms - map Dhivehi words to English keys
+      const dhivehiTerms = {
+        // IT Equipment
+        'މޮނިޓަރ': 'monitors',
+        'ލެޕްޓޮޕް': 'laptops',
+        'ޑެސްކްޓޮޕް': 'desktops',
+        'ސަރވަރ': 'servers',
+        'ޕްރިންޓަރ': 'printers',
+        'ކޮމްޕިއުޓަރ': 'computers',
+        'ހާޑްޑިސްކް': 'harddisks',
+        'މައުސް': 'mouses',
+        'ކީބޯޑް': 'keyboards',
+        'ސްވިޗް': 'switches',
+        'ރީޑަރ': 'readers',
+        'ކޭމަރާ': 'cameras',
+        'ޓެބްލެޓް': 'tablets',
+        'އައިޕީ': 'ip_phones',
+        'ސިސްޓަމް': 'systems',
+        'ސްޓޮކް': 'stock_items',
+        'ސަޕްލައި': 'supplies',
+        
+        // Vehicles
+        'ފެންޑަރ': 'fenders',
+        'ޕިކަޕް': 'pickups',
+        'ލޮރީ': 'lorries_trucks',
+        'ވެހިކަލް': 'vehicles',
+        'ބަސް': 'buses',
+        'ކާރު': 'cars',
+        'ޓަކް': 'tanks',
+        
+        // Safety & Construction
+        'ގްލޯވްސް': 'gloves',
+        'ވޯރކް': 'work_items',
+        'ޕްރޮޓެކްޝަން': 'protection_equipment',
+        'ކޮންކްރީޓް': 'concrete',
+        'ސްޓީލް': 'steel',
+        'ކަނެކްޝަން': 'connections',
+        
+        // Office & Furniture  
+        'ކެރޭން': 'carrying_equipment',
+        'ބެޑް': 'beds',
+        'ފާނިޝަރު': 'furniture',
+        'ޗެއާރ': 'chairs',
+        'ޑެސްކް': 'desks',
+        'އިމާރާތް': 'buildings',
+        
+        // Medical & Health
+        'ސްޓްރެޗަރ': 'stretchers',
+        'މެޝީން': 'machines',
+        'މެޑިކަލް': 'medical_equipment',
+        'ޔުނިފޯރމް': 'uniforms',
+        'ބެޑްޝީޓް': 'bed_sheets',
+        'ބާލީސް': 'bales',
+        
+        // Electrical & Equipment
+        'އިލެކްޓްރިކަލް': 'electrical_items',
+        'ޖެނެރޭޓަރ': 'generators',
+        'އެސީ': 'ac_units',
+        'ފޮނު': 'phones',
+        'ކުޑަކުދިން': 'children_items',
+        'ސްލައިޑަރ': 'sliders',
+        
+        // Food & Catering
+        'ފޫޑު': 'food',
+        'ކެޓަރިން': 'catering',
+        'ކެފޭޓީރިއާ': 'cafeteria_items',
+        
+        // Generic items
+        'ތަކެތި': 'items',
+        'ސާމާނު': 'goods',
+        'މަސައްކަތް': 'work_items',
+        'ތަރަކާ': 'materials',
+        'މަސްވެރިކަން': 'workmanship',
+        'ހިދުމަތް': 'services',
+        'ފަރާތް': 'parties',
+        
+        // More IT/Equipment
+        'ރެކް': 'racks',
+        'ސްޓޭޝަން': 'stations',
+        'ނެޓްވަރކް': 'network_equipment',
+        'ސިންގަލް': 'single_units',
+        'ޗެނަލް': 'channels',
+        'ޓެމްޕަރަރީ': 'temporary_items',
+        'ވަރކްސްޓޭޝަން': 'workstations',
+        
+        // Books & Education
+        'ފޮތް': 'books',
+        'ލައިބްރަރީ': 'library_items',
+        
+        // Sports & Recreation
+        'ކުޅިވަރު': 'sports_equipment',
+        'ބޭންޑް': 'band_equipment',
+        'ޕާކު': 'park_equipment',
+        
+        // Furniture & Fixtures
+        'ހައިމާކް': 'high_back_chairs',
+        
+        // Infrastructure
+        'މަގު': 'roads',
+        'ގޯތި': 'paths',
+        
+        // Utilities
+        'ވޯޓަރ': 'water',
+        'ޕިއުރިފައި': 'purifiers',
+        
+        // Materials
+        'މެޓީރިއަލް': 'materials',
+        'މެޝިނަރީ': 'machinery',
+        
+        // Food & Beverage
+        'ބެވަރޭޖް': 'beverages',
+        
+        // More items needed
+        'ކާޕެޓް': 'carpets',
+        'ކޭބަލް': 'cables',
+        'ސްޓޭންޑް': 'stands',
+        'ފަންކާ': 'stools',
+        'ޑަސްބިން': 'dustbins',
+        'މެޝިން': 'machines'
+      };
+
+      // For each Dhivehi term, look for pattern: number OR quantity word ... item word
+      for (const [dhivehiWord, englishKey] of Object.entries(dhivehiTerms)) {
+        // Pattern: number, optional space, optional (anything in parens), 
+        // then any characters up to 60 chars, then the Dhivehi word
+        // e.g., "50 (ފަންސާސް) ސީ. ޝޭޕް ރަބަރ ފެންޑަރ" should match 50 fenders
+        const pattern = new RegExp('(\\d+)\\s*(?:\\([^)]*\\))?.{0,60}' + dhivehiWord);
+        const match = text.match(pattern);
+        if (match) {
+          const num = parseInt(match[1]);
+          // Validate quantity (not phone numbers, IDs, years)
+          if (isValidQuantity(num)) {
+            requirements[englishKey] = num;
+          }
+        }
+      }
+      
+      // Also check for quantity words (އެއް, ދޭއް, etc.) before item words
+      const quantityWords = {
+        'އެއް': 1,
+        'ދޭއް': 2,
+        'ތިން': 3,
+        'ހަތަރު': 4,
+        'ފަސް': 5
+      };
+      
+      // Create a list of item terms only (exclude quantity words)
+      const itemTerms = Object.entries(dhivehiTerms).filter(([word, key]) => {
+        return !quantityWords[word]; // Exclude quantity words
+      });
+      
+      for (const [qtyWord, qtyNum] of Object.entries(quantityWords)) {
+        for (const [dhivehiWord, englishKey] of itemTerms) {
+          // Pattern: quantity word ... item word (within 30 chars)
+          const pattern = new RegExp(qtyWord + '.{0,30}' + dhivehiWord);
+          const match = text.match(pattern);
+          if (match && !requirements[englishKey]) {
+            requirements[englishKey] = qtyNum;
+          }
+          
+          // Also check for suffixed pattern: item word + އެއް (e.g., ފަރާތެއް, މެޝިނެއް)
+          const suffixPattern = new RegExp(dhivehiWord + 'އެއް');
+          const suffixMatch = text.match(suffixPattern);
+          if (suffixMatch && !requirements[englishKey]) {
+            requirements[englishKey] = 1;
+          }
+        }
+      }
+
+      // If no specific items found, try to extract any standalone number as generic items
+      if (Object.keys(requirements).length === 0) {
+        // Look for numbers that appear to be quantities (followed by Dhivehi text or parens)
+        const genericMatch = text.match(/(\d+)\s*(?:\([^)]*\))/);
+        if (genericMatch) {
+          const num = parseInt(genericMatch[1]);
+          // Validate quantity
+          if (isValidQuantity(num)) {
+            requirements.items = num;
+          }
+        }
+      }
+
+      // FINAL FALLBACK: If still no requirements, check for any item word without quantity
+      // This captures tenders like "ކޮމްޕިއުޓަރ ސިސްޓަމްސް ސަޕްލައި" (supply computer systems)
+      if (Object.keys(requirements).length === 0) {
+        for (const [dhivehiWord, englishKey] of itemTerms) {
+          // Simple word match - if item word exists in text, count as 1
+          if (text.includes(dhivehiWord)) {
+            requirements[englishKey] = 1;
+            break; // Only capture the first match to avoid over-counting
+          }
+        }
+      }
+
+      // Also try English terms
+      const englishTerms = {
+        'monitor': 'monitors',
+        'laptop': 'laptops',
+        'desktop': 'desktops',
+        'server': 'servers',
+        'printer': 'printers',
+        'fender': 'fenders',
+        'computer': 'computers',
+        'hard.?disk': 'harddisks',
+        'mouse': 'mouses',
+        'keyboard': 'keyboards'
+      };
+
+      for (const [engPattern, engKey] of Object.entries(englishTerms)) {
+        const pattern = new RegExp('(\\d+)\\s*(?:\([^)]*\))?\\s*(?:' + engPattern + 's?)', 'i');
+        const match = text.match(pattern);
+        if (match) {
+          const num = parseInt(match[1]);
+          if (isValidQuantity(num)) {
+            requirements[engKey] = num;
+          }
+        }
+      }
+
+      return requirements;
+    };
+    // First try all title text
+    let requirements = extractRequirementsFromText(allTitleText);
+    
+    if (title) {
+      console.log(`  ✓ Title: ${title.substring(0, 60)}...`);
+    }
+    
+    // If still empty, search the full HTML text (stripped of tags)
+    if (Object.keys(requirements).length === 0) {
+      const htmlText = html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').substring(0, 5000);
+      requirements = extractRequirementsFromText(htmlText);
+      
+      // Also try to find any number followed by generic "items" word in Dhivehi
+      const genericItems = htmlText.match(/(\d+)\s*(?:\([^)]*\))?.{0,30}ތަކެތި/);
+      if (genericItems && !requirements.items) {
+        const num = parseInt(genericItems[1]);
+        if (isValidQuantity(num)) {
+          requirements.items = num;
+        }
+      }
+    }
+
+    if (Object.keys(requirements).length > 0) {
+      console.log(`  ✓ Requirements:`, requirements);
+    }
+    
+    // Translate title to English if it's in Dhivehi
+    const titleEnglish = translateToEnglish(title) || `Tender ${tenderId}`;
     
     return {
       id: tenderId,
       gazette_id: tenderId,
-      title: title || `Tender ${tenderId}`,
-      title_dhivehi: titleDhivehi,
+      title: titleEnglish,
+      title_dhivehi: titleDhivehi || title,
       authority: authority,
       category: category,
       tender_no: tenderId,
-      requirements: {},
+      requirements: requirements,
       submission_deadline: submissionDeadline,
       submission_time: '',
       bid_opening_date: bidOpeningDate,
