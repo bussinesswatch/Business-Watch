@@ -16,7 +16,8 @@ import {
   Wallet,
   PiggyBank,
   ArrowDownLeft,
-  ArrowUpRight
+  ArrowUpRight,
+  Users as UsersIcon
 } from 'lucide-react';
 import { 
   BarChart, 
@@ -441,7 +442,7 @@ const Dashboard = () => {
         {/* Detailed Breakdown: Other Party (consolidated) */}
         <div className="border-t border-gray-200 pt-4 mb-4">
           <h3 className="text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
-            <Users className="w-4 h-4" />
+            <UsersIcon className="w-4 h-4" />
             Other Party Capital (Consolidated)
           </h3>
           <div className="bg-gray-50 p-3 rounded-lg">
@@ -471,7 +472,7 @@ const Dashboard = () => {
         {/* Detailed Breakdown: Staff (by individual) */}
         <div className="border-t border-gray-200 pt-4">
           <h3 className="text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
-            <Users className="w-4 h-4" />
+            <UsersIcon className="w-4 h-4" />
             Company Staff Capital (By Person)
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
