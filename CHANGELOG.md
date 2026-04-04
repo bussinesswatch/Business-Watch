@@ -26,7 +26,10 @@ All notable changes to the Business Watch project.
 - **Dashboard.jsx**: Added Capital Summary section with staff breakdown and Other Party consolidation
 - **Chart Fix**: Monthly Revenue chart now uses submissionDeadline (due date) instead of submittedAt (logged date)
 
-### 📁 New Files/Collections
+### � Fixed
+- **Dashboard.jsx**: Renamed `Users` import to `UsersIcon` to resolve ReferenceError caused by naming collision with Users page component
+
+### �📁 New Files/Collections
 - Firestore Collection: `capital` (stores all capital entries)
 
 ---
