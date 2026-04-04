@@ -86,7 +86,13 @@ const BidQuotation = ({ bid, onClose }) => {
   const items = bid?.items || [];
 
   const handlePrint = () => {
-    window.print();
+    document.body.classList.add('printing-quotation');
+    setTimeout(() => {
+      window.print();
+      setTimeout(() => {
+        document.body.classList.remove('printing-quotation');
+      }, 100);
+    }, 100);
   };
 
   // Render individual item quotations
@@ -512,6 +518,21 @@ const BidQuotation = ({ bid, onClose }) => {
         {/* Quotation Content */}
         <div className="max-w-4xl mx-auto bg-white shadow-lg print:shadow-none">
           <style>{`
+            /* Hide everything except quotation when printing */
+            body.printing-quotation > div:not(.fixed),
+            body.printing-quotation nav,
+            body.printing-quotation header,
+            body.printing-quotation .sidebar,
+            body.printing-quotation #root > div:first-child {
+              display: none !important;
+            }
+            body.printing-quotation .fixed.inset-0 {
+              position: static !important;
+              overflow: visible !important;
+            }
+            body.printing-quotation {
+              background: white !important;
+            }
             @media print {
               @page {
                 size: A4 portrait;
@@ -520,34 +541,20 @@ const BidQuotation = ({ bid, onClose }) => {
               body {
                 -webkit-print-color-adjust: exact;
                 print-color-adjust: exact;
-                background: white !important;
               }
               .quotation-page {
                 page-break-after: always;
                 min-height: 0 !important;
                 height: auto !important;
-                background: white !important;
                 box-shadow: none !important;
                 margin: 0 !important;
-                padding: 0 !important;
+                padding: 10mm !important;
               }
               .quotation-page:last-child {
                 page-break-after: avoid;
               }
               .print\\:hidden {
                 display: none !important;
-              }
-              .bg-gray-100 {
-                background: white !important;
-              }
-              .bg-black {
-                display: none !important;
-              }
-              .max-w-4xl {
-                max-width: none !important;
-              }
-              .shadow-lg {
-                box-shadow: none !important;
               }
             }
           `}</style>
