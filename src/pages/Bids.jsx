@@ -2134,7 +2134,7 @@ const Bids = ({ initialFilter }) => {
                     />
                   </div>
                   <div>
-                    <label className="label">Experience (%)</label>
+                    <label className="label">Feasibility (%)</label>
                     <input
                       type="number"
                       value={formData.evaluationExperience || ''}
