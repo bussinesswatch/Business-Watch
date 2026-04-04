@@ -1,11 +1,15 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Printer, Download, X, FileText, Building2, Phone, Mail, MapPin, Hash, Calendar, User } from 'lucide-react';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 
 const BidQuotation = ({ bid, onClose }) => {
   const [printMode, setPrintMode] = useState('all'); // 'all' or 'individual'
   const [showTax, setShowTax] = useState(true);
   const [gstRate, setGstRate] = useState(8);
   const [selectedSignatory, setSelectedSignatory] = useState(0);
+  const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
+  const quotationRef = useRef(null);
 
   // Signatory options with e-signatures
   const signatories = [
@@ -93,6 +97,43 @@ const BidQuotation = ({ bid, onClose }) => {
         document.body.classList.remove('printing-quotation');
       }, 100);
     }, 100);
+  };
+
+  const handleDownloadPDF = async () => {
+    if (!quotationRef.current) return;
+    
+    setIsGeneratingPDF(true);
+    try {
+      const element = quotationRef.current;
+      const canvas = await html2canvas(element, {
+        scale: 2,
+        useCORS: true,
+        logging: false,
+        backgroundColor: '#ffffff'
+      });
+      
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = pdf.internal.pageSize.getHeight();
+      const imgWidth = canvas.width;
+      const imgHeight = canvas.height;
+      const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
+      
+      const imgX = (pdfWidth - imgWidth * ratio) / 2;
+      const imgY = 0;
+      
+      pdf.addImage(imgData, 'PNG', imgX, imgY, imgWidth * ratio, imgHeight * ratio);
+      
+      const fileName = `Quotation_${bid?.title?.replace(/\s+/g, '_') || 'Bid'}_${new Date().toISOString().split('T')[0]}.pdf`;
+      pdf.save(fileName);
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+      alert('Failed to generate PDF. Please try using the Print button instead.');
+    } finally {
+      setIsGeneratingPDF(false);
+    }
   };
 
   // Render individual item quotations
@@ -219,11 +260,18 @@ const BidQuotation = ({ bid, onClose }) => {
           </table>
 
         {/* Bank Information */}
-        <div className="text-xs text-gray-700 space-y-0.5 mb-2 border-t border-gray-300 pt-2">
+        <div className="text-xs text-gray-700 space-y-1 mb-2 border-t border-gray-300 pt-2">
           <p className="font-semibold">Bank Account Information:</p>
-          <p>Bank: MIB (Maldives Islamic Bank)</p>
-          <p>Account Name: Business Watch Pvt Ltd</p>
-          <p>MVR: 90101480036671000 | USD: 90101480036672000</p>
+          <div className="space-y-1">
+            <p className="font-medium text-gray-800">Bank of Maldives (BML)</p>
+            <p>Account: 7770000188096 (WADIAH BUSINESS CURRENT)</p>
+            <p>Account: 7770000188098 (WADIAH BUSINESS CURRENT)</p>
+          </div>
+          <div className="space-y-1 mt-1">
+            <p className="font-medium text-gray-800">Maldives Islamic Bank (MIB)</p>
+            <p>Account Name: Business Watch Pvt Ltd</p>
+            <p>MVR: 90101480036671000 | USD: 90101480036672000</p>
+          </div>
         </div>
 
         {/* Footer */}
@@ -383,9 +431,16 @@ const BidQuotation = ({ bid, onClose }) => {
         {/* Bank Information */}
         <div className="text-xs text-gray-700 mb-2 border-t border-gray-300 pt-2">
           <p className="font-semibold mb-1">Bank Account Information:</p>
-          <p>Bank: MIB (Maldives Islamic Bank)</p>
-          <p>Account Name: Business Watch Pvt Ltd</p>
-          <p>MVR: 90101480036671000 | USD: 90101480036672000</p>
+          <div className="space-y-0.5 mb-1">
+            <p className="font-medium text-gray-800">Bank of Maldives (BML)</p>
+            <p>Account: 7770000188096 (WADIAH BUSINESS CURRENT)</p>
+            <p>Account: 7770000188098 (WADIAH BUSINESS CURRENT)</p>
+          </div>
+          <div className="space-y-0.5">
+            <p className="font-medium text-gray-800">Maldives Islamic Bank (MIB)</p>
+            <p>Account Name: Business Watch Pvt Ltd</p>
+            <p>MVR: 90101480036671000 | USD: 90101480036672000</p>
+          </div>
         </div>
 
         {/* Footer */}
@@ -498,11 +553,12 @@ const BidQuotation = ({ bid, onClose }) => {
             </button>
 
             <button
-              onClick={handlePrint}
-              className="btn-secondary flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white border-green-600"
+              onClick={handleDownloadPDF}
+              disabled={isGeneratingPDF}
+              className="btn-secondary flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white border-green-600 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Download className="w-4 h-4" />
-              Download PDF
+              {isGeneratingPDF ? 'Generating...' : 'Download PDF'}
             </button>
 
             <button
@@ -516,7 +572,7 @@ const BidQuotation = ({ bid, onClose }) => {
         </div>
 
         {/* Quotation Content */}
-        <div className="max-w-4xl mx-auto bg-white shadow-lg print:shadow-none">
+        <div ref={quotationRef} className="max-w-4xl mx-auto bg-white shadow-lg print:shadow-none">
           <style>{`
             /* Hide everything except quotation when printing */
             body.printing-quotation > div:not(.fixed),
