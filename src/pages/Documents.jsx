@@ -179,6 +179,14 @@ const Documents = () => {
     return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
   };
 
+  const getCloudinaryViewUrl = (url, format) => {
+    if (!url) return '';
+    if (format === 'pdf') {
+      return url.replace('/upload/', '/raw/');
+    }
+    return url;
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -286,7 +294,8 @@ const Documents = () => {
               return (
                 <div
                   key={doc.id}
-                  className="bg-white rounded-xl border border-gray-200 p-5 hover:shadow-lg transition-shadow"
+                  className="bg-white rounded-xl border border-gray-200 p-5 hover:shadow-lg transition-shadow cursor-pointer"
+                  onClick={() => setPreviewDoc(doc)}
                 >
                   <div className="flex items-start justify-between mb-4">
                     <div className={`w-12 h-12 rounded-lg bg-${type.color}-100 flex items-center justify-center`}>
@@ -315,16 +324,22 @@ const Documents = () => {
                     </p>
                   )}
 
-                  <div className="flex gap-2">
+                  <div className="flex gap-2" onClick={(e) => e.stopPropagation()}>
                     <button
-                      onClick={() => setPreviewDoc(doc)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setPreviewDoc(doc);
+                      }}
                       className="flex-1 flex items-center justify-center gap-2 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm font-medium transition-colors"
                     >
                       <Eye className="w-4 h-4" />
                       View
                     </button>
                     <button
-                      onClick={() => openEditModal(doc)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        openEditModal(doc);
+                      }}
                       className="flex items-center justify-center gap-2 py-2 px-3 rounded-lg bg-yellow-50 hover:bg-yellow-100 text-yellow-600 text-sm font-medium transition-colors"
                     >
                       <Pencil className="w-4 h-4" />
@@ -340,7 +355,10 @@ const Documents = () => {
                     </a>
                     {isAdmin() && (
                       <button
-                        onClick={() => handleDelete(doc)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDelete(doc);
+                        }}
                         className="flex items-center justify-center gap-2 py-2 px-3 rounded-lg bg-red-50 hover:bg-red-100 text-red-600 text-sm font-medium transition-colors"
                       >
                         <Trash2 className="w-4 h-4" />
@@ -532,7 +550,7 @@ const Documents = () => {
             <div className="p-4 h-[70vh]">
               {previewDoc.format === 'pdf' ? (
                 <iframe
-                  src={previewDoc.url}
+                  src={getCloudinaryViewUrl(previewDoc.url, previewDoc.format)}
                   className="w-full h-full rounded-lg"
                   title={previewDoc.name}
                 />
