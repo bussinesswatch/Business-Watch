@@ -189,13 +189,10 @@ const Documents = () => {
     return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
   };
 
-  const getCloudinaryViewUrl = (url, format) => {
+  const getCloudinaryViewUrl = (url) => {
     if (!url) return '';
-    if (format === 'pdf') {
-      // Use Mozilla PDF.js viewer for reliable embedding
-      return `https://mozilla.github.io/pdf.js/web/viewer.html?file=${encodeURIComponent(url.replace('/image/upload/', '/raw/upload/'))}`;
-    }
-    return url;
+    // Use /raw/ delivery type for PDFs to avoid image processing
+    return url.replace('/image/upload/', '/raw/upload/');
   };
 
   // Helper to safely format Firestore timestamps
@@ -616,7 +613,7 @@ const Documents = () => {
                     <FileText className="w-16 h-16 text-red-500 mb-4" />
                     <p className="text-gray-600 mb-4">Failed to load PDF</p>
                     <a
-                      href={previewDoc.url}
+                      href={getCloudinaryViewUrl(previewDoc.url)}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="btn-primary"
@@ -627,7 +624,12 @@ const Documents = () => {
                 ) : (
                   <div className="flex flex-col items-center">
                     <Document
-                      file={previewDoc.url.replace('/image/upload/', '/raw/upload/')}
+                      file={getCloudinaryViewUrl(previewDoc.url)}
+                      options={{ 
+                        withCredentials: false,
+                        cMapUrl: 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/cmaps/',
+                        cMapPacked: true,
+                      }}
                       onLoadSuccess={onDocumentLoadSuccess}
                       onLoadError={onDocumentLoadError}
                       loading={
@@ -638,8 +640,8 @@ const Documents = () => {
                     >
                       <Page
                         pageNumber={pageNumber}
-                        renderTextLayer={true}
-                        renderAnnotationLayer={true}
+                        renderTextLayer={false}
+                        renderAnnotationLayer={false}
                         className="shadow-lg"
                         width={800}
                       />
