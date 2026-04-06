@@ -44,6 +44,8 @@ const Documents = () => {
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [previewDoc, setPreviewDoc] = useState(null);
+  const [pdfBlobUrl, setPdfBlobUrl] = useState(null);
+  const [fetchingPdf, setFetchingPdf] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
   const [uploadForm, setUploadForm] = useState({
     name: '',
@@ -230,11 +232,38 @@ const Documents = () => {
   const goToNextPage = () => setPageNumber((prev) => Math.min(prev + 1, numPages || 1));
 
   const closePreview = () => {
+    if (pdfBlobUrl) {
+      URL.revokeObjectURL(pdfBlobUrl);
+      setPdfBlobUrl(null);
+    }
     setPreviewDoc(null);
     setPageNumber(1);
     setNumPages(null);
     setPdfError(null);
+    setFetchingPdf(false);
   };
+
+  // Fetch PDF as blob when preview opens
+  useEffect(() => {
+    if (previewDoc?.format === 'pdf' && !pdfBlobUrl) {
+      const fetchPdf = async () => {
+        setFetchingPdf(true);
+        try {
+          const response = await fetch(getCloudinaryViewUrl(previewDoc.url));
+          if (!response.ok) throw new Error('Failed to fetch PDF');
+          const blob = await response.blob();
+          const url = URL.createObjectURL(blob);
+          setPdfBlobUrl(url);
+        } catch (err) {
+          console.error('Error fetching PDF:', err);
+          setPdfError(err.message);
+        } finally {
+          setFetchingPdf(false);
+        }
+      };
+      fetchPdf();
+    }
+  }, [previewDoc, pdfBlobUrl]);
 
   if (loading) {
     return (
@@ -613,7 +642,7 @@ const Documents = () => {
                     <FileText className="w-16 h-16 text-red-500 mb-4" />
                     <p className="text-gray-600 mb-4">Failed to load PDF</p>
                     <a
-                      href={getCloudinaryViewUrl(previewDoc.url)}
+                      href={previewDoc.url}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="btn-primary"
@@ -621,15 +650,15 @@ const Documents = () => {
                       Open in New Tab
                     </a>
                   </div>
+                ) : fetchingPdf || !pdfBlobUrl ? (
+                  <div className="flex flex-col items-center justify-center h-full bg-white rounded-lg p-8">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"></div>
+                    <p className="text-gray-600">Loading PDF...</p>
+                  </div>
                 ) : (
                   <div className="flex flex-col items-center">
                     <Document
-                      file={getCloudinaryViewUrl(previewDoc.url)}
-                      options={{ 
-                        withCredentials: false,
-                        cMapUrl: 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/cmaps/',
-                        cMapPacked: true,
-                      }}
+                      file={pdfBlobUrl}
                       onLoadSuccess={onDocumentLoadSuccess}
                       onLoadError={onDocumentLoadError}
                       loading={
