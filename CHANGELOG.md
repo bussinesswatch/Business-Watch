@@ -2,6 +2,50 @@
 
 All notable changes to the Business Watch project.
 
+## [1.6.0] - 2026-04-06
+
+### ✨ Added
+
+#### Document Management System (Cloudinary Integration)
+- **Documents Page**: New full-featured document management interface
+  - Cloudinary integration for secure file storage (free tier)
+  - Document categories: Company Registration, GST Certificate, Experience Letters, Bank Statement, Company Profile, Others
+  - PDF thumbnail preview: First page displayed as image (like Cloudinary Media Library)
+  - Click-to-preview: Click any document card to open preview modal
+  - Full CRUD operations: Upload, view, edit metadata, delete
+  - Search and filter by name, description, or document type
+  - Direct download of original files
+  - Real-time sync with Firebase Firestore
+
+#### Bank Information in Bid Quotation
+- **Bid Print Preview**: Added bank account details to quotation template
+  - BML Bank: 7770000188096 (MVR), 7770000188098 (USD)
+  - MIB Bank: 90101480036671000 (MVR), 90101480036672000 (USD)
+  - Account Name: Business Watch Pvt Ltd
+  - Print layout: A4 Portrait format with proper styling
+  - Download/Save as PDF option
+
+### 🔧 Changed
+- **Documents.jsx**: Replaced react-pdf with Cloudinary thumbnail generation for better PDF viewing
+- **Bids.jsx**: Added bank info section to bid quotation print preview
+- **Dashboard**: Removed Active Won Tenders stat card, added real-time Recent Activity updates
+
+### 🐛 Fixed
+- **Cloudinary PDF 401 Error**: Fixed by using Cloudinary's image transformation to generate PDF thumbnails
+- **Build Failure**: Removed react-pdf dependencies causing Vercel build errors
+- **Firestore Timestamp**: Added safe timestamp formatting helper
+
+### 📁 New Files/Collections
+- Firestore Collection: `documents` (stores document metadata)
+- Cloudinary Upload Preset: `business_watch`
+
+### 📊 Statistics
+- **Total Pages**: 30+ pages
+- **Document Types**: 6 categories
+- **Storage**: Cloudinary (free tier)
+
+---
+
 ## [1.5.0] - 2026-04-03
 
 ### ✨ Added

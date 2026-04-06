@@ -378,25 +378,47 @@ Track all incoming shipments and deliveries.
 
 ## Documents
 
-Centralized document management system.
+Full-featured document management system with Cloudinary integration for secure file storage.
 
-### Document Types
+### Document Categories
 
-- Tender documents
-- Bid submissions
-- Contracts
-- Invoices
-- Delivery receipts
-- Correspondence
+**Business Documents:**
+- **Company Registration**: Registration certificates and business licenses
+- **GST Certificate**: Tax registration and compliance documents
+- **Experience Letters**: Completed project certificates and testimonials
+- **Bank Statement**: Financial records and bank documents
+- **Company Profile**: Business overview and capability statements
+- **Others**: Miscellaneous documents
 
 ### Document Features
 
-- Upload PDFs, images, Excel files
-- Categorize by project
-- Version control
-- Search by name/date
-- Download anytime
-- Share with team
+**Upload:**
+1. Click "Upload Document" button
+2. Select document type from dropdown
+3. Enter document name
+4. Add description (optional)
+5. Select file (PDF, Word, Images up to 10MB)
+6. Click Upload
+
+**Preview:**
+- Click any document card to open preview modal
+- PDFs display as thumbnail image (first page)
+- Images shown at full resolution
+- Download button to save original file
+
+**Manage Documents:**
+- **Search**: Find by name or description
+- **Filter**: Filter by document type
+- **Edit**: Click pencil icon to modify name/type/description
+- **Delete**: Click trash icon (Admin only)
+- **Download**: Click download icon or use preview modal
+
+### Storage
+
+- **Cloudinary**: Secure cloud storage with free tier
+- **Firebase**: Document metadata in Firestore
+- **Real-time**: Changes synced across all users
+- **Access**: All authenticated users can view, Admin can delete
 
 ---
 
@@ -973,6 +995,9 @@ Tenders by organization:
 | View urgent tenders | Dashboard → Urgent Alerts |
 | Search tenders | Tenders page → Search bar |
 | Create bid | Tenders → Select tender → Create Bid |
+| Upload document | Documents → Upload Document |
+| View PDF | Documents → Click any document card |
+| Print bid quotation | Bids → View Bid → Print Preview |
 | Upload data | Admin → Upload Excel / Run script |
 | Export report | Reports → Select report → Export |
 | Subscribe to alerts | Click bell icon → Notification Settings |
@@ -991,9 +1016,9 @@ Tenders by organization:
 
 ## Version Information
 
-**Document Version**: 1.4.0  
-**Last Updated**: April 3, 2026  
-**App Version**: 1.4.0  
+**Document Version**: 1.6.0  
+**Last Updated**: April 6, 2026  
+**App Version**: 1.6.0  
 **Total Tenders**: 50+
 
 ---

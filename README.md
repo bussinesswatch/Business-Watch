@@ -4,6 +4,15 @@ A full-stack web application for managing Maldives government tenders, bids, pro
 
 ## 🌟 New Features (April 2026)
 
+### Document Management System
+- **Cloudinary Integration**: Store documents securely with Cloudinary (free tier)
+- **Document Categories**: Company Registration, GST Certificate, Experience Letters, Bank Statement, Company Profile, Others
+- **PDF Thumbnail Preview**: View PDF first page as thumbnail image (like Cloudinary Media Library)
+- **Full CRUD Operations**: Upload, view, edit metadata, and delete documents
+- **Search & Filter**: Find documents by name, description, or type
+- **Download Documents**: Direct download of original files
+- **Click-to-Preview**: Click any document card to open preview modal
+
 ### Capital Tracking & Investment Management
 - **Track Capital Sources**: Record borrowed amounts from Company Staff or Other Parties
 - **3 Directors Predefined**: Abobakuru Qasim (Managing Director), Abdul Rasheed Ali (Director), Ziyad Rashadh (Director)
@@ -23,6 +32,12 @@ A full-stack web application for managing Maldives government tenders, bids, pro
 - **User-Defined Categories**: Add custom expense types with localStorage persistence
 - **Staff-wise Tracking**: Assign expenses to specific staff members
 - **Firebase Integration**: All data stored in Firestore with real-time sync
+
+### Bank Information in Bid Print Preview
+- **BML Bank Accounts**: 7770000188096 (MVR), 7770000188098 (USD)
+- **MIB Bank Accounts**: 90101480036671000 (MVR), 90101480036672000 (USD)
+- **Account Name**: Business Watch Pvt Ltd
+- **Print Layout**: A4 Portrait format with proper bank details
 
 ### Bid Lot Configuration
 - **Flexible Lot Options**: Choose between "Many Items with One Lot" or "Each Item with 1 Lot"
