@@ -193,8 +193,8 @@ const Documents = () => {
 
   const getCloudinaryViewUrl = (url) => {
     if (!url) return '';
-    // Convert to /raw/ for direct PDF access
-    return url.replace('/image/upload/', '/raw/upload/');
+    // Convert to /raw/ and add inline flag for PDF viewing
+    return url.replace('/image/upload/', '/raw/upload/fl_inline/');
   };
 
   // Helper to safely format Firestore timestamps
