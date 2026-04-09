@@ -366,7 +366,7 @@ const BidQuotation = ({ bid, onClose }) => {
                   <td className="border border-gray-800 px-2 py-1">{item.name || 'ITEM-' + (index + 1)}</td>
                   <td className="border border-gray-800 px-2 py-1 text-center">{qty}</td>
                   <td className="border border-gray-800 px-2 py-1 text-right">{bidPrice.toFixed(2)}</td>
-                  <td className="border border-gray-800 px-2 py-1 text-right">{itemTotal.toLocaleString()}.00</td>
+                  <td className="border border-gray-800 px-2 py-1 text-right">{itemTotal.toLocaleString(undefined, {maximumFractionDigits: 2})}</td>
                 </tr>
               );
             })}
@@ -374,19 +374,19 @@ const BidQuotation = ({ bid, onClose }) => {
           <tfoot>
             <tr>
               <td colSpan="4" className="border border-gray-800 px-2 py-1 text-right font-semibold">Sub Total</td>
-              <td className="border border-gray-800 px-2 py-1 text-right">{subTotal.toLocaleString()}.00</td>
+              <td className="border border-gray-800 px-2 py-1 text-right">{subTotal.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
             </tr>
             {showTax && (
               <tr>
                 <td colSpan="4" className="border border-gray-800 px-2 py-1 text-right font-semibold">GST ({gstRate}%)</td>
-                <td className="border border-gray-800 px-2 py-1 text-right">{taxAmount.toLocaleString()}.00</td>
+                <td className="border border-gray-800 px-2 py-1 text-right">{taxAmount.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
               </tr>
             )}
             <tr className="bg-gray-50">
               <td colSpan="4" className="border border-gray-800 px-2 py-1.5">
                 <span className="font-semibold">Total in Words:</span> {numberToWords(total)}
               </td>
-              <td className="border border-gray-800 px-2 py-1.5 text-right font-bold text-base">{total.toLocaleString(undefined, {minimumFractionDigits: 1, maximumFractionDigits: 1})}</td>
+              <td className="border border-gray-800 px-2 py-1.5 text-right font-bold text-base">{total.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
             </tr>
           </tfoot>
         </table>
