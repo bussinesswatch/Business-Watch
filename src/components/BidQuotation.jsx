@@ -38,34 +38,28 @@ const BidQuotation = ({ bid, onClose }) => {
     return `BW/${year}/${month}/001`;
   };
 
-  // Format number to words (simplified version)
+  // Format number to words (simple format: hundreds, thousands)
+  // Note: We intentionally ignore decimals (no laari/point in words).
   const numberToWords = (num) => {
     if (!num || num === 0) return 'Zero';
-    
+
     const ones = ['', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine',
                   'ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen',
                   'seventeen', 'eighteen', 'nineteen'];
     const tens = ['', '', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'];
-    
+
     const convert = (n) => {
       if (n < 20) return ones[n];
       if (n < 100) return tens[Math.floor(n / 10)] + (n % 10 !== 0 ? '-' + ones[n % 10] : '');
       if (n < 1000) return ones[Math.floor(n / 100)] + ' hundred' + (n % 100 !== 0 ? ' and ' + convert(n % 100) : '');
-      if (n < 100000) return convert(Math.floor(n / 1000)) + ' thousand' + (n % 1000 !== 0 ? ' ' + convert(n % 1000) : '');
-      if (n < 10000000) return convert(Math.floor(n / 100000)) + ' lakh' + (n % 100000 !== 0 ? ' ' + convert(n % 100000) : '');
-      return convert(Math.floor(n / 10000000)) + ' crore' + (n % 10000000 !== 0 ? ' ' + convert(n % 10000000) : '');
+      if (n < 1000000) return convert(Math.floor(n / 1000)) + ' thousand' + (n % 1000 !== 0 ? ' ' + convert(n % 1000) : '');
+      if (n < 1000000000) return convert(Math.floor(n / 1000000)) + ' million' + (n % 1000000 !== 0 ? ' ' + convert(n % 1000000) : '');
+      return convert(Math.floor(n / 1000000000)) + ' billion' + (n % 1000000000 !== 0 ? ' ' + convert(n % 1000000000) : '');
     };
-    
-    const wholePart = Math.floor(num);
-    const decimalPart = Math.round((num - wholePart) * 100);
-    
+
+    const wholePart = Math.round(num);
     let result = convert(wholePart);
     result = result.charAt(0).toUpperCase() + result.slice(1);
-    
-    if (decimalPart > 0) {
-      result += ' and ' + convert(decimalPart) + ' laari';
-    }
-    
     return result + ' only';
   };
 
@@ -240,7 +234,7 @@ const BidQuotation = ({ bid, onClose }) => {
                 <td colSpan="4" className="border border-gray-800 px-2 py-2 text-left">
                   <span className="font-semibold">Total:</span> {numberToWords(itemGrandTotal)}
                 </td>
-                <td className="border border-gray-800 px-2 py-2 text-right font-bold">{itemGrandTotal.toLocaleString()}.00</td>
+                <td className="border border-gray-800 px-2 py-2 text-right font-bold">{itemGrandTotal.toLocaleString(undefined, {minimumFractionDigits: 1, maximumFractionDigits: 1})}</td>
               </tr>
             </tfoot>
           </table>
@@ -391,7 +385,7 @@ const BidQuotation = ({ bid, onClose }) => {
               <td colSpan="4" className="border border-gray-800 px-2 py-1.5">
                 <span className="font-semibold">Total in Words:</span> {numberToWords(total)}
               </td>
-              <td className="border border-gray-800 px-2 py-1.5 text-right font-bold text-base">{total.toLocaleString()}.00</td>
+              <td className="border border-gray-800 px-2 py-1.5 text-right font-bold text-base">{total.toLocaleString(undefined, {minimumFractionDigits: 1, maximumFractionDigits: 1})}</td>
             </tr>
           </tfoot>
         </table>
