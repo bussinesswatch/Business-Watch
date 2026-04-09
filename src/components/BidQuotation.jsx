@@ -56,20 +56,15 @@ const BidQuotation = ({ bid, onClose }) => {
       return convert(Math.floor(n / 10000000)) + ' crore' + (n % 10000000 !== 0 ? ' ' + convert(n % 10000000) : '');
     };
     
-    const wholePart = Math.floor(num);
-    const decimalPart = Math.round((num - wholePart) * 100);
+    const wholePart = Math.round(num);
     
     let result = convert(wholePart);
     result = result.charAt(0).toUpperCase() + result.slice(1);
     
-    if (decimalPart > 0) {
-      result += ' and ' + convert(decimalPart) + ' laari';
-    }
-    
     return result + ' only';
   };
 
-  // Calculate totals
+  // Calculate totals (rounded to whole numbers)
   const calculateTotals = () => {
     const items = bid?.items || [];
     let subTotal = 0;
@@ -81,7 +76,7 @@ const BidQuotation = ({ bid, onClose }) => {
     });
     
     const taxAmount = showTax ? (subTotal * gstRate / 100) : 0;
-    const total = subTotal + taxAmount;
+    const total = Math.round(subTotal + taxAmount);
     
     return { subTotal, taxAmount, total };
   };
