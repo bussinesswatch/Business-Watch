@@ -81,7 +81,7 @@ const defaultBidSections = {
     fields: [
       { name: 'quotationNo', label: 'Quotation No', value: 'BW/2026/026', type: 'text' },
       { name: 'quotationDate', label: 'Date', value: '', type: 'date' },
-      { name: 'client', label: 'Client', value: 'Public Service Media (PSM)', type: 'text' },
+      { name: 'client', label: 'Client', value: '', type: 'text' },
       { name: 'procurementRef', label: 'Procurement Ref', value: '(PROC-05-26) BIT/2026/20', type: 'text' },
       { name: 'subTotal', label: 'Sub Total (MVR)', value: '68500.00', type: 'text' },
       { name: 'gst', label: 'GST 8%', value: '5480.00', type: 'text' },
@@ -247,8 +247,8 @@ export default function BidCompiler() {
       });
     }
     
-    // Update Page 2 - Quotation
-    if (populated.page2_quotation) {
+    // Update Page 5 - Quotation
+    if (populated.page5_quotation) {
       // Check if bid has a saved quotation with detailed items
       const savedQuotation = bid.quotation || bid.savedQuotation || null;
       
@@ -262,7 +262,7 @@ export default function BidCompiler() {
         validityDays = savedQuotation.validityDays || savedQuotation.validity || '90';
         deliveryTime = savedQuotation.deliveryTime || savedQuotation.delivery || 'As per tender specifications';
         paymentTerms = savedQuotation.paymentTerms || 'As per tender terms';
-        clientName = savedQuotation.client || savedQuotation.clientName || bid.client || bid.agencyName || 'Public Service Media (PSM)';
+        clientName = savedQuotation.client || savedQuotation.clientName || bid.client || bid.agencyName || bid.organization || '';
         
         // Extract items from saved quotation
         const quotationItems = savedQuotation.items || savedQuotation.lineItems || [];
@@ -281,7 +281,7 @@ export default function BidCompiler() {
         validityDays = bid.validityDays || bid.validity || '90';
         deliveryTime = bid.deliveryTime || bid.deliveryPeriod || bid.timeline || 'As per tender specifications';
         paymentTerms = bid.paymentTerms || 'As per tender terms';
-        clientName = bid.client || bid.agencyName || bid.organization || 'Public Service Media (PSM)';
+        clientName = bid.client || bid.agencyName || bid.organization || bid.tenderTitle || bid.title || '';
         
         // Extract items from bid data
         items = [];
@@ -307,7 +307,7 @@ export default function BidCompiler() {
         }
       }
       
-      populated.page2_quotation.fields = populated.page2_quotation.fields.map(field => {
+      populated.page5_quotation.fields = populated.page5_quotation.fields.map(field => {
         switch(field.name) {
           case 'quotationNo': return { ...field, value: bid.quotationNo || bid.quoteNumber || savedQuotation?.quotationNo || `BW/${new Date().getFullYear()}/${String(bid.id || Date.now()).slice(-4)}` };
           case 'quotationDate': return { ...field, value: formatDate(savedQuotation?.date) || formatDate(savedQuotation?.quotationDate) || formatDate(bid.bidDate) || formatDate(bid.createdAt) || new Date().toISOString().split('T')[0] };
@@ -326,7 +326,7 @@ export default function BidCompiler() {
       
       // Update the items array
       if (items.length > 0) {
-        populated.page2_quotation.items = items;
+        populated.page5_quotation.items = items;
       }
     }
     
