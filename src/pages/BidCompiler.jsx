@@ -1,6 +1,14 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { 
+  collection, 
+  query, 
+  getDocs, 
+  where,
+  orderBy
+} from 'firebase/firestore';
+import { db } from '../services/firebase';
+import { 
   FileText, 
   Printer, 
   Save, 
@@ -14,7 +22,8 @@ import {
   ChevronRight,
   Copy,
   Eye,
-  X
+  X,
+  Search
 } from 'lucide-react';
 
 // Default bid sections based on typical PSM bid format - 23 pages
@@ -319,6 +328,9 @@ export default function BidCompiler() {
   const [currentBidName, setCurrentBidName] = useState(() => selectedBid?.title || '');
   const [expandedSections, setExpandedSections] = useState(Object.keys(defaultBidSections));
   const [uploadedFiles, setUploadedFiles] = useState({});
+  const [openBids, setOpenBids] = useState([]);
+  const [loadingOpenBids, setLoadingOpenBids] = useState(false);
+  const [selectedOpenBid, setSelectedOpenBid] = useState(selectedBid || null);
   const printRef = useRef();
 
   // Helper function to populate sections with bid data
@@ -329,10 +341,13 @@ export default function BidCompiler() {
     if (populated.cover) {
       populated.cover.fields = populated.cover.fields.map(field => {
         switch(field.name) {
-          case 'tenderNo': return { ...field, value: bid.tenderRef || bid.procurementRef || '' };
-          case 'tenderTitle': return { ...field, value: bid.title || '' };
-          case 'bidDate': return { ...field, value: bid.bidDate || new Date().toISOString().split('T')[0] };
-          case 'submissionDate': return { ...field, value: bid.submissionDeadline || '' };
+          case 'tenderNo': return { ...field, value: bid.tenderRef || bid.procurementRef || bid.tenderNumber || bid.reference || '' };
+          case 'tenderTitle': return { ...field, value: bid.title || bid.tenderTitle || '' };
+          case 'bidDate': return { ...field, value: bid.bidDate || bid.createdAt || new Date().toISOString().split('T')[0] };
+          case 'submissionDate': return { ...field, value: bid.submissionDeadline || bid.deadline || bid.closingDate || '' };
+          case 'contactPerson': return { ...field, value: bid.contactPerson || bid.representative || '' };
+          case 'phone': return { ...field, value: bid.contactPhone || bid.phone || '(960) 7786629' };
+          case 'email': return { ...field, value: bid.contactEmail || bid.email || 'businesswatchmv@gmail.com' };
           default: return field;
         }
       });
@@ -340,16 +355,23 @@ export default function BidCompiler() {
     
     // Update Page 2 - Quotation
     if (populated.page2_quotation) {
+      const subtotal = bid.bidAmount ? (bid.bidAmount / 1.08) : (bid.amount / 1.08) || 0;
+      const gst = bid.bidAmount ? (bid.bidAmount * 0.08 / 1.08) : (bid.amount * 0.08 / 1.08) || 0;
+      const grandTotal = bid.bidAmount || bid.amount || 0;
+      
       populated.page2_quotation.fields = populated.page2_quotation.fields.map(field => {
         switch(field.name) {
-          case 'quotationNo': return { ...field, value: bid.quotationNo || `BW/${new Date().getFullYear()}/${String(bid.id || Date.now()).slice(-3)}` };
-          case 'quotationDate': return { ...field, value: bid.bidDate || new Date().toISOString().split('T')[0] };
-          case 'procurementRef': return { ...field, value: bid.tenderRef || bid.procurementRef || '' };
-          case 'items': return { ...field, value: bid.items || bid.description || 'As per tender requirements' };
-          case 'subTotal': return { ...field, value: bid.bidAmount ? (bid.bidAmount / 1.08).toFixed(2) : '' };
-          case 'gst': return { ...field, value: bid.bidAmount ? (bid.bidAmount * 0.08).toFixed(2) : '' };
-          case 'grandTotal': return { ...field, value: bid.bidAmount ? bid.bidAmount.toFixed(2) : '' };
-          case 'validity': return { ...field, value: bid.validityDays || '90' };
+          case 'quotationNo': return { ...field, value: bid.quotationNo || bid.quoteNumber || `BW/${new Date().getFullYear()}/${String(bid.id || Date.now()).slice(-4)}` };
+          case 'quotationDate': return { ...field, value: bid.bidDate || bid.quotationDate || bid.createdAt || new Date().toISOString().split('T')[0] };
+          case 'procurementRef': return { ...field, value: bid.tenderRef || bid.procurementRef || bid.tenderNumber || bid.reference || '' };
+          case 'items': return { ...field, value: bid.items || bid.description || bid.scopeOfWork || bid.deliverables || 'As per tender requirements' };
+          case 'subTotal': return { ...field, value: subtotal ? subtotal.toFixed(2) : '' };
+          case 'gst': return { ...field, value: gst ? gst.toFixed(2) : '' };
+          case 'grandTotal': return { ...field, value: grandTotal ? grandTotal.toFixed(2) : '' };
+          case 'validity': return { ...field, value: bid.validityDays || bid.validity || '90' };
+          case 'deliveryTime': return { ...field, value: bid.deliveryTime || bid.deliveryPeriod || bid.timeline || 'As per tender specifications' };
+          case 'paymentTerms': return { ...field, value: bid.paymentTerms || 'As per tender terms' };
+          case 'warranty': return { ...field, value: bid.warranty || bid.warrantyPeriod || 'As per manufacturer' };
           default: return field;
         }
       });
@@ -359,14 +381,64 @@ export default function BidCompiler() {
     if (populated.letter) {
       populated.letter.fields = populated.letter.fields.map(field => {
         if (field.name === 'subject') {
-          return { ...field, value: `Submission of Tender for ${bid.title || ''}` };
+          return { ...field, value: `Submission of Tender for ${bid.title || bid.tenderTitle || ''}` };
+        }
+        if (field.name === 'recipient') {
+          return { ...field, value: bid.agencyName || bid.organization || bid.department || 'The Tender Board\nPublic Service Media (PSM)' };
         }
         return field;
       });
     }
     
+    // Update Company Info if available
+    if (populated.company && bid.companyInfo) {
+      populated.company.fields = populated.company.fields.map(field => {
+        switch(field.name) {
+          case 'regNo': return { ...field, value: bid.companyInfo.regNo || field.value };
+          case 'bankName': return { ...field, value: bid.companyInfo.bankName || field.value };
+          case 'accountNo': return { ...field, value: bid.companyInfo.accountNo || field.value };
+          default: return field;
+        }
+      });
+    }
+    
     return populated;
   }
+
+  // Fetch open bids from Firebase
+  const fetchOpenBids = async () => {
+    setLoadingOpenBids(true);
+    try {
+      const bidsQuery = query(
+        collection(db, 'bids'),
+        where('status', 'in', ['Open', 'Submitted', 'Draft']),
+        orderBy('createdAt', 'desc')
+      );
+      const snapshot = await getDocs(bidsQuery);
+      const bids = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+      setOpenBids(bids);
+    } catch (error) {
+      console.error('Error fetching open bids:', error);
+    } finally {
+      setLoadingOpenBids(false);
+    }
+  };
+
+  // Load open bids on mount
+  useEffect(() => {
+    fetchOpenBids();
+  }, []);
+
+  // Handle selecting an open bid
+  const handleSelectOpenBid = (bid) => {
+    setSelectedOpenBid(bid);
+    setCurrentBidName(bid.title || bid.tenderTitle || '');
+    const populated = populateSectionsWithBidData(defaultBidSections, bid);
+    setSections(populated);
+  };
 
   const updateField = (sectionKey, fieldName, value) => {
     setSections(prev => ({
@@ -1234,7 +1306,39 @@ export default function BidCompiler() {
         <div className="w-80 bg-white border-r border-gray-200 overflow-y-auto">
           <div className="p-4 border-b border-gray-200">
             <h2 className="font-semibold text-gray-700 mb-2">Bid Sections</h2>
-            <p className="text-xs text-gray-500">Click to expand/collapse</p>
+            <p className="text-xs text-gray-500 mb-3">Click to expand/collapse</p>
+            
+            {/* Open Bids Selector */}
+            <div className="space-y-2">
+              <label className="text-xs font-medium text-gray-600 flex items-center gap-1">
+                <Search size={12} />
+                Select from Open Bids
+              </label>
+              <select
+                value={selectedOpenBid?.id || ''}
+                onChange={(e) => {
+                  const bid = openBids.find(b => b.id === e.target.value);
+                  if (bid) handleSelectOpenBid(bid);
+                }}
+                disabled={loadingOpenBids}
+                className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+              >
+                <option value="">
+                  {loadingOpenBids ? 'Loading open bids...' : 'Select an open bid...'}
+                </option>
+                {openBids.map(bid => (
+                  <option key={bid.id} value={bid.id}>
+                    {bid.title || bid.tenderTitle || bid.tenderRef || 'Untitled Bid'}
+                    {bid.bidAmount ? ` (MVR ${bid.bidAmount.toLocaleString()})` : ''}
+                  </option>
+                ))}
+              </select>
+              {selectedOpenBid && (
+                <div className="text-xs text-green-600 bg-green-50 px-2 py-1 rounded">
+                  Selected: {selectedOpenBid.title || selectedOpenBid.tenderTitle || 'Selected Bid'}
+                </div>
+              )}
+            </div>
           </div>
           
           {Object.entries(sections).map(([key, section]) => (
