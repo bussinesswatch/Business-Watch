@@ -783,7 +783,7 @@ export default function BidCompiler() {
               <tr><td className="border border-gray-800 px-2 py-1">Frequency Stability</td><td className="border border-gray-800 px-2 py-1">±10Hz</td></tr>
               <tr><td className="border border-gray-800 px-2 py-1">Harmonic Suppression</td><td className="border border-gray-800 px-2 py-1">≥60dB</td></tr>
               <tr><td className="border border-gray-800 px-2 py-1">Spurious Suppression</td><td className="border border-gray-800 px-2 py-1">≥70dB</td></tr>
-              <tr><td className="border border-gray-800 px-2 py-1">VSWR</td><td className="border border-gray-800 px-2 py-1"><1.5:1</td></tr>
+              <tr><td className="border border-gray-800 px-2 py-1">VSWR</td><td className="border border-gray-800 px-2 py-1">&lt;1.5:1</td></tr>
             </tbody>
           </table>
           <h3 className="font-bold mb-3">Audio Specifications:</h3>
@@ -793,7 +793,7 @@ export default function BidCompiler() {
               <tr><td className="border border-gray-800 px-2 py-1">Frequency Response</td><td className="border border-gray-800 px-2 py-1">30Hz-15KHz (±1dB)</td></tr>
               <tr><td className="border border-gray-800 px-2 py-1">Left/Right Channel Separation</td><td className="border border-gray-800 px-2 py-1">≥50dB</td></tr>
               <tr><td className="border border-gray-800 px-2 py-1">Stereo S/N Ratio</td><td className="border border-gray-800 px-2 py-1">≥70dB</td></tr>
-              <tr><td className="border border-gray-800 px-2 py-1">Audio Distortion</td><td className="border border-gray-800 px-2 py-1"><0.3%</td></tr>
+              <tr><td className="border border-gray-800 px-2 py-1">Audio Distortion</td><td className="border border-gray-800 px-2 py-1">&lt;0.3%</td></tr>
             </tbody>
           </table>
           <p className="text-sm font-semibold mt-8 text-right">Page 10 of 23</p>
