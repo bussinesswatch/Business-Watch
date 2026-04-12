@@ -241,6 +241,8 @@ export default function BidCompiler() {
   const [previewDocument, setPreviewDocument] = useState(null);
   const printRef = useRef();
 
+  const normalizedSections = mergeWithDefaultSections(sections);
+
   // Helper function to convert Firebase timestamp to yyyy-MM-dd string
   function formatDate(dateValue) {
     if (!dateValue) return '';
@@ -688,6 +690,7 @@ export default function BidCompiler() {
   };
 
   const renderPreview = () => {
+    const sections = normalizedSections;
     return (
       <div className="bg-white p-8 max-w-4xl mx-auto print:p-0" ref={printRef}>
         {/* Page 1 - Cover Page */}
@@ -1392,27 +1395,29 @@ export default function BidCompiler() {
             </div>
           </div>
           
-          {Object.entries(sections).map(([key, section]) => (
+          {Object.entries(normalizedSections).map(([key, section]) => (
             <div key={key} className="border-b border-gray-100">
               <button
                 onClick={() => toggleSection(key)}
-                className="w-full px-4 py-3 flex items-center justify-between hover:bg-gray-50 text-left"
+                className="w-full flex items-center justify-between p-3 hover:bg-gray-50 transition-colors"
               >
                 <span className="font-medium text-sm">{section.title}</span>
-                {expandedSections.includes(key) ? 
-                  <ChevronDown size={16} className="text-gray-400" /> : 
+                {expandedSections.includes(key) ? (
+                  <ChevronDown size={16} className="text-gray-400" />
+                ) : (
                   <ChevronRight size={16} className="text-gray-400" />
-                }
+                )}
               </button>
-              
-              {expandedSections.includes(key) && (
-                <div className="px-4 pb-4 space-y-2">
-                  {section.fields.slice(0, 3).map(field => (
-                    <div key={field.name} className="text-xs text-gray-500 flex justify-between">
-                      <span>{field.label}</span>
-                      <span className={field.value ? 'text-green-600' : 'text-red-400'}>
+              {expandedSections.includes(key) && Array.isArray(section?.fields) && (
+                <div className="px-4 pb-3">
+                  {section.fields.map((field) => (
+                    <div key={field.name} className="mb-2">
+                      <label className="block text-xs font-medium text-gray-600 mb-1">
+                        {field.label}
+                      </label>
+                      <div className="text-xs text-gray-800 bg-gray-50 px-2 py-1 rounded truncate">
                         {field.value ? '✓' : '○'}
-                      </span>
+                      </div>
                     </div>
                   ))}
                   {section.fields.length > 3 && (
@@ -1433,7 +1438,7 @@ export default function BidCompiler() {
                 {savedBids.map(bid => (
                   <div key={bid.id} className="flex items-center justify-between p-2 bg-gray-50 rounded text-sm">
                     <span className="truncate">{bid.name}</span>
-                    <div className="flex gap-1">
+                    <div className="flex items-center gap-1">
                       <button
                         onClick={() => loadBid(bid)}
                         className="p-1 text-blue-600 hover:bg-blue-100 rounded"
@@ -1482,7 +1487,7 @@ export default function BidCompiler() {
 
               {/* Forms */}
               <div className="space-y-6">
-                {Object.entries(sections).map(([key, section]) => (
+                {Object.entries(normalizedSections).map(([key, section]) => (
                   <div key={key} className="bg-white rounded-lg shadow-sm overflow-hidden">
                     <div 
                       className="px-6 py-4 bg-gray-50 border-b border-gray-200 flex justify-between items-center cursor-pointer"
@@ -1492,7 +1497,7 @@ export default function BidCompiler() {
                       {activeSection === key ? <ChevronDown size={20} /> : <ChevronRight size={20} />}
                     </div>
                     
-                    {activeSection === key && (
+                    {activeSection === key && Array.isArray(section?.fields) && (
                       <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-4">
                         {section.fields.map(field => (
                           <div key={field.name} className={field.type === 'textarea' ? 'md:col-span-2' : ''}>
