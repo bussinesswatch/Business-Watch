@@ -968,31 +968,12 @@ export default function BidCompiler() {
               <p className="text-sm text-gray-600">As per tender requirements</p>
             </div>
           </div>
-          <p className="text-sm font-semibold mt-8 text-right">Page 8 of 23</p>
+          <p className="text-sm font-semibold mt-8 text-right">Page 8 of 12</p>
         </div>
 
-        {/* Letter of Transmittal */}
-        <div className="page-break-after mt-8">
-          <h2 className="text-xl font-bold mb-4 border-b pb-2">Letter of Transmittal</h2>
-          <div className="whitespace-pre-line text-sm">
-            {sections.letter.fields.find(f => f.name === 'recipient')?.value}
-          </div>
-          <p className="mt-4 font-semibold">{sections.letter.fields.find(f => f.name === 'subject')?.value}</p>
-          <div className="whitespace-pre-line mt-4 text-sm">
-            {sections.letter.fields.find(f => f.name === 'letterContent')?.value}
-          </div>
-          <div className="mt-8">
-            <p>Yours faithfully,</p>
-            <p className="mt-4 font-semibold">{sections.letter.fields.find(f => f.name === 'signature')?.value}</p>
-            <p>{sections.letter.fields.find(f => f.name === 'name')?.value}</p>
-            <p>{sections.letter.fields.find(f => f.name === 'designation')?.value}</p>
-            <p>{sections.letter.fields.find(f => f.name === 'date')?.value}</p>
-          </div>
-        </div>
-
-        {/* Document Checklist */}
-        <div className="page-break-after mt-8">
-          <h2 className="text-xl font-bold mb-4 border-b pb-2">Document Checklist</h2>
+        {/* Page 2 - Document Checklist */}
+        <div className="page-break-after">
+          <h2 className="text-xl font-bold mb-4 border-b pb-2">Page 2 - Document Checklist</h2>
           <table className="w-full border-collapse border border-gray-400 text-sm">
             <thead>
               <tr className="bg-gray-100">
@@ -1001,7 +982,7 @@ export default function BidCompiler() {
               </tr>
             </thead>
             <tbody>
-              {sections.checklist.fields.map(field => (
+              {(sections.page2_checklist?.fields || []).map(field => (
                 <tr key={field.name}>
                   <td className="border border-gray-400 px-3 py-2">{field.label}</td>
                   <td className="border border-gray-400 px-3 py-2 text-center">
@@ -1014,43 +995,7 @@ export default function BidCompiler() {
               ))}
             </tbody>
           </table>
-        </div>
-
-        {/* Company Information */}
-        <div className="page-break-after mt-8">
-          <h2 className="text-xl font-bold mb-4 border-b pb-2">Company Information</h2>
-          <table className="w-full text-sm">
-            <tbody>
-              {sections.company.fields.map(field => (
-                <tr key={field.name} className="border-b">
-                  <td className="py-2 font-semibold w-1/3">{field.label}:</td>
-                  <td className="py-2 whitespace-pre-line">{field.value}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-
-        {/* Experience */}
-        <div className="page-break-after mt-8">
-          <h2 className="text-xl font-bold mb-4 border-b pb-2">Experience & Past Performance</h2>
-          {sections.experience.fields.map(field => (
-            <div key={field.name} className="mb-4">
-              <h3 className="font-semibold text-sm">{field.label}</h3>
-              <p className="text-sm whitespace-pre-line mt-1">{field.value}</p>
-            </div>
-          ))}
-        </div>
-
-        {/* Technical */}
-        <div className="page-break-after mt-8">
-          <h2 className="text-xl font-bold mb-4 border-b pb-2">Technical Compliance</h2>
-          {sections.technical.fields.map(field => (
-            <div key={field.name} className="mb-4">
-              <h3 className="font-semibold text-sm">{field.label}</h3>
-              <p className="text-sm whitespace-pre-line mt-1">{field.value}</p>
-            </div>
-          ))}
+          <p className="text-sm font-semibold mt-8 text-right">Page 2 of 12</p>
         </div>
 
         {/* Pages 9-23 - Common Specifications */}
@@ -1059,7 +1004,7 @@ export default function BidCompiler() {
         <div className="page-break-after">
           <h2 className="text-xl font-bold text-center mb-6 border-b-2 border-gray-800 pb-2">Technical Specifications - Overview</h2>
           <div className="space-y-4 text-sm">
-            <p><strong>Item Name:</strong> {sections.page2_quotation.fields.find(f => f.name === 'items')?.value || 'Transmitter and Related Equipment'}</p>
+            <p><strong>Item Name:</strong> {sections.page6_specification?.fields?.find(f => f.name === 'itemName')?.value || 'Transmitter and Related Equipment'}</p>
             <p><strong>Brand:</strong> FMUSER or ZHC (Equivalent brands accepted)</p>
             <p><strong>Model:</strong> FU618F-300W / ZHC618F-300W or equivalent</p>
             <p><strong>Power Output:</strong> 300W</p>
