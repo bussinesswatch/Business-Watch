@@ -4,6 +4,25 @@ A full-stack web application for managing Maldives government tenders, bids, pro
 
 ## 🌟 New Features (April 2026)
 
+### Bid Compiler (23-Page Bid Document Generator)
+- **Complete Bid Compilation System**: Generate full 23-page bid documents ready for submission
+  - Page 1: Declaration of Ethical Conduct with signature fields
+  - Page 2: Dynamic Bid Quotation with itemized table (auto-populated from bid data)
+  - Pages 3-8: Certificate upload sections with document selection from Documents page
+  - Pages 9-23: Technical specifications and editable user-defined sections
+  - Print-ready preview with proper page breaks and page numbers
+  - Save and load compiled bids
+
+#### Bid Compiler Integration
+- **Bids Page Connection**: Click "Bid Compile" button on any bid to auto-fill the compiler
+  - Fetches bid data: items, quantities, rates, amounts, dates
+  - Pre-fills quotation table with all line items
+  - Auto-calculates subtotal, GST 8%, and grand total
+- **Documents Integration**: Select existing documents for certificate pages
+  - Dropdown filtered by document type (Company Reg, GST, Tax Clearance, etc.)
+  - Preview documents before including in bid package
+  - Download option for selected documents
+
 ### Document Management System
 - **Cloudinary Integration**: Store documents securely with Cloudinary (free tier)
 - **Document Categories**: Company Registration, GST Certificate, Experience Letters, Bank Statement, Company Profile, Others
@@ -91,7 +110,8 @@ A full-stack web application for managing Maldives government tenders, bids, pro
 - **Authentication**: Firebase Email/Password login with Admin and Staff roles
 - **Dashboard**: Key statistics, charts, recent activity, and deadline alerts
 - **Tender Management**: Track Maldives government tenders with full details from Gazette
-- **Bid Management**: Create bids with auto-calculated profit margins
+  - **Bid Management**: Create bids with auto-calculated profit margins
+  - **Bid Compiler**: Generate 23-page bid documents with print preview
 - **Procurement System**: Manage purchases for won tenders
 - **Supplier Management**: Store supplier information and track purchase history
 - **Delivery Tracking**: Track delivery status and mark projects as completed
@@ -283,6 +303,7 @@ business-watch/
 │   │   ├── Dashboard.jsx
 │   │   ├── Tenders.jsx
 │   │   ├── Bids.jsx
+│   │   ├── BidCompiler.jsx    # 23-page bid document generator
 │   │   ├── Procurement.jsx
 │   │   ├── Suppliers.jsx
 │   │   ├── Deliveries.jsx
@@ -338,8 +359,9 @@ Create an admin user through Firebase console or registration, then manually set
 - Delete `node_modules` and `package-lock.json`
 - Run `npm install` again
 
-**Last Updated**: April 3, 2026  
+**Last Updated**: April 11, 2026  
 **Total Tenders**: 50+  
+**App Version**: 1.7.0  
 **Data Source**: https://gazette.gov.mv/iulaan
 
 MIT License - feel free to use for your business.

@@ -9,26 +9,27 @@ Complete guide for using the Business Watch tender management system.
 3. [Navigation Overview](#navigation-overview)
 4. [Tenders](#tenders)
 5. [Bids](#bids)
-6. [Quotations](#quotations)
-7. [Procurement](#procurement)
-8. [Suppliers](#suppliers)
-9. [Deliveries](#deliveries)
-10. [Documents](#documents)
-11. [Projects](#projects)
-12. [Finance](#finance)
-13. [Analytics](#analytics)
-14. [Reports](#reports)
-15. [Calendar](#calendar)
-16. [KPI Dashboard](#kpi-dashboard)
-17. [Cost Calculator](#cost-calculator)
-18. [Staff Expense](#staff-expense)
-19. [Advanced Search](#advanced-search)
-20. [Email Notifications](#email-notifications)
-21. [Administration](#administration)
-22. [Mobile Usage](#mobile-usage)
-23. [Data Sources](#data-sources)
-24. [Troubleshooting](#troubleshooting)
-25. [Quick Reference](#quick-reference)
+6. [Bid Compiler](#bid-compiler)
+7. [Quotations](#quotations)
+8. [Procurement](#procurement)
+9. [Suppliers](#suppliers)
+10. [Deliveries](#deliveries)
+11. [Documents](#documents)
+12. [Projects](#projects)
+13. [Finance](#finance)
+14. [Analytics](#analytics)
+15. [Reports](#reports)
+16. [Calendar](#calendar)
+17. [KPI Dashboard](#kpi-dashboard)
+18. [Cost Calculator](#cost-calculator)
+19. [Staff Expense](#staff-expense)
+20. [Advanced Search](#advanced-search)
+21. [Email Notifications](#email-notifications)
+22. [Administration](#administration)
+23. [Mobile Usage](#mobile-usage)
+24. [Data Sources](#data-sources)
+25. [Troubleshooting](#troubleshooting)
+26. [Quick Reference](#quick-reference)
 
 ---
 
@@ -281,6 +282,77 @@ Quickly populate bid forms by pasting a Gazette URL. The system fetches tender d
 - Requires internet connection to fetch Gazette data
 - Some fields may remain empty if not available on Gazette page
 - Always review and verify auto-populated data before saving
+
+## Bid Compiler
+
+Generate complete 23-page bid documents ready for tender submission. The Bid Compiler integrates with Bids and Documents pages for seamless workflow.
+
+### Bid Compiler Features
+
+**23-Page Structure:**
+- **Page 1**: Declaration of Ethical Conduct - signature fields, company info
+- **Page 2**: Bid Quotation - dynamic itemized table with qty, rate, amount
+- **Page 3**: Company Registration Certificate - select from Documents page
+- **Page 4**: Past Completed Bids - list of previous projects
+- **Page 5**: GST Registration Certificate - document selection
+- **Page 6**: SME Registration - certificate upload
+- **Page 7**: Tax Clearance Certificate - document selection
+- **Page 8**: Other Certificates - additional documents
+- **Pages 9-23**: Technical Specifications & Terms - editable sections
+
+### Using the Bid Compiler
+
+**Method 1: From Bids Page (Recommended)**
+1. Go to **Bids** page
+2. Find the bid you want to compile
+3. Click the **green "Bid Compile" button** (FileStack icon)
+4. Bid Compiler opens with all data pre-filled:
+   - Quotation number and date
+   - Client and procurement reference
+   - Itemized list with quantities, rates, amounts
+   - Subtotal, GST 8%, Grand Total calculated automatically
+
+**Method 2: Manual Selection**
+1. Go to **Bid Compiler** page from sidebar
+2. Use the **"Select from Open Bids"** dropdown in the sidebar
+3. Choose an open bid to populate all fields
+4. Or manually fill in the information
+
+### Document Selection for Pages 3-8
+
+Each certificate page has a dropdown to select documents:
+1. Click on a certificate section (e.g., Page 3 - Company Registration)
+2. Select from the **"Select from Documents"** dropdown
+3. The dropdown shows documents filtered by type:
+   - Page 3: Company Registration → `registration` type documents
+   - Page 5: GST → `gst` type documents
+   - Page 7: Tax Clearance → `bank` type documents
+4. **View button** (eye icon) opens document preview
+5. Or upload a new document directly
+
+### Print Preview & Saving
+
+**Print Preview:**
+- Click **"Print Preview"** button to see all 23 pages
+- Proper page breaks between pages
+- Page numbers at bottom right
+- Click **Print** or **Download as PDF**
+
+**Save Compiled Bid:**
+- Click **"Save"** button (floppy disk icon)
+- Enter a name for the compiled bid
+- Saved to browser localStorage
+- View saved bids in **"Saved Bids"** section
+
+### Tips
+
+- Review all pre-filled data from the bid before printing
+- Ensure all required documents are selected/attached
+- Check calculations: Subtotal + GST = Grand Total
+- Save before printing as a backup
+- Use Print Preview to check formatting before final print
+
+---
 
 ## Quotations
 
@@ -1016,10 +1088,17 @@ Tenders by organization:
 
 ## Version Information
 
-**Document Version**: 1.6.0  
-**Last Updated**: April 6, 2026  
-**App Version**: 1.6.0  
+**Document Version**: 1.7.0  
+**Last Updated**: April 11, 2026  
+**App Version**: 1.7.0  
 **Total Tenders**: 50+
+
+### Recent Updates (v1.7.0)
+- **Bid Compiler**: 23-page bid document generator
+- **Document Integration**: Select documents from Documents page
+- **Bids Page Integration**: Bid Compile button for one-click compilation
+- **Full Quotation Table**: Itemized list with qty, rate, amount columns
+- **Firebase Timestamp Fix**: Proper date formatting
 
 ---
 

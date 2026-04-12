@@ -824,7 +824,7 @@ export default function BidCompiler() {
             <p>this <strong>{sections.page3_companyReg?.fields?.find(f => f.name === 'regDate')?.value}</strong></p>
             <p className="mt-8 text-lg font-bold">No: {sections.page3_companyReg?.fields?.find(f => f.name === 'regNo')?.value}</p>
           </div>
-          <p className="text-sm font-semibold mt-8 text-right">Page 4 of 12</p>
+          <p className="text-sm font-semibold mt-8 text-right">Page 3 of 12</p>
         </div>
 
         {/* Page 5 - Quotation */}
