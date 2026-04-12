@@ -179,11 +179,49 @@ const defaultBidSections = {
 export default function BidCompiler() {
   const location = useLocation();
   const selectedBid = location.state?.selectedBid;
-  
+
+  const mergeWithDefaultSections = (incomingSections) => {
+    const merged = JSON.parse(JSON.stringify(defaultBidSections));
+
+    if (!incomingSections || typeof incomingSections !== 'object') {
+      return merged;
+    }
+
+    Object.entries(incomingSections).forEach(([key, incomingSection]) => {
+      if (!merged[key] || !incomingSection || typeof incomingSection !== 'object') return;
+
+      if (typeof incomingSection.title === 'string') {
+        merged[key].title = incomingSection.title;
+      }
+
+      const incomingFields = Array.isArray(incomingSection.fields) ? incomingSection.fields : [];
+      if (merged[key].fields && Array.isArray(merged[key].fields)) {
+        merged[key].fields = merged[key].fields.map((defaultField) => {
+          const match = incomingFields.find((f) => f?.name === defaultField.name);
+          return match ? { ...defaultField, value: match.value } : defaultField;
+        });
+
+        incomingFields.forEach((f) => {
+          if (!f?.name) return;
+          const exists = merged[key].fields.some((df) => df.name === f.name);
+          if (!exists) merged[key].fields.push(f);
+        });
+      } else {
+        merged[key].fields = incomingFields;
+      }
+
+      if (incomingSection.items) {
+        merged[key].items = incomingSection.items;
+      }
+    });
+
+    return merged;
+  };
+
   const [sections, setSections] = useState(() => {
     // If a bid was selected from Bids page, pre-populate with its data
     if (selectedBid) {
-      return populateSectionsWithBidData(defaultBidSections, selectedBid);
+      return mergeWithDefaultSections(populateSectionsWithBidData(defaultBidSections, selectedBid));
     }
     return defaultBidSections;
   });
@@ -450,19 +488,24 @@ export default function BidCompiler() {
     setSelectedOpenBid(bid);
     setCurrentBidName(bid.title || bid.tenderTitle || '');
     const populated = populateSectionsWithBidData(defaultBidSections, bid);
-    setSections(populated);
+    setSections(mergeWithDefaultSections(populated));
   };
 
   const updateField = (sectionKey, fieldName, value) => {
-    setSections(prev => ({
-      ...prev,
-      [sectionKey]: {
-        ...prev[sectionKey],
-        fields: prev[sectionKey].fields.map(f => 
-          f.name === fieldName ? { ...f, value } : f
-        )
-      }
-    }));
+    setSections(prev => {
+      const prevSection = prev?.[sectionKey] || defaultBidSections?.[sectionKey];
+      const prevFields = Array.isArray(prevSection?.fields) ? prevSection.fields : [];
+
+      return {
+        ...prev,
+        [sectionKey]: {
+          ...(prevSection || { title: sectionKey, fields: [] }),
+          fields: prevFields.map(f =>
+            f.name === fieldName ? { ...f, value } : f
+          )
+        }
+      };
+    });
   };
 
   const toggleSection = (sectionKey) => {
@@ -492,7 +535,7 @@ export default function BidCompiler() {
   };
 
   const loadBid = (bid) => {
-    setSections(bid.sections);
+    setSections(mergeWithDefaultSections(bid.sections));
     setCurrentBidName(bid.name);
   };
 
