@@ -8,6 +8,7 @@ import {
   orderBy
 } from 'firebase/firestore';
 import { db } from '../services/firebase';
+import { BidQuotationPage } from '../components/BidQuotation';
 import { 
   FileText, 
   Printer, 
@@ -773,116 +774,27 @@ export default function BidCompiler() {
 
         {/* Page 5 - Quotation */}
         <div className="page-break-after">
-          {/* Header Section */}
-          <div className="flex justify-between items-start mb-4">
-            <div className="flex-1">
-              <h1 className="text-2xl"><span className="font-bold">Business Watch</span> <span className="text-lg text-gray-600">Private Limited</span></h1>
-              <p className="text-xs text-gray-600 mt-1">Reg No: C0006/2025</p>
-              <p className="text-xs text-gray-600">TIN: 1169863/GST/T/501</p>
-              <p className="text-xs text-gray-600">Address: Gulhifalhu, Lh.Himavaru</p>
-              <p className="text-xs text-gray-600">(960) 7786629, (960) 9829050</p>
-              <p className="text-xs text-gray-600">businesswatchmv@gmail.com</p>
-            </div>
-            <div className="text-center">
-              <div className="border-2 border-gray-800 px-8 py-4">
-                <h2 className="text-2xl font-bold">QUOTATION</h2>
-              </div>
-              <p className="text-xs text-gray-600 mt-2">Vendor No: 514110</p>
-            </div>
-          </div>
-
-          {/* Horizontal Line */}
-          <div className="border-b-2 border-gray-800 mb-4"></div>
-
-          {/* Quotation Details */}
-          <div className="flex justify-between items-start mb-4">
-            <div className="text-sm">
-              <p><strong>Quotation No:</strong> {sections.page5_quotation.fields.find(f => f.name === 'quotationNo')?.value || 'BW/2026/XXX'}</p>
-              <p><strong>Date:</strong> {sections.page5_quotation.fields.find(f => f.name === 'quotationDate')?.value || new Date().toLocaleDateString('en-GB')}</p>
-              <p><strong>Client:</strong> {sections.page5_quotation.fields.find(f => f.name === 'client')?.value || ''}</p>
-              <p><strong>Iulaan No:</strong> {sections.page5_quotation.fields.find(f => f.name === 'procurementRef')?.value || ''}</p>
-            </div>
-            <div className="border border-gray-800 px-4 py-2">
-              <p className="text-sm font-bold text-center">ALL ITEMS</p>
-            </div>
-          </div>
-
-          {/* Items Table */}
-          <table className="w-full border-collapse border border-gray-800 text-sm mb-4">
-            <thead>
-              <tr className="bg-gray-100">
-                <th className="border border-gray-800 px-2 py-2 text-center w-10">#</th>
-                <th className="border border-gray-800 px-2 py-2 text-left">Item Description</th>
-                <th className="border border-gray-800 px-2 py-2 text-center w-16">Qty</th>
-                <th className="border border-gray-800 px-2 py-2 text-right w-24">Rate<br/>(MVR)</th>
-                <th className="border border-gray-800 px-2 py-2 text-right w-24">Amount<br/>(MVR)</th>
-              </tr>
-            </thead>
-            <tbody>
-              {(sections.page5_quotation?.items || []).length > 0 ? (
-                sections.page5_quotation.items.map((item, index) => (
-                  <tr key={item.id || index}>
-                    <td className="border border-gray-800 px-2 py-2 text-center">{index + 1}</td>
-                    <td className="border border-gray-800 px-2 py-2">{item.description}</td>
-                    <td className="border border-gray-800 px-2 py-2 text-center">{item.qty}</td>
-                    <td className="border border-gray-800 px-2 py-2 text-right">{Number(item.rate).toLocaleString('en-MV', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
-                    <td className="border border-gray-800 px-2 py-2 text-right">{Number(item.amount).toLocaleString('en-MV', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td className="border border-gray-800 px-2 py-4 text-center" colSpan="5">No items available</td>
-                </tr>
-              )}
-              {/* Sub Total */}
-              <tr>
-                <td className="border border-gray-800 px-2 py-2 text-right" colSpan="4"><strong>Sub Total</strong></td>
-                <td className="border border-gray-800 px-2 py-2 text-right">{Number(sections.page5_quotation.fields.find(f => f.name === 'subTotal')?.value || 0).toLocaleString('en-MV', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
-              </tr>
-              {/* GST */}
-              <tr>
-                <td className="border border-gray-800 px-2 py-2 text-right" colSpan="4"><strong>GST (8%)</strong></td>
-                <td className="border border-gray-800 px-2 py-2 text-right">{Number(sections.page5_quotation.fields.find(f => f.name === 'gst')?.value || 0).toLocaleString('en-MV', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
-              </tr>
-              {/* Total in Words & Grand Total */}
-              <tr>
-                <td className="border border-gray-800 px-2 py-3" colSpan="4">
-                  <p className="text-xs">Total in Words: <span className="italic">{sections.page5_quotation.fields.find(f => f.name === 'grandTotal')?.value ? 
-                    new Intl.NumberFormat('en-MV', { style: 'spellout' }).format(Number(sections.page5_quotation.fields.find(f => f.name === 'grandTotal')?.value)).replace(/-/g, ' ') + ' only' 
-                    : 'Zero only'}</span></p>
-                </td>
-                <td className="border border-gray-800 px-2 py-3 text-right font-bold text-lg">{Number(sections.page5_quotation.fields.find(f => f.name === 'grandTotal')?.value || 0).toLocaleString('en-MV', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
-              </tr>
-            </tbody>
-          </table>
-
-          {/* Bank Account Information */}
-          <div className="text-xs mb-4">
-            <p className="font-semibold mb-1">Bank Account Information:</p>
-            <p className="font-semibold">Bank of Maldives (BML)</p>
-            <p>Account Name: Business Watch Pvt Ltd</p>
-            <p>MVR: 7770000188096 | USD: 7770000188098</p>
-            <p className="font-semibold mt-1">Maldives Islamic Bank (MIB)</p>
-            <p>Account Name: Business Watch Pvt Ltd</p>
-            <p>MVR: 90101480036671000 | USD: 90101480036672000</p>
-          </div>
-
-          {/* Footer */}
-          <div className="flex justify-between items-end text-xs">
-            <div>
-              <p>All rates are in MVR. Delivery: {sections.page5_quotation.fields.find(f => f.name === 'deliveryTime')?.value || 'As per tender'}. Validity: {sections.page5_quotation.fields.find(f => f.name === 'validity')?.value || '90'} days.</p>
-              <p className="text-gray-500 mt-1">Payment Terms: {sections.page5_quotation.fields.find(f => f.name === 'paymentTerms')?.value || 'As per tender terms'}</p>
-            </div>
-            <div className="text-center">
-              <div className="w-24 h-24 border border-gray-300 rounded-full mb-2 flex items-center justify-center text-gray-300 text-xs">
-                [STAMP]
-              </div>
-              <p className="font-semibold">Abobakuru Qasim</p>
-              <p>Managing Director</p>
-            </div>
-          </div>
-
-          <p className="text-sm font-semibold mt-6 text-right">Page 5 of 12</p>
+          <BidQuotationPage
+            bid={{
+              vendorNumber: '514110',
+              quotationNo: sections.page5_quotation?.fields?.find(f => f.name === 'quotationNo')?.value,
+              quotationDate: sections.page5_quotation?.fields?.find(f => f.name === 'quotationDate')?.value,
+              authority: sections.page5_quotation?.fields?.find(f => f.name === 'client')?.value,
+              title: sections.page5_quotation?.fields?.find(f => f.name === 'client')?.value,
+              tenderNo: sections.page5_quotation?.fields?.find(f => f.name === 'procurementRef')?.value,
+              deliveryDays: parseInt(String(sections.page5_quotation?.fields?.find(f => f.name === 'deliveryTime')?.value || '').match(/\d+/)?.[0] || '', 10) || undefined,
+              quotationValidity: parseInt(String(sections.page5_quotation?.fields?.find(f => f.name === 'validity')?.value || ''), 10) || undefined,
+              items: (sections.page5_quotation?.items || []).map((it, idx) => ({
+                id: it.id || idx,
+                name: it.description,
+                quantity: it.qty,
+                bidPrice: it.rate
+              }))
+            }}
+            showTax={true}
+            gstRate={8}
+            selectedSignatory={0}
+          />
         </div>
 
         {/* Page 7 - GST Registration */}
