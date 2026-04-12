@@ -709,27 +709,27 @@ export default function BidCompiler() {
               <tbody>
                 <tr className="border-b border-gray-300">
                   <td className="py-2 font-semibold w-1/3">Tender No:</td>
-                  <td className="py-2">{sections.page1_cover.fields.find(f => f.name === 'tenderNo')?.value || '_________________'}</td>
+                  <td className="py-2">{sections.page1_cover?.fields?.find(f => f.name === 'tenderNo')?.value || '_________________'}</td>
                 </tr>
                 <tr className="border-b border-gray-300">
                   <td className="py-2 font-semibold">Tender Title:</td>
-                  <td className="py-2">{sections.page1_cover.fields.find(f => f.name === 'tenderTitle')?.value || '_________________'}</td>
+                  <td className="py-2">{sections.page1_cover?.fields?.find(f => f.name === 'tenderTitle')?.value || '_________________'}</td>
                 </tr>
                 <tr className="border-b border-gray-300">
                   <td className="py-2 font-semibold">Company:</td>
-                  <td className="py-2">{sections.page1_cover.fields.find(f => f.name === 'companyName')?.value}</td>
+                  <td className="py-2">{sections.page1_cover?.fields?.find(f => f.name === 'companyName')?.value}</td>
                 </tr>
                 <tr className="border-b border-gray-300">
                   <td className="py-2 font-semibold">Contact Person:</td>
-                  <td className="py-2">{sections.page1_cover.fields.find(f => f.name === 'contactPerson')?.value || '_________________'}</td>
+                  <td className="py-2">{sections.page1_cover?.fields?.find(f => f.name === 'contactPerson')?.value || '_________________'}</td>
                 </tr>
                 <tr className="border-b border-gray-300">
                   <td className="py-2 font-semibold">TIN:</td>
-                  <td className="py-2">{sections.page1_cover.fields.find(f => f.name === 'tin')?.value}</td>
+                  <td className="py-2">{sections.page1_cover?.fields?.find(f => f.name === 'tin')?.value}</td>
                 </tr>
                 <tr>
                   <td className="py-2 font-semibold">Submission Date:</td>
-                  <td className="py-2">{sections.page1_cover.fields.find(f => f.name === 'submissionDate')?.value || '_________________'}</td>
+                  <td className="py-2">{sections.page1_cover?.fields?.find(f => f.name === 'submissionDate')?.value || '_________________'}</td>
                 </tr>
               </tbody>
             </table>
@@ -753,47 +753,47 @@ export default function BidCompiler() {
               <tr>
                 <td className="border border-gray-800 px-3 py-2">1</td>
                 <td className="border border-gray-800 px-3 py-2">Tender Fee Receipt</td>
-                <td className="border border-gray-800 px-3 py-2 text-center">{sections.page2_checklist.fields.find(f => f.name === 'tenderFee')?.value ? '✓' : '☐'}</td>
+                <td className="border border-gray-800 px-3 py-2 text-center">{sections.page2_checklist?.fields?.find(f => f.name === 'tenderFee')?.value ? '✓' : '☐'}</td>
               </tr>
               <tr>
                 <td className="border border-gray-800 px-3 py-2">2</td>
                 <td className="border border-gray-800 px-3 py-2">Bid Security</td>
-                <td className="border border-gray-800 px-3 py-2 text-center">{sections.page2_checklist.fields.find(f => f.name === 'bidSecurity')?.value ? '✓' : '☐'}</td>
+                <td className="border border-gray-800 px-3 py-2 text-center">{sections.page2_checklist?.fields?.find(f => f.name === 'bidSecurity')?.value ? '✓' : '☐'}</td>
               </tr>
               <tr>
                 <td className="border border-gray-800 px-3 py-2">3</td>
                 <td className="border border-gray-800 px-3 py-2">Company Profile/Certificate</td>
-                <td className="border border-gray-800 px-3 py-2 text-center">{sections.page2_checklist.fields.find(f => f.name === 'companyProfile')?.value ? '✓' : '☐'}</td>
+                <td className="border border-gray-800 px-3 py-2 text-center">{sections.page2_checklist?.fields?.find(f => f.name === 'companyProfile')?.value ? '✓' : '☐'}</td>
               </tr>
               <tr>
                 <td className="border border-gray-800 px-3 py-2">4</td>
                 <td className="border border-gray-800 px-3 py-2">TIN Certificate</td>
-                <td className="border border-gray-800 px-3 py-2 text-center">{sections.page2_checklist.fields.find(f => f.name === 'tinCert')?.value ? '✓' : '☐'}</td>
+                <td className="border border-gray-800 px-3 py-2 text-center">{sections.page2_checklist?.fields?.find(f => f.name === 'tinCert')?.value ? '✓' : '☐'}</td>
               </tr>
               <tr>
                 <td className="border border-gray-800 px-3 py-2">5</td>
                 <td className="border border-gray-800 px-3 py-2">GST Certificate</td>
-                <td className="border border-gray-800 px-3 py-2 text-center">{sections.page2_checklist.fields.find(f => f.name === 'gstCert')?.value ? '✓' : '☐'}</td>
+                <td className="border border-gray-800 px-3 py-2 text-center">{sections.page2_checklist?.fields?.find(f => f.name === 'gstCert')?.value ? '✓' : '☐'}</td>
               </tr>
               <tr>
                 <td className="border border-gray-800 px-3 py-2">6</td>
                 <td className="border border-gray-800 px-3 py-2">Bank Reference</td>
-                <td className="border border-gray-800 px-3 py-2 text-center">{sections.page2_checklist.fields.find(f => f.name === 'bankRef')?.value ? '✓' : '☐'}</td>
+                <td className="border border-gray-800 px-3 py-2 text-center">{sections.page2_checklist?.fields?.find(f => f.name === 'bankRef')?.value ? '✓' : '☐'}</td>
               </tr>
               <tr>
                 <td className="border border-gray-800 px-3 py-2">7</td>
                 <td className="border border-gray-800 px-3 py-2">Past Performance Certificates</td>
-                <td className="border border-gray-800 px-3 py-2 text-center">{sections.page2_checklist.fields.find(f => f.name === 'pastPerformance')?.value ? '✓' : '☐'}</td>
+                <td className="border border-gray-800 px-3 py-2 text-center">{sections.page2_checklist?.fields?.find(f => f.name === 'pastPerformance')?.value ? '✓' : '☐'}</td>
               </tr>
               <tr>
                 <td className="border border-gray-800 px-3 py-2">8</td>
                 <td className="border border-gray-800 px-3 py-2">Technical Specifications</td>
-                <td className="border border-gray-800 px-3 py-2 text-center">{sections.page2_checklist.fields.find(f => f.name === 'technicalSpecs')?.value ? '✓' : '☐'}</td>
+                <td className="border border-gray-800 px-3 py-2 text-center">{sections.page2_checklist?.fields?.find(f => f.name === 'technicalSpecs')?.value ? '✓' : '☐'}</td>
               </tr>
               <tr>
                 <td className="border border-gray-800 px-3 py-2">9</td>
                 <td className="border border-gray-800 px-3 py-2">Price Schedule</td>
-                <td className="border border-gray-800 px-3 py-2 text-center">{sections.page2_checklist.fields.find(f => f.name === 'priceSchedule')?.value ? '✓' : '☐'}</td>
+                <td className="border border-gray-800 px-3 py-2 text-center">{sections.page2_checklist?.fields?.find(f => f.name === 'priceSchedule')?.value ? '✓' : '☐'}</td>
               </tr>
             </tbody>
           </table>
@@ -812,8 +812,8 @@ export default function BidCompiler() {
           <div className="text-center space-y-4 text-sm">
             <p>I HEREBY certify that <strong>BUSINESS WATCH PRIVATE LIMITED</strong> is on this day registered</p>
             <p>under the Act no. 7/2023 and given under my hand and seal, at Male', Republic of Maldives</p>
-            <p>this <strong>{sections.page3_companyReg.fields.find(f => f.name === 'regDate')?.value}</strong></p>
-            <p className="mt-8 text-lg font-bold">No: {sections.page3_companyReg.fields.find(f => f.name === 'regNo')?.value}</p>
+            <p>this <strong>{sections.page3_companyReg?.fields?.find(f => f.name === 'regDate')?.value}</strong></p>
+            <p className="mt-8 text-lg font-bold">No: {sections.page3_companyReg?.fields?.find(f => f.name === 'regNo')?.value}</p>
           </div>
           <p className="text-sm font-semibold mt-8 text-right">Page 4 of 12</p>
         </div>
@@ -857,9 +857,9 @@ export default function BidCompiler() {
             <p>This is to certify that the undermentioned business activity is registered under the<br/>Goods and Services Tax Act (Law Number 10/2011).</p>
             <div className="border-2 border-gray-800 p-4 my-6 inline-block">
               <p className="font-bold">Business Watch Private Limited</p>
-              <p>TIN: {sections.page5_gst.fields.find(f => f.name === 'gstTin')?.value}</p>
-              <p>{sections.page5_gst.fields.find(f => f.name === 'gstDate')?.value}</p>
-              <p>Taxable Activity Number: {sections.page5_gst.fields.find(f => f.name === 'taxableActivity')?.value}</p>
+              <p>TIN: {sections.page5_gst?.fields?.find(f => f.name === 'gstTin')?.value}</p>
+              <p>{sections.page5_gst?.fields?.find(f => f.name === 'gstDate')?.value}</p>
+              <p>Taxable Activity Number: {sections.page5_gst?.fields?.find(f => f.name === 'taxableActivity')?.value}</p>
             </div>
             <p>Commissioner General of Taxation</p>
             <p>Maldives Inland Revenue Authority</p>
@@ -873,30 +873,30 @@ export default function BidCompiler() {
             <div className="text-xs text-gray-500 mb-2">بِسْمِ ٱللَّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</div>
             <p className="text-sm">MINISTRY OF ECONOMIC DEVELOPMENT & TRADE</p>
             <p className="text-xs">MALÉ REPUBLIC OF MALDIVES</p>
-            <p className="text-sm mt-2">{sections.page6_sme.fields.find(f => f.name === 'smeNo')?.value}</p>
+            <p className="text-sm mt-2">{sections.page6_sme?.fields?.find(f => f.name === 'smeNo')?.value}</p>
           </div>
           <h1 className="text-2xl font-bold text-center mb-8 underline">SME Registration</h1>
           <table className="w-full max-w-md mx-auto text-sm mb-8">
             <tbody>
               <tr>
                 <td className="py-2 font-semibold">Registered To:</td>
-                <td className="py-2">BUSINESS WATCH PVT LTD ({sections.page3_companyReg.fields.find(f => f.name === 'regNo')?.value})</td>
+                <td className="py-2">BUSINESS WATCH PVT LTD ({sections.page3_companyReg?.fields?.find(f => f.name === 'regNo')?.value})</td>
               </tr>
               <tr>
                 <td className="py-2 font-semibold">Registered Address:</td>
-                <td className="py-2">{sections.page6_sme.fields.find(f => f.name === 'smeAddress')?.value}</td>
+                <td className="py-2">{sections.page6_sme?.fields?.find(f => f.name === 'smeAddress')?.value}</td>
               </tr>
               <tr>
                 <td className="py-2 font-semibold">Business Category:</td>
-                <td className="py-2">{sections.page6_sme.fields.find(f => f.name === 'businessCategory')?.value}</td>
+                <td className="py-2">{sections.page6_sme?.fields?.find(f => f.name === 'businessCategory')?.value}</td>
               </tr>
               <tr>
                 <td className="py-2 font-semibold">Business Ranking:</td>
-                <td className="py-2">{sections.page6_sme.fields.find(f => f.name === 'businessRanking')?.value}</td>
+                <td className="py-2">{sections.page6_sme?.fields?.find(f => f.name === 'businessRanking')?.value}</td>
               </tr>
               <tr>
                 <td className="py-2 font-semibold">Registration Date:</td>
-                <td className="py-2">{sections.page6_sme.fields.find(f => f.name === 'smeRegDate')?.value}</td>
+                <td className="py-2">{sections.page6_sme?.fields?.find(f => f.name === 'smeRegDate')?.value}</td>
               </tr>
             </tbody>
           </table>
@@ -917,16 +917,16 @@ export default function BidCompiler() {
           </div>
           <div className="grid grid-cols-2 gap-4 text-sm mb-4">
             <div>
-              <p><strong>Reference Number:</strong> {sections.page7_taxClearance.fields.find(f => f.name === 'refNumber')?.value}</p>
-              <p><strong>Date of Issue:</strong> {sections.page7_taxClearance.fields.find(f => f.name === 'dateOfIssue')?.value}</p>
+              <p><strong>Reference Number:</strong> {sections.page7_taxClearance?.fields?.find(f => f.name === 'refNumber')?.value}</p>
+              <p><strong>Date of Issue:</strong> {sections.page7_taxClearance?.fields?.find(f => f.name === 'dateOfIssue')?.value}</p>
             </div>
             <div>
-              <p><strong>Taxpayer Identification No:</strong> {sections.page7_taxClearance.fields.find(f => f.name === 'taxpayerId')?.value}</p>
+              <p><strong>Taxpayer Identification No:</strong> {sections.page7_taxClearance?.fields?.find(f => f.name === 'taxpayerId')?.value}</p>
             </div>
           </div>
           <div className="border-2 border-gray-800 p-4 mb-4">
             <p className="text-sm font-semibold mb-2">Status of dues:</p>
-            <p className="text-sm">☑ {sections.page7_taxClearance.fields.find(f => f.name === 'taxStatus')?.value}</p>
+            <p className="text-sm">☑ {sections.page7_taxClearance?.fields?.find(f => f.name === 'taxStatus')?.value}</p>
           </div>
           <p className="text-sm mt-4">
             Below are the details of the taxes and fees that has been checked for the purpose of this clearance:
@@ -1004,7 +1004,7 @@ export default function BidCompiler() {
         <div className="page-break-after">
           <h2 className="text-xl font-bold text-center mb-6 border-b-2 border-gray-800 pb-2">Technical Specifications - Overview</h2>
           <div className="space-y-4 text-sm">
-            <p><strong>Item Name:</strong> {sections.page6_specification?.fields?.find(f => f.name === 'itemName')?.value || 'Transmitter and Related Equipment'}</p>
+            <p><strong>Item Name:</strong> {sections.page10_experienceLetters?.fields?.find(f => f.name === 'itemName')?.value ?? 'Transmitter and Related Equipment'}</p>
             <p><strong>Brand:</strong> FMUSER or ZHC (Equivalent brands accepted)</p>
             <p><strong>Model:</strong> FU618F-300W / ZHC618F-300W or equivalent</p>
             <p><strong>Power Output:</strong> 300W</p>
@@ -1243,7 +1243,7 @@ export default function BidCompiler() {
             <div className="mt-8 border-t border-gray-300 pt-4">
               <p className="font-bold">Authorized Signatory:</p>
               <p className="mt-4">Signature: _________________________</p>
-              <p className="mt-2">Name: {sections.page1_declaration.fields.find(f => f.name === 'signatoryName')?.value}</p>
+              <p className="mt-2">Name: {sections.page1_declaration?.fields?.find(f => f.name === 'signatoryName')?.value}</p>
               <p>Date: _________________________</p>
               <p className="mt-2">Company Stamp:</p>
               <div className="w-32 h-32 border border-gray-400 mt-2 flex items-center justify-center">
