@@ -1259,12 +1259,12 @@ export default function BidCompiler() {
         <div className="mt-8">
           <h2 className="text-xl font-bold mb-4 border-b pb-2">Declaration</h2>
           <div className="whitespace-pre-line text-sm mb-6">
-            {sections.declaration.fields.find(f => f.name === 'declaration')?.value}
+            {sections.page3_submission?.fields?.find(f => f.name === 'declaration')?.value || ''}
           </div>
           <div className="mt-8">
-            <p><strong>Name:</strong> {sections.declaration.fields.find(f => f.name === 'declarantName')?.value}</p>
-            <p><strong>Designation:</strong> {sections.declaration.fields.find(f => f.name === 'declarantDesignation')?.value}</p>
-            <p><strong>Date:</strong> {sections.declaration.fields.find(f => f.name === 'declarationDate')?.value}</p>
+            <p><strong>Name:</strong> {sections.page3_submission?.fields?.find(f => f.name === 'declarantName')?.value || ''}</p>
+            <p><strong>Designation:</strong> {sections.page3_submission?.fields?.find(f => f.name === 'declarantDesignation')?.value || ''}</p>
+            <p><strong>Date:</strong> {sections.page3_submission?.fields?.find(f => f.name === 'declarationDate')?.value || ''}</p>
             <p className="mt-8">_______________________</p>
             <p className="text-sm">Signature</p>
           </div>
