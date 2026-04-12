@@ -2,6 +2,65 @@
 
 All notable changes to the Business Watch project.
 
+## [1.7.0] - 2026-04-11
+
+### ✨ Added
+
+#### Bid Compiler (23-Page Bid Document Generator)
+- **New Bid Compiler Page**: Complete 23-page bid document compilation system
+  - Page 1: Declaration of Ethical Conduct
+  - Page 2: Bid Quotation with dynamic itemized table (pulls from bid data)
+  - Pages 3-8: Document upload sections (Company Reg, GST, SME, Tax Clearance, etc.)
+  - Pages 9-23: Technical specifications and editable user-defined sections
+  - Print-ready preview with page breaks and page numbers
+  - Save/load compiled bids with localStorage
+
+#### Bid Compiler Integration
+- **Bids Page Integration**: "Bid Compile" button on each bid card
+  - Navigate to Bid Compiler with selected bid data pre-filled
+  - Auto-populates quotation data, items, amounts, dates
+- **Document Selection**: Dropdown to select documents from Documents page
+  - Filter documents by type (registration, gst, bank, etc.)
+  - Preview selected documents before including in bid
+  - View button to open document preview modal
+
+#### Enhanced Data Fetching
+- **Firebase Timestamp Handling**: Fixed date formatting for Firestore timestamps
+- **Bid Data Extraction**: Improved mapping of bid items to quotation table
+- **Document URL Mapping**: Connects Bid Compiler to Documents collection
+
+### 🔧 Changed
+- **BidCompiler.jsx**: Complete rewrite with 23-page structure
+- **Bids.jsx**: Added Bid Compile button (FileStack icon) in card and table views
+- **Documents Integration**: Bid Compiler can fetch and display documents from Firebase
+
+### 🐛 Fixed
+- **[object Object] Issue**: Fixed items description showing as object in Page 2
+- **Date Format Errors**: Resolved timestamp conversion for date input fields
+- **Quotation Table**: Now displays full itemized list with qty, rate, amount columns
+- **Page 2 Styling**: Exact match with Bid Quotation print layout
+  - Header styling with Business Watch bold, Private Limited normal
+  - Proper QUOTATION box sizing and Vendor No placement
+  - Horizontal line separator under header
+  - Bank account information section layout
+  - Signature and stamp positioning
+- **Saved Quotation Sync**: Bid Compiler now fetches saved quotation data
+  - Checks for `bid.quotation` or `bid.savedQuotation`
+  - Uses quotation items, totals, and dates if available
+  - Falls back to bid data if no quotation saved
+
+### 📁 New Files/Collections
+- Firestore Collection: `compiledBids` (stores compiled bid documents)
+- New Page: `src/pages/BidCompiler.jsx`
+- Workflow: `.windsurf/workflows/deploy.md`
+
+### 📊 Statistics
+- **Total Pages**: 23 pages in Bid Compiler
+- **Document Types Supported**: 6 categories
+- **Integration Points**: Bids ↔ Bid Compiler ↔ Documents
+
+---
+
 ## [1.6.0] - 2026-04-06
 
 ### ✨ Added
