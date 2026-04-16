@@ -559,7 +559,7 @@ const BidQuotation = ({ bid, onClose }) => {
             <p><span className="font-semibold">Client:</span> {bid?.authority || bid?.title || 'N/A'}</p>
             {bid?.tenderNo && <p><span className="font-semibold">Iulaan No:</span> {bid.tenderNo}</p>}
           </div>
-          <div className="border-2 border-gray-800 px-4 py-2">
+          <div className="border-2 border-gray-800 px-4 py-2 text-center">
             <span className="font-bold text-lg">ALL ITEMS</span>
           </div>
         </div>
@@ -569,10 +569,10 @@ const BidQuotation = ({ bid, onClose }) => {
           <thead>
             <tr className="bg-gray-100">
               <th className="border border-gray-800 px-2 py-1.5 text-center w-8">#</th>
-              <th className="border border-gray-800 px-2 py-1.5 text-left">Item Description</th>
+              <th className="border border-gray-800 px-2 py-1.5 text-center">Item Description</th>
               <th className="border border-gray-800 px-2 py-1.5 text-center w-12">Qty</th>
-              <th className="border border-gray-800 px-2 py-1.5 text-right w-20">Rate (MVR)</th>
-              <th className="border border-gray-800 px-2 py-1.5 text-right w-24">Amount (MVR)</th>
+              <th className="border border-gray-800 px-2 py-1.5 text-center w-20">Rate (MVR)</th>
+              <th className="border border-gray-800 px-2 py-1.5 text-center w-24">Amount (MVR)</th>
             </tr>
           </thead>
           <tbody>
@@ -584,30 +584,30 @@ const BidQuotation = ({ bid, onClose }) => {
               return (
                 <tr key={item.id} style={{ verticalAlign: 'middle' }}>
                   <td className="border border-gray-800 px-2 py-1 text-center" style={{ verticalAlign: 'middle' }}>{index + 1}</td>
-                  <td className="border border-gray-800 px-2 py-1" style={{ verticalAlign: 'middle' }}>{item.name || 'ITEM-' + (index + 1)}</td>
+                  <td className="border border-gray-800 px-2 py-1 text-center" style={{ verticalAlign: 'middle' }}>{item.name || 'ITEM-' + (index + 1)}</td>
                   <td className="border border-gray-800 px-2 py-1 text-center" style={{ verticalAlign: 'middle' }}>{qty}</td>
-                  <td className="border border-gray-800 px-2 py-1 text-right" style={{ verticalAlign: 'middle' }}>{formatAmount(bidPrice)}</td>
-                  <td className="border border-gray-800 px-2 py-1 text-right" style={{ verticalAlign: 'middle' }}>{formatAmount(itemTotal)}</td>
+                  <td className="border border-gray-800 px-2 py-1 text-center" style={{ verticalAlign: 'middle' }}>{formatAmount(bidPrice)}</td>
+                  <td className="border border-gray-800 px-2 py-1 text-center" style={{ verticalAlign: 'middle' }}>{formatAmount(itemTotal)}</td>
                 </tr>
               );
             })}
           </tbody>
           <tfoot>
             <tr style={{ verticalAlign: 'middle' }}>
-              <td colSpan="4" className="border border-gray-800 px-2 py-1 text-right font-semibold" style={{ verticalAlign: 'middle' }}>Sub Total</td>
-              <td className="border border-gray-800 px-2 py-1 text-right" style={{ verticalAlign: 'middle' }}>{formatAmount(subTotal)}</td>
+              <td colSpan="4" className="border border-gray-800 px-2 py-1 text-center font-semibold" style={{ verticalAlign: 'middle' }}>Sub Total</td>
+              <td className="border border-gray-800 px-2 py-1 text-center" style={{ verticalAlign: 'middle' }}>{formatAmount(subTotal)}</td>
             </tr>
             {showTax && (
               <tr style={{ verticalAlign: 'middle' }}>
-                <td colSpan="4" className="border border-gray-800 px-2 py-1 text-right font-semibold" style={{ verticalAlign: 'middle' }}>GST ({gstRate}%)</td>
-                <td className="border border-gray-800 px-2 py-1 text-right" style={{ verticalAlign: 'middle' }}>{formatAmount(taxAmount)}</td>
+                <td colSpan="4" className="border border-gray-800 px-2 py-1 text-center font-semibold" style={{ verticalAlign: 'middle' }}>GST ({gstRate}%)</td>
+                <td className="border border-gray-800 px-2 py-1 text-center" style={{ verticalAlign: 'middle' }}>{formatAmount(taxAmount)}</td>
               </tr>
             )}
             <tr className="bg-gray-50" style={{ verticalAlign: 'middle' }}>
-              <td colSpan="4" className="border border-gray-800 px-2 py-1.5" style={{ verticalAlign: 'middle' }}>
+              <td colSpan="4" className="border border-gray-800 px-2 py-1.5 text-center" style={{ verticalAlign: 'middle' }}>
                 <span className="font-semibold">Total in Words:</span> {numberToWords(total)}
               </td>
-              <td className="border border-gray-800 px-2 py-1.5 text-right font-bold text-base" style={{ verticalAlign: 'middle' }}>{formatAmount(total)}</td>
+              <td className="border border-gray-800 px-2 py-1.5 text-center font-bold text-base" style={{ verticalAlign: 'middle' }}>{formatAmount(total)}</td>
             </tr>
           </tfoot>
         </table>
