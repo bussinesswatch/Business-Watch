@@ -212,10 +212,11 @@ const SmartBids = () => {
           return {
             bidId: bid.id,
             bidTitle: bid.title || bid.tenderTitle || 'Untitled Bid',
+            category,
             currentPrice: bid.bidAmount || 0,
             suggestedPrice: bid.bidAmount || 0,
             adjustment: 0,
-            reasoning: 'Insufficient historical data for this category'
+            reasoning: ['Insufficient historical data for this category']
           };
         }
 
