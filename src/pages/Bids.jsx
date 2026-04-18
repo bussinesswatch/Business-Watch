@@ -37,8 +37,12 @@ const Bids = ({ initialFilter }) => {
   const [quotationBid, setQuotationBid] = useState(null);
   const [showOpenBidsReport, setShowOpenBidsReport] = useState(false);
   
-  // Staff list for assignment
-  const [staffList, setStaffList] = useState([]);
+  // Staff list for assignment - includes default company staff
+  const [staffList, setStaffList] = useState([
+    { id: 'staff-001', name: 'Abdul Rasheed Ali', email: 'abdul@businesswatch.mv', role: 'staff' },
+    { id: 'staff-002', name: 'Ziyad Rashad', email: 'ziyad@businesswatch.mv', role: 'staff' },
+    { id: 'staff-003', name: 'Aboobakuru Gasim', email: 'aboobakuru@businesswatch.mv', role: 'staff' }
+  ]);
   
   // User-defined cost types persisted in localStorage
   const [userDefinedCostTypes, setUserDefinedCostTypes] = useState(() => {
