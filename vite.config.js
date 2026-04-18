@@ -5,8 +5,9 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   server: {
-    port: 5173,
-    host: true
+    port: 3456,
+    strictPort: true,
+    host: '127.0.0.1'
   },
   build: {
     // Force new hash on every build to bust cache

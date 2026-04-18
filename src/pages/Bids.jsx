@@ -37,6 +37,9 @@ const Bids = ({ initialFilter }) => {
   const [quotationBid, setQuotationBid] = useState(null);
   const [showOpenBidsReport, setShowOpenBidsReport] = useState(false);
   
+  // Staff list for assignment
+  const [staffList, setStaffList] = useState([]);
+  
   // User-defined cost types persisted in localStorage
   const [userDefinedCostTypes, setUserDefinedCostTypes] = useState(() => {
     const saved = localStorage.getItem('userDefinedCostTypes');
@@ -123,14 +126,16 @@ const Bids = ({ initialFilter }) => {
   });
 
   useEffect(() => {
-    fetchData();
+    fetchBids();
+    fetchTenders();
+    fetchStaff();
   }, []);
 
-  const fetchData = async () => {
+  const fetchBids = async () => {
     try {
       const bidsSnapshot = await getDocs(collection(db, 'bids'));
-      const bidsData = bidsSnapshot.docs.map(doc => ({ 
-        id: doc.id, 
+      const bidsData = bidsSnapshot.docs.map(doc => ({
+        id: doc.id,
         ...doc.data(),
         createdAt: doc.data().createdAt?.toDate?.() || new Date()
       })).sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
@@ -139,6 +144,32 @@ const Bids = ({ initialFilter }) => {
       console.error('Error fetching bids:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchTenders = async () => {
+    try {
+      const tendersSnapshot = await getDocs(collection(db, 'tenders'));
+      const tendersData = tendersSnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+      console.log('Fetched tenders:', tendersData);
+    } catch (error) {
+      console.error('Error fetching tenders:', error);
+    }
+  };
+
+  const fetchStaff = async () => {
+    try {
+      const staffSnapshot = await getDocs(collection(db, 'staff'));
+      const staffData = staffSnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+      console.log('Fetched staff:', staffData);
+    } catch (error) {
+      console.error('Error fetching staff:', error);
     }
   };
 
@@ -1009,6 +1040,27 @@ const Bids = ({ initialFilter }) => {
                     </div>
                   </div>
                   
+                  {/* Staff Assignment Dropdown */}
+                  <div className="mb-3" onClick={(e) => e.stopPropagation()}>
+                    <select
+                      value={bid.assignedStaff || ''}
+                      onChange={(e) => assignStaffToBid(bid.id, e.target.value)}
+                      className="w-full text-xs px-2 py-1.5 border border-gray-300 rounded bg-white hover:border-blue-400 focus:border-blue-500 focus:outline-none cursor-pointer"
+                    >
+                      <option value="">Assign Staff...</option>
+                      {staffList.map(staff => (
+                        <option key={staff.id} value={staff.id}>
+                          {staff.name || staff.email || staff.id}
+                        </option>
+                      ))}
+                    </select>
+                    {bid.assignedStaff && (
+                      <p className="text-xs text-green-600 mt-1">
+                        Assigned: {staffList.find(s => s.id === bid.assignedStaff)?.name || 'Unknown'}
+                      </p>
+                    )}
+                  </div>
+                  
                   <h3 className="font-semibold text-gray-900 line-clamp-2 mb-2 group-hover:text-blue-600 transition-colors">
                     {bid.title || 'Untitled Tender'}
                   </h3>
@@ -1163,6 +1215,7 @@ const Bids = ({ initialFilter }) => {
                 <th className="px-2 py-2 text-left text-xs font-medium text-gray-500 uppercase">Days</th>
                 <th className="px-2 py-2 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
                 <th className="px-2 py-2 text-left text-xs font-medium text-gray-500 uppercase hidden sm:table-cell">Result</th>
+                <th className="px-2 py-2 text-left text-xs font-medium text-gray-500 uppercase hidden md:table-cell">Staff</th>
                 <th className="px-2 py-2 text-right text-xs font-medium text-gray-500 uppercase">Amount</th>
                 <th className="px-2 py-2 text-center text-xs font-medium text-gray-500 uppercase">Act</th>
               </tr>
@@ -1208,6 +1261,20 @@ const Bids = ({ initialFilter }) => {
                         className={`text-xs rounded-full px-2 py-0.5 border-0 cursor-pointer ${getResultColor(bid.result)}`}
                       >
                         {results.map(r => <option key={r} value={r}>{r}</option>)}
+                      </select>
+                    </td>
+                    <td className="px-2 py-2 hidden md:table-cell" onClick={(e) => e.stopPropagation()}>
+                      <select
+                        value={bid.assignedStaff || ''}
+                        onChange={(e) => assignStaffToBid(bid.id, e.target.value)}
+                        className="text-xs rounded-full px-2 py-0.5 border border-gray-300 cursor-pointer bg-white hover:border-blue-400 focus:border-blue-500 focus:outline-none max-w-[120px]"
+                      >
+                        <option value="">Assign...</option>
+                        {staffList.map(staff => (
+                          <option key={staff.id} value={staff.id}>
+                            {staff.name || staff.email || staff.id}
+                          </option>
+                        ))}
                       </select>
                     </td>
                     <td className="px-2 py-2 text-right font-medium text-xs">

@@ -102,7 +102,7 @@ export const BidQuotationPage = ({ bid, showTax = true, gstRate = 8, selectedSig
           </div>
         </div>
         <div className="text-right">
-          <h1 className="text-2xl font-bold text-gray-900 border-2 border-gray-800 px-4 py-1 inline-block">
+          <h1 className="text-2xl font-bold text-gray-900">
             QUOTATION
           </h1>
           <div className="mt-2 text-xs text-gray-600">
@@ -118,7 +118,7 @@ export const BidQuotationPage = ({ bid, showTax = true, gstRate = 8, selectedSig
           <p><span className="font-semibold">Client:</span> {bid?.authority || bid?.title || 'N/A'}</p>
           {bid?.tenderNo && <p><span className="font-semibold">Iulaan No:</span> {bid.tenderNo}</p>}
         </div>
-        <div className="border-2 border-gray-800 px-4 py-2 text-center">
+        <div className="text-center">
           <span className="font-bold text-lg">ALL ITEMS</span>
         </div>
       </div>
@@ -325,7 +325,32 @@ const BidQuotation = ({ bid, onClose }) => {
         scale: 2,
         useCORS: true,
         logging: false,
-        backgroundColor: '#ffffff'
+        backgroundColor: '#ffffff',
+        onclone: (clonedDoc) => {
+          // Apply styles for PDF rendering
+          const allCells = clonedDoc.querySelectorAll('table.quotation-table td, table.quotation-table th');
+          allCells.forEach((cell) => {
+            const row = cell.parentElement;
+            const cellsInRow = Array.from(row.children);
+            const colIndex = cellsInRow.indexOf(cell);
+            
+            // Column 1 is Item Description - left aligned, others centered
+            if (colIndex !== 1) {
+              cell.style.textAlign = 'center';
+            } else {
+              cell.style.textAlign = 'left';
+            }
+            cell.style.verticalAlign = 'middle';
+          });
+          
+          // Add vertical centering to Item Description cells using padding
+          const itemDescCells = clonedDoc.querySelectorAll('table.quotation-table td:nth-child(2)');
+          itemDescCells.forEach(cell => {
+            cell.style.paddingTop = '16px';
+            cell.style.paddingBottom = '16px';
+            cell.style.verticalAlign = 'middle';
+          });
+        }
       });
       
       const imgData = canvas.toDataURL('image/png');
@@ -420,43 +445,61 @@ const BidQuotation = ({ bid, onClose }) => {
           </div>
 
           {/* Items Table */}
-          <table className="w-full border-collapse border border-gray-800 mb-4 text-sm">
+          <table className="w-full border-collapse border border-gray-800 mb-4 text-sm quotation-table">
             <thead>
               <tr className="bg-gray-100">
-                <th className="border border-gray-800 px-2 py-1 w-12 text-center">#</th>
-                <th className="border border-gray-800 px-2 py-1 text-center">Item</th>
-                <th className="border border-gray-800 px-2 py-1 w-16 text-center">Qty</th>
-                <th className="border border-gray-800 px-2 py-1 w-24 text-center">Rate</th>
-                <th className="border border-gray-800 px-2 py-1 w-28 text-center">Amount</th>
+                <th className="border border-gray-800 px-2 py-1 w-12 text-center align-middle">#</th>
+                <th className="border border-gray-800 px-2 py-1 text-center align-middle">Item</th>
+                <th className="border border-gray-800 px-2 py-1 w-16 text-center align-middle">Qty</th>
+                <th className="border border-gray-800 px-2 py-1 w-24 text-center align-middle">Rate</th>
+                <th className="border border-gray-800 px-2 py-1 w-28 text-center align-middle">Amount</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td className="border border-gray-800 px-2 py-1 text-center text-xs">1</td>
-                <td className="border border-gray-800 px-2 py-1 text-center text-xs">
-                  <div className="font-medium text-xs">{item.name || `ITEM-${idx + 1}`}</div>
+                <td className="border border-gray-800 px-2 py-1 text-xs" style={{ textAlign: 'center', verticalAlign: 'middle' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>1</div>
                 </td>
-                <td className="border border-gray-800 px-2 py-1 text-center text-xs">{qty}</td>
-                <td className="border border-gray-800 px-2 py-1 text-center text-xs">{bidPrice.toFixed(2)}</td>
-                <td className="border border-gray-800 px-2 py-1 text-center text-xs">{itemTotal.toLocaleString()}.00</td>
+                <td className="border border-gray-800 px-2 py-1 text-xs" style={{ textAlign: 'center', verticalAlign: 'middle' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>{item.name || `ITEM-${idx + 1}`}</div>
+                </td>
+                <td className="border border-gray-800 px-2 py-1 text-xs" style={{ textAlign: 'center', verticalAlign: 'middle' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>{qty}</div>
+                </td>
+                <td className="border border-gray-800 px-2 py-1 text-xs" style={{ textAlign: 'center', verticalAlign: 'middle' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>{bidPrice.toFixed(2)}</div>
+                </td>
+                <td className="border border-gray-800 px-2 py-1 text-xs" style={{ textAlign: 'center', verticalAlign: 'middle' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>{itemTotal.toLocaleString()}.00</div>
+                </td>
               </tr>
             </tbody>
             <tfoot>
               <tr>
-                <td colSpan="4" className="border border-gray-800 px-2 py-2 text-center font-semibold">Sub total</td>
-                <td className="border border-gray-800 px-2 py-2 text-center">{itemTotal.toLocaleString()}.00</td>
+                <td colSpan="4" className="border border-gray-800 px-2 py-2 font-semibold" style={{ textAlign: 'center', verticalAlign: 'middle' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>Sub total</div>
+                </td>
+                <td className="border border-gray-800 px-2 py-2" style={{ textAlign: 'center', verticalAlign: 'middle' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>{itemTotal.toLocaleString()}.00</div>
+                </td>
               </tr>
               {showTax && (
                 <tr>
-                  <td colSpan="4" className="border border-gray-800 px-2 py-2 text-center font-semibold">GST {gstRate}%</td>
-                  <td className="border border-gray-800 px-2 py-2 text-center">{itemTax.toLocaleString()}.00</td>
+                  <td colSpan="4" className="border border-gray-800 px-2 py-2 font-semibold" style={{ textAlign: 'center', verticalAlign: 'middle' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>GST {gstRate}%</div>
+                  </td>
+                  <td className="border border-gray-800 px-2 py-2" style={{ textAlign: 'center', verticalAlign: 'middle' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>{itemTax.toLocaleString()}.00</div>
+                  </td>
                 </tr>
               )}
               <tr>
-                <td colSpan="4" className="border border-gray-800 px-2 py-2 text-center">
+                <td colSpan="4" className="border border-gray-800 px-2 py-2" style={{ textAlign: 'center', verticalAlign: 'middle' }}>
                   <span className="font-semibold">Total:</span> {numberToWords(itemGrandTotal)}
                 </td>
-                <td className="border border-gray-800 px-2 py-2 text-center font-bold">{itemGrandTotal.toLocaleString(undefined, {minimumFractionDigits: 1, maximumFractionDigits: 1})}</td>
+                <td className="border border-gray-800 px-2 py-2 font-bold" style={{ textAlign: 'center', verticalAlign: 'middle' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>{itemGrandTotal.toLocaleString(undefined, {minimumFractionDigits: 1, maximumFractionDigits: 1})}</div>
+                </td>
               </tr>
             </tfoot>
           </table>
@@ -542,10 +585,8 @@ const BidQuotation = ({ bid, onClose }) => {
             </div>
           </div>
           <div className="text-right">
-            <h1 className="text-2xl font-bold text-gray-900 border-2 border-gray-800 px-4 py-1 inline-block">
-              QUOTATION
-            </h1>
-            <div className="mt-2 text-xs text-gray-600">
+            <h1 className="text-2xl font-bold text-gray-900">QUOTATION</h1>
+            <div className="text-xs text-gray-600">
               <p>Vendor No: {bid?.vendorNumber || '514110'}</p>
             </div>
           </div>
@@ -559,20 +600,20 @@ const BidQuotation = ({ bid, onClose }) => {
             <p><span className="font-semibold">Client:</span> {bid?.authority || bid?.title || 'N/A'}</p>
             {bid?.tenderNo && <p><span className="font-semibold">Iulaan No:</span> {bid.tenderNo}</p>}
           </div>
-          <div className="border-2 border-gray-800 px-4 py-2 text-center">
+          <div className="text-center">
             <span className="font-bold text-lg">ALL ITEMS</span>
           </div>
         </div>
 
         {/* Items Table */}
-        <table className="w-full border-collapse border border-gray-800 mb-3 text-xs">
+        <table className="w-full border-collapse border border-gray-800 mb-3 text-xs quotation-table">
           <thead>
             <tr className="bg-gray-100">
-              <th className="border border-gray-800 px-2 py-1.5 text-center w-8">#</th>
-              <th className="border border-gray-800 px-2 py-1.5 text-center">Item Description</th>
-              <th className="border border-gray-800 px-2 py-1.5 text-center w-12">Qty</th>
-              <th className="border border-gray-800 px-2 py-1.5 text-center w-20">Rate (MVR)</th>
-              <th className="border border-gray-800 px-2 py-1.5 text-center w-24">Amount (MVR)</th>
+              <th className="border border-gray-800 px-2 py-1.5" style={{ textAlign: 'center', verticalAlign: 'middle' }}>#</th>
+              <th className="border border-gray-800 px-2 py-1.5" style={{ textAlign: 'center', verticalAlign: 'middle' }}>Item Description</th>
+              <th className="border border-gray-800 px-2 py-1.5" style={{ textAlign: 'center', verticalAlign: 'middle' }}>Qty</th>
+              <th className="border border-gray-800 px-2 py-1.5" style={{ textAlign: 'center', verticalAlign: 'middle' }}>Rate (MVR)</th>
+              <th className="border border-gray-800 px-2 py-1.5" style={{ textAlign: 'center', verticalAlign: 'middle' }}>Amount (MVR)</th>
             </tr>
           </thead>
           <tbody>
@@ -583,31 +624,51 @@ const BidQuotation = ({ bid, onClose }) => {
 
               return (
                 <tr key={item.id} style={{ verticalAlign: 'middle' }}>
-                  <td className="border border-gray-800 px-2 py-1 text-center" style={{ verticalAlign: 'middle' }}>{index + 1}</td>
-                  <td className="border border-gray-800 px-2 py-1 text-center" style={{ verticalAlign: 'middle' }}>{item.name || 'ITEM-' + (index + 1)}</td>
-                  <td className="border border-gray-800 px-2 py-1 text-center" style={{ verticalAlign: 'middle' }}>{qty}</td>
-                  <td className="border border-gray-800 px-2 py-1 text-center" style={{ verticalAlign: 'middle' }}>{formatAmount(bidPrice)}</td>
-                  <td className="border border-gray-800 px-2 py-1 text-center" style={{ verticalAlign: 'middle' }}>{formatAmount(itemTotal)}</td>
+                  <td className="border border-gray-800 px-2 py-1" style={{ textAlign: 'center', verticalAlign: 'middle' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>{index + 1}</div>
+                  </td>
+                  <td className="border border-gray-800 px-2" style={{ textAlign: 'left', verticalAlign: 'middle', paddingTop: '16px', paddingBottom: '16px' }}>
+                    <span style={{ textAlign: 'left', display: 'block', lineHeight: '1.4' }}>{item.name || 'ITEM-' + (index + 1)}</span>
+                  </td>
+                  <td className="border border-gray-800 px-2 py-1" style={{ textAlign: 'center', verticalAlign: 'middle' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>{qty}</div>
+                  </td>
+                  <td className="border border-gray-800 px-2 py-1" style={{ textAlign: 'center', verticalAlign: 'middle' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>{formatAmount(bidPrice)}</div>
+                  </td>
+                  <td className="border border-gray-800 px-2 py-1" style={{ textAlign: 'center', verticalAlign: 'middle' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>{formatAmount(itemTotal)}</div>
+                  </td>
                 </tr>
               );
             })}
           </tbody>
           <tfoot>
             <tr style={{ verticalAlign: 'middle' }}>
-              <td colSpan="4" className="border border-gray-800 px-2 py-1 text-center font-semibold" style={{ verticalAlign: 'middle' }}>Sub Total</td>
-              <td className="border border-gray-800 px-2 py-1 text-center" style={{ verticalAlign: 'middle' }}>{formatAmount(subTotal)}</td>
+              <td colSpan="4" className="border border-gray-800 px-2 py-1 font-semibold" style={{ textAlign: 'center', verticalAlign: 'middle' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>Sub Total</div>
+              </td>
+              <td className="border border-gray-800 px-2 py-1" style={{ textAlign: 'center', verticalAlign: 'middle' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>{formatAmount(subTotal)}</div>
+              </td>
             </tr>
             {showTax && (
               <tr style={{ verticalAlign: 'middle' }}>
-                <td colSpan="4" className="border border-gray-800 px-2 py-1 text-center font-semibold" style={{ verticalAlign: 'middle' }}>GST ({gstRate}%)</td>
-                <td className="border border-gray-800 px-2 py-1 text-center" style={{ verticalAlign: 'middle' }}>{formatAmount(taxAmount)}</td>
+                <td colSpan="4" className="border border-gray-800 px-2 py-1 font-semibold" style={{ textAlign: 'center', verticalAlign: 'middle' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>GST ({gstRate}%)</div>
+                </td>
+                <td className="border border-gray-800 px-2 py-1" style={{ textAlign: 'center', verticalAlign: 'middle' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>{formatAmount(taxAmount)}</div>
+                </td>
               </tr>
             )}
             <tr className="bg-gray-50" style={{ verticalAlign: 'middle' }}>
-              <td colSpan="4" className="border border-gray-800 px-2 py-1.5 text-center" style={{ verticalAlign: 'middle' }}>
+              <td colSpan="4" className="border border-gray-800 px-2 py-1.5" style={{ textAlign: 'center', verticalAlign: 'middle' }}>
                 <span className="font-semibold">Total in Words:</span> {numberToWords(total)}
               </td>
-              <td className="border border-gray-800 px-2 py-1.5 text-center font-bold text-base" style={{ verticalAlign: 'middle' }}>{formatAmount(total)}</td>
+              <td className="border border-gray-800 px-2 py-1.5 font-bold text-base" style={{ textAlign: 'center', verticalAlign: 'middle' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>{formatAmount(total)}</div>
+              </td>
             </tr>
           </tfoot>
         </table>
@@ -792,6 +853,19 @@ const BidQuotation = ({ bid, onClose }) => {
               }
               .quotation-page:last-child {
                 page-break-after: avoid;
+              }
+              /* Force table cell text centering for PDF */
+              table.quotation-table th,
+              table.quotation-table td {
+                text-align: center !important;
+                vertical-align: middle !important;
+              }
+              table.quotation-table td > div {
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                height: 100% !important;
+                text-align: center !important;
               }
               .print\\:hidden {
                 display: none !important;

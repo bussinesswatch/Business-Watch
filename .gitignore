@@ -1,16 +1,22 @@
 node_modules/
+
 dist/
+
 .env
-.env.vercel
-service-account.json
+
+.env.local
+
 *.log
+
 .DS_Store
+
 .vscode/
+
 .idea/
+
 *.swp
+
 *.swo
+
 *~
 
-.vercel
-
-service-account.json
