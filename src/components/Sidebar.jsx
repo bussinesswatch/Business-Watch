@@ -32,7 +32,8 @@ import {
   Search,
   MessageCircle,
   Wallet,
-  FileStack
+  FileStack,
+  Brain
 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useState, useEffect } from 'react';
@@ -81,6 +82,7 @@ const Sidebar = () => {
     { path: '/bids', icon: DollarSign, label: 'Bids' },
     { path: '/bids/won', icon: CheckCircle, label: 'Won Bids' },
     { path: '/bids/pending', icon: Clock, label: 'Pending Bids' },
+    { path: '/smart-bids', icon: Brain, label: 'Smart Bids AI' },
     { path: '/purchase-orders', icon: ShoppingCart, label: 'Purchase Orders' },
     { path: '/quotations', icon: Receipt, label: 'Quotations' },
     { path: '/procurement', icon: ShoppingCart, label: 'Procurement' },

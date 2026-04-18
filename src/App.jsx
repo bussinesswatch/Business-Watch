@@ -37,6 +37,7 @@ import AdvancedSearch from './pages/AdvancedSearch';
 import Chat from './pages/Chat';
 import StaffExpense from './pages/StaffExpense';
 import BidCompiler from './pages/BidCompiler';
+import SmartBids from './pages/SmartBids';
 
 import { useAuth } from './contexts/AuthContext';
 
@@ -285,6 +286,14 @@ function App() {
         <ProtectedRoute>
           <Layout>
             <BidComparison />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      
+      <Route path="/smart-bids" element={
+        <ProtectedRoute>
+          <Layout>
+            <SmartBids />
           </Layout>
         </ProtectedRoute>
       } />
