@@ -41,10 +41,7 @@ const Bids = ({ initialFilter }) => {
   const [staffList, setStaffList] = useState([
     { id: 'staff-001', name: 'Abdul Rasheed Ali', email: 'abdul@businesswatch.mv', role: 'staff' },
     { id: 'staff-002', name: 'Ziyad Rashad', email: 'ziyad@businesswatch.mv', role: 'staff' },
-    { id: 'staff-003', name: 'Aboobakuru Gasim', email: 'aboobakuru@businesswatch.mv', role: 'staff' },
-    { id: 'staff-004', name: 'Mohamed Zain', email: 'mohamed.zain@businesswatch.mv', role: 'admin', salaryAccess: 'full' },
-    { id: 'staff-005', name: 'Aishath Jumana', email: 'aishath.jumana@businesswatch.mv', role: 'admin', salaryAccess: 'full' },
-    { id: 'staff-006', name: 'Adam Imad', email: 'adam.imad@businesswatch.mv', role: 'admin', salaryAccess: 'full' }
+    { id: 'staff-003', name: 'Aboobakuru Gasim', email: 'aboobakuru@businesswatch.mv', role: 'staff' }
   ]);
   
   // User-defined cost types persisted in localStorage
@@ -60,7 +57,7 @@ const Bids = ({ initialFilter }) => {
 
   const categories = ['IT', 'Medical Equipment', 'Office Supplies', 'Furniture', 'Electrical', 'Electronics', 'Safety Equipment', 'Machinery', 'Construction', 'Sports Equipment', 'Printing', 'Security/IT', 'Apparel', 'Apparel/Uniform', 'Supply', 'Awards', 'IT/Equipment', 'Construction/Furniture', 'Civil Works'];
   const statuses = ['Draft', 'Submitted', 'Under Review', 'Accepted', 'Rejected', 'Open', 'Closed', 'Cancelled', 'Registered'];
-  const results = ['Pending', 'Won', 'Lost', 'Cancelled', 'Registered', 'Missed Registered'];
+  const results = ['Pending', 'Won', 'Lost', 'Cancelled', 'Registered', 'Missed Registered', 'Unconcerned', 'Urgent'];
 
   const [formData, setFormData] = useState({
     // Tender Info
@@ -783,7 +780,9 @@ const Bids = ({ initialFilter }) => {
     const colors = {
       'Pending': 'bg-gray-100 text-gray-800',
       'Won': 'bg-green-100 text-green-800',
-      'Lost': 'bg-red-100 text-red-800'
+      'Lost': 'bg-red-100 text-red-800',
+      'Unconcerned': 'bg-slate-100 text-slate-600',
+      'Urgent': 'bg-rose-100 text-rose-700'
     };
     return colors[result] || 'bg-gray-100 text-gray-800';
   };
@@ -990,6 +989,60 @@ const Bids = ({ initialFilter }) => {
               <p className="text-xs sm:text-sm text-gray-600">Missed Reg</p>
               <p className="text-lg sm:text-2xl font-bold text-orange-700">
                 {bids.filter(b => b.result === 'Missed Registered' || b.status === 'Missed Registered').length}
+              </p>
+            </div>
+          </div>
+        </div>
+        {/* New Stats Cards */}
+        <div 
+          className="card bg-slate-50 border-slate-200 p-2 sm:p-4 cursor-pointer hover:shadow-md transition-shadow"
+          onClick={() => { setFilterStatus('All'); setFilterResult('Unconcerned'); }}
+        >
+          <div className="flex items-center gap-2 sm:gap-3">
+            <XCircle className="w-5 h-5 sm:w-8 sm:h-8 text-slate-500" />
+            <div>
+              <p className="text-xs sm:text-sm text-gray-600">Unconcerned</p>
+              <p className="text-lg sm:text-2xl font-bold text-slate-600">
+                {bids.filter(b => b.result === 'Unconcerned').length}
+              </p>
+            </div>
+          </div>
+        </div>
+        <div 
+          className="card bg-rose-50 border-rose-200 p-2 sm:p-4 cursor-pointer hover:shadow-md transition-shadow"
+          onClick={() => { setFilterStatus('All'); setFilterResult('Urgent'); }}
+        >
+          <div className="flex items-center gap-2 sm:gap-3">
+            <Clock className="w-5 h-5 sm:w-8 sm:h-8 text-rose-600" />
+            <div>
+              <p className="text-xs sm:text-sm text-gray-600">Urgent</p>
+              <p className="text-lg sm:text-2xl font-bold text-rose-700">
+                {bids.filter(b => b.result === 'Urgent').length}
+              </p>
+            </div>
+          </div>
+        </div>
+        <div 
+          className="card bg-teal-50 border-teal-200 p-2 sm:p-4 cursor-pointer hover:shadow-md transition-shadow"
+          onClick={() => { setFilterStatus('Registered'); setFilterResult('All'); }}
+        >
+          <div className="flex items-center gap-2 sm:gap-3">
+            <CheckCircle className="w-5 h-5 sm:w-8 sm:h-8 text-teal-600" />
+            <div>
+              <p className="text-xs sm:text-sm text-gray-600">Registered</p>
+              <p className="text-lg sm:text-2xl font-bold text-teal-700">
+                {bids.filter(b => b.status === 'Registered' || b.result === 'Registered').length}
+              </p>
+            </div>
+          </div>
+        </div>
+        <div className="card bg-indigo-50 border-indigo-200 p-2 sm:p-4">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <Building2 className="w-5 h-5 sm:w-8 sm:h-8 text-indigo-600" />
+            <div>
+              <p className="text-xs sm:text-sm text-gray-600">Assigned Staff</p>
+              <p className="text-lg sm:text-2xl font-bold text-indigo-700">
+                {bids.filter(b => b.assignedStaff).length}
               </p>
             </div>
           </div>
