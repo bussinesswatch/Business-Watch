@@ -29,6 +29,7 @@ const Bids = ({ initialFilter }) => {
   const [filterCategory, setFilterCategory] = useState('All');
   const [filterResult, setFilterResult] = useState(initialFilter || 'All');
   const [filterAuthority, setFilterAuthority] = useState('All');
+  const [showArchived, setShowArchived] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [editingBid, setEditingBid] = useState(null);
   const [viewingBid, setViewingBid] = useState(null);
@@ -779,7 +780,13 @@ const Bids = ({ initialFilter }) => {
     const matchesStatus = filterStatus === 'All' || bid.status === filterStatus;
     const matchesResult = filterResult === 'All' || bid.result === filterResult;
     const matchesAuthority = filterAuthority === 'All' || bid.authority === filterAuthority;
-    return matchesSearch && matchesStatus && matchesResult && matchesAuthority;
+    
+    // Archive filter: hide expired, missed, and not registered bids unless showArchived is true
+    const isArchived = bid.result === 'Missed' || bid.result === 'Not Registered' || 
+                       (bid.submissionDeadline && new Date(bid.submissionDeadline) < new Date() && bid.status !== 'Submitted' && bid.result !== 'Won');
+    const matchesArchive = showArchived || !isArchived;
+    
+    return matchesSearch && matchesStatus && matchesResult && matchesAuthority && matchesArchive;
   });
 
   const getStatusColor = (status) => {
@@ -1138,6 +1145,15 @@ const Bids = ({ initialFilter }) => {
             <option key={auth} value={auth}>{auth}</option>
           ))}
         </select>
+        <label className="flex items-center gap-2 text-sm text-gray-600 cursor-pointer">
+          <input
+            type="checkbox"
+            checked={showArchived}
+            onChange={(e) => setShowArchived(e.target.checked)}
+            className="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+          />
+          Show Archived
+        </label>
       </div>
       </div>
 
