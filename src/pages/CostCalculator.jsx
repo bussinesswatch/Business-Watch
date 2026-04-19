@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Calculator, DollarSign, ShoppingCart, Package, Save, FileText, Trash2, Plus } from 'lucide-react';
+import { Calculator, DollarSign, ShoppingCart, Package, Save, FileText, Trash2, Plus, Edit, Printer } from 'lucide-react';
 import { useData } from '../hooks/useData';
 
 export default function CostCalculator() {
@@ -59,17 +59,92 @@ export default function CostCalculator() {
   }, [selectedItems, exchangeRate, markup]);
 
   const saveCalculation = () => {
-    const calculation = {
+    if (selectedItems.length === 0) return;
+    
+    const calcName = prompt('Enter calculation name:', `Calculation ${savedCalculations.length + 1}`);
+    if (!calcName) return;
+    
+    const newCalc = {
       id: Date.now(),
-      name: `Calculation ${savedCalculations.length + 1}`,
+      name: calcName,
+      date: new Date().toLocaleDateString(),
       items: [...selectedItems],
-      subtotalUSD: calculations.subtotalUSD,
-      subtotalMVR: calculations.subtotalMVR,
       markup,
-      totalMVR: calculations.totalMVR,
-      date: new Date().toLocaleDateString()
+      exchangeRate,
+      subtotal: calculations.subtotalUSD,
+      totalWithMarkup: calculations.subtotalUSD + (calculations.subtotalUSD * (markup / 100)),
+      totalMVR: calculations.totalMVR
     };
-    setSavedCalculations([...savedCalculations, calculation]);
+    
+    setSavedCalculations([...savedCalculations, newCalc]);
+  };
+
+  const loadCalculation = (calc) => {
+    setSelectedItems(calc.items.map(item => ({...item})));
+    setMarkup(calc.markup);
+    setExchangeRate(calc.exchangeRate);
+  };
+
+  const deleteCalculation = (id) => {
+    if (confirm('Are you sure you want to delete this calculation?')) {
+      setSavedCalculations(savedCalculations.filter(c => c.id !== id));
+    }
+  };
+
+  const printCalculation = (calc) => {
+    const printWindow = window.open('', '_blank');
+    const html = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>${calc.name}</title>
+        <style>
+          body { font-family: Arial, sans-serif; padding: 20px; }
+          table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+          th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+          th { background: #f5f5f5; }
+          .header { text-align: center; margin-bottom: 30px; }
+          .totals { margin-top: 20px; text-align: right; }
+          .total-row { font-size: 1.2em; font-weight: bold; color: #2563eb; }
+        </style>
+      </head>
+      <body>
+        <div class="header">
+          <h1>${calc.name}</h1>
+          <p>Date: ${calc.date}</p>
+          <p>Markup: ${calc.markup}% | Exchange Rate: ${calc.exchangeRate}</p>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Item</th>
+              <th>Qty</th>
+              <th>Unit Price (USD)</th>
+              <th>Total (USD)</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${calc.items.map(item => `
+              <tr>
+                <td>${item.name}</td>
+                <td>${item.quantity}</td>
+                <td>$${item.unitPrice.toFixed(2)}</td>
+                <td>$${(item.unitPrice * item.quantity).toFixed(2)}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+        <div class="totals">
+          <p>Subtotal: $${calc.subtotal.toFixed(2)}</p>
+          <p>With Markup: $${calc.totalWithMarkup.toFixed(2)}</p>
+          <p class="total-row">Total MVR: ${calc.totalMVR.toLocaleString()}</p>
+        </div>
+      </body>
+      </html>
+    `;
+    printWindow.document.write(html);
+    printWindow.document.close();
+    printWindow.print();
   };
 
   return (
@@ -284,6 +359,26 @@ export default function CostCalculator() {
                     <p className="text-sm text-gray-600 mt-1">
                       {calc.items.length} items • {calc.markup}% markup
                     </p>
+                    <div className="flex gap-2 mt-2">
+                      <button
+                        onClick={() => loadCalculation(calc)}
+                        className="text-xs text-blue-600 hover:text-blue-800 flex items-center gap-1"
+                      >
+                        <Edit className="w-3 h-3" /> Edit
+                      </button>
+                      <button
+                        onClick={() => deleteCalculation(calc.id)}
+                        className="text-xs text-red-600 hover:text-red-800 flex items-center gap-1"
+                      >
+                        <Trash2 className="w-3 h-3" /> Delete
+                      </button>
+                      <button
+                        onClick={() => printCalculation(calc)}
+                        className="text-xs text-gray-600 hover:text-gray-800 flex items-center gap-1"
+                      >
+                        <Printer className="w-3 h-3" /> Print
+                      </button>
+                    </div>
                   </div>
                 ))}
               </div>
