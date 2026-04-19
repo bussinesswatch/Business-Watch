@@ -142,7 +142,7 @@ export const BidQuotationPage = ({ bid, showTax = true, gstRate = 8, selectedSig
             return (
               <tr key={item.id || index} style={{ verticalAlign: 'middle' }}>
                 <td className="border border-gray-800 px-2 py-1 text-center" style={{ verticalAlign: 'middle' }}>{index + 1}</td>
-                <td className="border border-gray-800 px-2 py-1 text-center" style={{ verticalAlign: 'middle' }}>{item.name || 'ITEM-' + (index + 1)}</td>
+                <td className="border border-gray-800 px-2 py-1 text-left" style={{ verticalAlign: 'middle' }}>{item.name || 'ITEM-' + (index + 1)}</td>
                 <td className="border border-gray-800 px-2 py-1 text-center" style={{ verticalAlign: 'middle' }}>{qty}</td>
                 <td className="border border-gray-800 px-2 py-1 text-center" style={{ verticalAlign: 'middle' }}>{formatAmount(bidPrice)}</td>
                 <td className="border border-gray-800 px-2 py-1 text-center" style={{ verticalAlign: 'middle' }}>{formatAmount(itemTotal)}</td>
