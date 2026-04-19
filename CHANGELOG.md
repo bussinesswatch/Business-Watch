@@ -2,6 +2,69 @@
 
 All notable changes to the Business Watch project.
 
+## [1.8.0] - 2026-04-19
+
+### ✨ Added
+
+#### Bids Page Enhancements
+- **Comprehensive Search**: Fixed and expanded search functionality to search across all bid fields
+  - Searches: tender title, authority, office, category, tender number, status, items, notes
+  - Real-time filtering as you type
+  - Case-insensitive matching
+- **Authority/Office Filter**: New dropdown to filter bids by authority or office
+  - Shows all unique authorities from bids
+  - "All Authorities" option to clear filter
+  - Combined with search for powerful filtering
+- **Archive Feature**: Hide expired, not registered, and missed bids from dashboard
+  - "Show Archived" checkbox toggle
+  - By default, archived bids are hidden to reduce clutter
+  - Archived statuses: Expired, Not Registered, Missed
+- **Auto-Generate Bid Number**: Unique bid number generation
+  - Format: BID-YYYY-NNN (e.g., BID-2025-001)
+  - "Auto-Generate" button next to Tender Number field
+  - Automatically increments based on existing bids
+  - Prevents duplicate numbers
+
+#### Cost Calculator Enhancements
+- **Saved Calculation Management**: Full CRUD operations for saved calculations
+  - **Edit**: Load saved calculation back into calculator for modification
+  - **Delete**: Remove saved calculations with confirmation
+  - **Print**: Generate print-friendly report of calculations
+  - Action buttons on each saved calculation card
+
+#### Quotation Enhancements
+- **Delete Option**: Remove saved quotations with confirmation dialog
+- **Print Option**: Generate print-friendly quotation reports
+- **Item Description Alignment**: Fixed to left-align for better readability
+
+#### Bid Compiler Enhancements
+- **Section Selection Before Printing**: Choose which sections to include in final bid
+  - Checkbox toggles for each of the 23 sections
+  - "Sections to Print" panel in print preview
+  - Only selected sections appear in final output
+  - Helps customize bids for different tender requirements
+
+### 🔧 Changed
+- **Bids.jsx**: Added search, authority filter, archive toggle, auto-generate bid number
+- **CostCalculator.jsx**: Added loadCalculation, deleteCalculation, printCalculation functions
+- **BidQuotation.jsx**: Added delete/print actions, fixed alignment
+- **BidCompiler.jsx**: Added printSections state and section filtering logic
+
+### 🐛 Fixed
+- **Search Not Working**: Fixed to properly search across all bid fields
+- **Quotation Alignment**: Item descriptions now left-aligned instead of centered
+- **Bid Number Duplicates**: Auto-generation ensures unique bid numbers
+
+### 📁 Updated Files
+```
+src/pages/Bids.jsx
+src/pages/CostCalculator.jsx
+src/components/BidQuotation.jsx
+src/pages/BidCompiler.jsx
+```
+
+---
+
 ## [1.7.0] - 2026-04-11
 
 ### ✨ Added

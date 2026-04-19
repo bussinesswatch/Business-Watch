@@ -177,6 +177,23 @@ Manage all your bidding activities in one place.
 - **Lost**: Not awarded
 - **Withdrawn**: Bid retracted
 
+### Search & Filter
+
+**Comprehensive Search:**
+- Search across all bid fields: title, authority, office, category, tender number, status, items, notes
+- Real-time filtering as you type
+- Case-insensitive matching
+
+**Authority Filter:**
+- Dropdown filter to show bids by specific authority/office
+- "All Authorities" option to clear filter
+- Combine with search for powerful filtering
+
+**Archive Toggle:**
+- "Show Archived" checkbox to control visibility
+- By default, archived bids (Expired, Not Registered, Missed) are hidden
+- Toggle on to view all bids including archived ones
+
 ### Bid List Views
 
 **Card View:**
@@ -249,6 +266,24 @@ Add extra costs to your bid calculation:
 4. Enter amount for each cost
 5. Total automatically calculated
 
+### Auto-Generate Bid Number
+
+Generate unique bid numbers automatically to avoid duplicates:
+
+**Format:** `BID-YYYY-NNN` (e.g., `BID-2025-001`)
+
+**How to Use:**
+1. In the bid creation/editing form, find the "Tender Number" field
+2. Click the **"Auto-Generate"** button next to the field
+3. System generates next available number based on existing bids
+4. Prevents duplicate numbers automatically
+
+**Benefits:**
+- No manual entry needed
+- Consistent numbering format
+- Automatic sequencing
+- No duplicates
+
 ### Gazette URL Auto-Fetch
 
 Quickly populate bid forms by pasting a Gazette URL. The system fetches tender details and auto-fills the form.
@@ -285,7 +320,7 @@ Quickly populate bid forms by pasting a Gazette URL. The system fetches tender d
 
 ## Bid Compiler
 
-Generate complete 23-page bid documents ready for tender submission. The Bid Compiler integrates with Bids and Documents pages for seamless workflow.
+Generate complete 23-page bid documents ready for tender submission. The Bid Compiler integrates with Bids and Documents pages for seamless workflow. Customize which sections to include before printing.
 
 ### Bid Compiler Features
 
@@ -330,12 +365,35 @@ Each certificate page has a dropdown to select documents:
 4. **View button** (eye icon) opens document preview
 5. Or upload a new document directly
 
+### Section Selection (Before Printing)
+
+Choose which sections to include in your printed bid:
+
+**How to Select Sections:**
+1. Click **"Print Preview"** to enter preview mode
+2. Look for **"Sections to Print"** panel at top
+3. Check/uncheck sections you want to include
+4. Only selected sections appear in final output
+
+**When to Use:**
+- Some tenders don't require all 23 pages
+- Customize bid for specific tender requirements
+- Remove unnecessary certificate pages
+- Create abbreviated bids for initial submissions
+
+**Available Sections:**
+- Page 1: Declaration of Ethical Conduct
+- Page 2: Bid Quotation
+- Pages 3-8: Certificate pages (Company Reg, Past Bids, GST, SME, Tax, Other)
+- Pages 9-23: Technical specifications and terms
+
 ### Print Preview & Saving
 
 **Print Preview:**
-- Click **"Print Preview"** button to see all 23 pages
+- Click **"Print Preview"** button to see selected pages
 - Proper page breaks between pages
 - Page numbers at bottom right
+- Only selected sections displayed
 - Click **Print** or **Download as PDF**
 
 **Save Compiled Bid:**
@@ -356,7 +414,7 @@ Each certificate page has a dropdown to select documents:
 
 ## Quotations
 
-Create and manage quotations for clients.
+Create and manage quotations for clients with full print and delete options.
 
 ### Quotation Features
 
@@ -365,7 +423,27 @@ Create and manage quotations for clients.
 - Calculate totals with tax
 - Track quotation status
 - Convert to orders
-- Export as PDF
+- Print quotations
+- Delete saved quotations
+
+### Quotation Actions
+
+**Print Quotation:**
+1. Open saved quotation
+2. Click **Print** button (printer icon)
+3. Opens print-friendly view
+4. Print or save as PDF
+
+**Delete Quotation:**
+1. Find quotation in list
+2. Click **Delete** button (trash icon)
+3. Confirm deletion
+4. Quotation removed from system
+
+**Edit Quotation:**
+1. Click **Edit** on any quotation
+2. Modify items, quantities, or prices
+3. Save changes
 
 ### Quotation Status
 
@@ -374,6 +452,11 @@ Create and manage quotations for clients.
 - **Accepted**: Client approved
 - **Rejected**: Client declined
 - **Expired**: Past validity date
+
+### Item Alignment
+
+- Item descriptions are left-aligned for better readability
+- Quantities, rates, and amounts remain right-aligned
 
 ---
 
@@ -652,7 +735,7 @@ Filter KPIs by:
 
 ## Cost Calculator
 
-Estimate costs for tender submissions.
+Estimate costs for tender submissions with full calculation management.
 
 ### Calculator Features
 
@@ -662,6 +745,32 @@ Estimate costs for tender submissions.
 - Calculate exchange rates
 - Factor in shipping costs
 - Include tax calculations
+
+### Saved Calculations Management
+
+**Save Calculation:**
+1. Add items and set quantities
+2. Adjust markup and exchange rate
+3. Click **"Save Calculation"** button
+4. Enter a name for the calculation
+5. Saved to your calculation list
+
+**Load/Edit Calculation:**
+1. Find saved calculation in the list
+2. Click **Edit** (pencil icon) to load it back
+3. Modify items, quantities, or rates
+4. Save again to update
+
+**Delete Calculation:**
+1. Click **Delete** (trash icon) on saved calculation
+2. Confirm deletion
+3. Calculation removed from list
+
+**Print Calculation:**
+1. Click **Print** (printer icon) on saved calculation
+2. Opens print-friendly report in new window
+3. Includes all items, quantities, prices, and totals
+4. Print or save as PDF
 
 ### Cost Components
 
@@ -1088,12 +1197,22 @@ Tenders by organization:
 
 ## Version Information
 
-**Document Version**: 1.7.0  
-**Last Updated**: April 11, 2026  
-**App Version**: 1.7.0  
+**Document Version**: 1.8.0  
+**Last Updated**: April 19, 2026  
+**App Version**: 1.8.0  
 **Total Tenders**: 50+
 
-### Recent Updates (v1.7.0)
+### Recent Updates (v1.8.0)
+- **Bids Page Search**: Fixed comprehensive search across all fields
+- **Authority Filter**: Filter bids by authority/office
+- **Archive Feature**: Hide expired/missed/not registered bids
+- **Auto-Generate Bid Number**: Unique BID-YYYY-NNN format
+- **Cost Calculator**: Edit, delete, and print saved calculations
+- **Quotation Actions**: Delete and print options
+- **Bid Compiler**: Section selection before printing
+- **Quotation Alignment**: Left-aligned item descriptions
+
+### Previous Updates (v1.7.0)
 - **Bid Compiler**: 23-page bid document generator
 - **Document Integration**: Select documents from Documents page
 - **Bids Page Integration**: Bid Compile button for one-click compilation

@@ -2,7 +2,32 @@
 
 A full-stack web application for managing Maldives government tenders, bids, procurement, and project tracking with real-time Firebase integration.
 
-## 🌟 New Features (April 2026)
+## 🌟 Latest Features (v1.8.0 - April 2026)
+
+### Enhanced Bids Page
+- **Comprehensive Search**: Fixed search across all bid fields (title, authority, office, category, tender number, status, items, notes)
+- **Authority/Office Filter**: Dropdown filter to show bids by specific authority
+- **Archive Feature**: "Show Archived" toggle to hide expired, not registered, and missed bids by default
+- **Auto-Generate Bid Number**: Unique BID-YYYY-NNN format with automatic sequencing (e.g., BID-2025-001)
+
+### Cost Calculator Management
+- **Edit Saved Calculations**: Load calculations back into calculator for modification
+- **Delete Calculations**: Remove saved calculations with confirmation
+- **Print Calculations**: Generate print-friendly reports with all items and totals
+
+### Quotation Enhancements
+- **Delete Quotations**: Remove saved quotations with confirmation
+- **Print Quotations**: Generate print-friendly quotation reports
+- **Fixed Alignment**: Item descriptions now left-aligned for better readability
+
+### Bid Compiler Improvements
+- **Section Selection**: Choose which of the 23 sections to include before printing
+- Customizable bid output for different tender requirements
+- Checkbox toggles for each section in print preview
+
+---
+
+## 🌟 Previous Features (v1.7.0 - April 2026)
 
 ### Bid Compiler (23-Page Bid Document Generator)
 - **Complete Bid Compilation System**: Generate full 23-page bid documents ready for submission
@@ -359,9 +384,9 @@ Create an admin user through Firebase console or registration, then manually set
 - Delete `node_modules` and `package-lock.json`
 - Run `npm install` again
 
-**Last Updated**: April 11, 2026  
+**Last Updated**: April 19, 2026  
 **Total Tenders**: 50+  
-**App Version**: 1.7.0  
+**App Version**: 1.8.0  
 **Data Source**: https://gazette.gov.mv/iulaan
 
 MIT License - feel free to use for your business.
